@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>secondappbackend</Name>
+    <RootNamespace>secondappbackend</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>d35bbe3c-2689-479f-a226-9a3e9b107c4e</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>app.js</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <NodejsPort>1337</NodejsPort>
+    <StartWebBrowser>true</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="passport-keystone.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="pkgcloud\openstack\compute\client\extensions\floating-ips.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\index.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\keys.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\networks-base.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\networks.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\security-group-rules.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\security-groups.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\servers.js" />
+    <Content Include="pkgcloud\openstack\compute\client\extensions\volume-attachments.js" />
+    <Content Include="pkgcloud\openstack\compute\client\flavors.js" />
+    <Content Include="pkgcloud\openstack\compute\client\images.js" />
+    <Content Include="pkgcloud\openstack\compute\client\index.js" />
+    <Content Include="pkgcloud\openstack\compute\client\servers.js" />
+    <Content Include="pkgcloud\openstack\compute\computeClient.js" />
+    <Content Include="pkgcloud\openstack\compute\flavor.js" />
+    <Content Include="pkgcloud\openstack\compute\image.js" />
+    <Content Include="pkgcloud\openstack\compute\index.js" />
+    <Content Include="pkgcloud\openstack\compute\server.js" />
+    <Content Include="pkgcloud\pkgcloud.js" />
+    <Content Include="pkgcloud\common\auth.js" />
+    <Content Include="pkgcloud\common\http-signature.js" />
+    <Content Include="pkgcloud\common\index.js" />
+    <Content Include="pkgcloud\common\status.js" />
+    <Content Include="pkgcloud\core\base\client.js" />
+    <Content Include="pkgcloud\core\base\index.js" />
+    <Content Include="pkgcloud\core\base\model.js" />
+    <Content Include="pkgcloud\core\compute\flavor.js" />
+    <Content Include="pkgcloud\core\compute\image.js" />
+    <Content Include="pkgcloud\core\compute\index.js" />
+    <Content Include="pkgcloud\core\compute\server.js" />
+    <Content Include="pkgcloud\core\dns\index.js" />
+    <Content Include="pkgcloud\core\dns\record.js" />
+    <Content Include="pkgcloud\core\dns\zone.js" />
+    <Content Include="pkgcloud\core\loadbalancer\index.js" />
+    <Content Include="pkgcloud\core\loadbalancer\loadbalancer.js" />
+    <Content Include="pkgcloud\core\loadbalancer\node.js" />
+    <Content Include="pkgcloud\core\network\network.js" />
+    <Content Include="pkgcloud\core\network\port.js" />
+    <Content Include="pkgcloud\core\network\securityGroup.js" />
+    <Content Include="pkgcloud\core\network\securityGroupRule.js" />
+    <Content Include="pkgcloud\core\network\subnet.js" />
+    <Content Include="pkgcloud\core\storage\container.js" />
+    <Content Include="pkgcloud\core\storage\file.js" />
+    <Content Include="pkgcloud\core\storage\index.js" />
+    <Content Include="pkgcloud\openstack\client.js" />
+    <Content Include="pkgcloud\openstack\context\identity.js" />
+    <Content Include="pkgcloud\openstack\context\index.js" />
+    <Content Include="pkgcloud\openstack\context\service.js" />
+    <Content Include="pkgcloud\openstack\context\serviceCatalog.js" />
+    <Content Include="pkgcloud\openstack\database\client\databases.js" />
+    <Content Include="pkgcloud\openstack\database\client\flavors.js" />
+    <Content Include="pkgcloud\openstack\database\client\index.js" />
+    <Content Include="pkgcloud\openstack\database\client\instances.js" />
+    <Content Include="pkgcloud\openstack\database\client\users.js" />
+    <Content Include="pkgcloud\openstack\database\database.js" />
+    <Content Include="pkgcloud\openstack\database\flavor.js" />
+    <Content Include="pkgcloud\openstack\database\index.js" />
+    <Content Include="pkgcloud\openstack\database\instance.js" />
+    <Content Include="pkgcloud\openstack\database\user.js" />
+    <Content Include="pkgcloud\openstack\identity\client\index.js" />
+    <Content Include="pkgcloud\openstack\identity\index.js" />
+    <Content Include="pkgcloud\openstack\index.js" />
+    <Content Include="pkgcloud\openstack\network\client\index.js" />
+    <Content Include="pkgcloud\openstack\network\client\networks.js" />
+    <Content Include="pkgcloud\openstack\network\client\ports.js" />
+    <Content Include="pkgcloud\openstack\network\client\securityGroupRules.js" />
+    <Content Include="pkgcloud\openstack\network\client\securityGroups.js" />
+    <Content Include="pkgcloud\openstack\network\client\subnets.js" />
+    <Content Include="pkgcloud\openstack\network\index.js" />
+    <Content Include="pkgcloud\openstack\network\network.js" />
+    <Content Include="pkgcloud\openstack\network\networkClient.js" />
+    <Content Include="pkgcloud\openstack\network\port.js" />
+    <Content Include="pkgcloud\openstack\network\securityGroup.js" />
+    <Content Include="pkgcloud\openstack\network\securityGroupRule.js" />
+    <Content Include="pkgcloud\openstack\network\subnet.js" />
+    <Content Include="pkgcloud\openstack\orchestration\client\events.js" />
+    <Content Include="pkgcloud\openstack\orchestration\client\index.js" />
+    <Content Include="pkgcloud\openstack\orchestration\client\resources.js" />
+    <Content Include="pkgcloud\openstack\orchestration\client\stacks.js" />
+    <Content Include="pkgcloud\openstack\orchestration\client\templates.js" />
+    <Content Include="pkgcloud\openstack\orchestration\index.js" />
+    <Content Include="pkgcloud\openstack\orchestration\resource.js" />
+    <Content Include="pkgcloud\openstack\orchestration\stack.js" />
+    <Content Include="pkgcloud\openstack\storage\client\account.js" />
+    <Content Include="pkgcloud\openstack\storage\client\containers.js" />
+    <Content Include="pkgcloud\openstack\storage\client\files.js" />
+    <Content Include="pkgcloud\openstack\storage\client\index.js" />
+    <Content Include="pkgcloud\openstack\storage\container.js" />
+    <Content Include="pkgcloud\openstack\storage\file.js" />
+    <Content Include="pkgcloud\openstack\storage\index.js" />
+    <Content Include="pkgcloud\openstack\storage\storageClient.js" />
+    <Content Include="routes\account.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Content Include="routes\project.js">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="pkgcloud\" />
+    <Folder Include="pkgcloud\common\" />
+    <Folder Include="pkgcloud\core\" />
+    <Folder Include="pkgcloud\core\base\" />
+    <Folder Include="pkgcloud\core\compute\" />
+    <Folder Include="pkgcloud\core\dns\" />
+    <Folder Include="pkgcloud\core\loadbalancer\" />
+    <Folder Include="pkgcloud\core\network\" />
+    <Folder Include="pkgcloud\core\storage\" />
+    <Folder Include="pkgcloud\openstack\" />
+    <Folder Include="pkgcloud\openstack\compute\" />
+    <Folder Include="pkgcloud\openstack\compute\client\" />
+    <Folder Include="pkgcloud\openstack\compute\client\extensions\" />
+    <Folder Include="pkgcloud\openstack\context\" />
+    <Folder Include="pkgcloud\openstack\database\" />
+    <Folder Include="pkgcloud\openstack\database\client\" />
+    <Folder Include="pkgcloud\openstack\identity\" />
+    <Folder Include="pkgcloud\openstack\identity\client\" />
+    <Folder Include="pkgcloud\openstack\network\" />
+    <Folder Include="pkgcloud\openstack\network\client\" />
+    <Folder Include="pkgcloud\openstack\orchestration\" />
+    <Folder Include="pkgcloud\openstack\orchestration\client\" />
+    <Folder Include="pkgcloud\openstack\storage\" />
+    <Folder Include="pkgcloud\openstack\storage\client\" />
+    <Folder Include="routes\" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

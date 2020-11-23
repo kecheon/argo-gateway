@@ -1,0 +1,7 @@
+ClientApp/dist/
+ClientApp/**/*.js
+ClientApp/**/*.map
+ClientApp/package-lock.json
+secondappbackend/package-lock.json
+_reference.js
+*/node_modules/

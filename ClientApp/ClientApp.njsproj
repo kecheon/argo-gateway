@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>ClientApp</Name>
+    <RootNamespace>ClientApp</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>404e5aaa-8aca-4303-85fa-0424281b032e</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>
+    </StartupFile>
+    <StartWebBrowser>True</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <NodejsPort>1337</NodejsPort>
+    <EnableTypeScript>true</EnableTypeScript>
+    <StartWebBrowser>true</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".browserslistrc" />
+    <Content Include=".editorconfig" />
+    <Content Include=".gitignore" />
+    <Content Include="angular.json" />
+    <Content Include="dist\ClientApp\favicon.ico" />
+    <Content Include="dist\ClientApp\index.html" />
+    <Content Include="dist\ClientApp\main.js" />
+    <Content Include="dist\ClientApp\main.js.map" />
+    <Content Include="dist\ClientApp\polyfills.js" />
+    <Content Include="dist\ClientApp\polyfills.js.map" />
+    <Content Include="dist\ClientApp\runtime.js" />
+    <Content Include="dist\ClientApp\runtime.js.map" />
+    <Content Include="dist\ClientApp\styles.css" />
+    <Content Include="dist\ClientApp\styles.css.map" />
+    <Content Include="dist\ClientApp\vendor.js" />
+    <Content Include="dist\ClientApp\vendor.js.map" />
+    <Content Include="dist\out-tsc\e2e\src\app.e2e-spec.js" />
+    <Content Include="dist\out-tsc\e2e\src\app.e2e-spec.js.map" />
+    <Content Include="dist\out-tsc\e2e\src\app.po.js" />
+    <Content Include="dist\out-tsc\e2e\src\app.po.js.map" />
+    <Content Include="dist\out-tsc\src\app\app-routing.module.js" />
+    <Content Include="dist\out-tsc\src\app\app-routing.module.js.map" />
+    <Content Include="dist\out-tsc\src\app\app.component.js" />
+    <Content Include="dist\out-tsc\src\app\app.component.js.map" />
+    <Content Include="dist\out-tsc\src\app\app.component.spec.js" />
+    <Content Include="dist\out-tsc\src\app\app.component.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\app.module.js" />
+    <Content Include="dist\out-tsc\src\app\app.module.js.map" />
+    <Content Include="dist\out-tsc\src\app\c-workflow-t.component.js" />
+    <Content Include="dist\out-tsc\src\app\c-workflow-t.component.js.map" />
+    <Content Include="dist\out-tsc\src\app\c-workflow-t.component.spec.js" />
+    <Content Include="dist\out-tsc\src\app\c-workflow-t.component.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\check-login.js" />
+    <Content Include="dist\out-tsc\src\app\check-login.js.map" />
+    <Content Include="dist\out-tsc\src\app\home.component.js" />
+    <Content Include="dist\out-tsc\src\app\home.component.js.map" />
+    <Content Include="dist\out-tsc\src\app\home.component.spec.js" />
+    <Content Include="dist\out-tsc\src\app\home.component.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\login.js" />
+    <Content Include="dist\out-tsc\src\app\login.js.map" />
+    <Content Include="dist\out-tsc\src\app\login.spec.js" />
+    <Content Include="dist\out-tsc\src\app\login.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\material.module.js" />
+    <Content Include="dist\out-tsc\src\app\material.module.js.map" />
+    <Content Include="dist\out-tsc\src\app\project.js" />
+    <Content Include="dist\out-tsc\src\app\project.js.map" />
+    <Content Include="dist\out-tsc\src\app\project.service.js" />
+    <Content Include="dist\out-tsc\src\app\project.service.js.map" />
+    <Content Include="dist\out-tsc\src\app\project.service.spec.js" />
+    <Content Include="dist\out-tsc\src\app\project.service.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\workflow-t.component.js" />
+    <Content Include="dist\out-tsc\src\app\workflow-t.component.js.map" />
+    <Content Include="dist\out-tsc\src\app\workflow-t.component.spec.js" />
+    <Content Include="dist\out-tsc\src\app\workflow-t.component.spec.js.map" />
+    <Content Include="dist\out-tsc\src\app\workflows.component.js" />
+    <Content Include="dist\out-tsc\src\app\workflows.component.js.map" />
+    <Content Include="dist\out-tsc\src\app\workflows.component.spec.js" />
+    <Content Include="dist\out-tsc\src\app\workflows.component.spec.js.map" />
+    <Content Include="dist\out-tsc\src\environments\environment.js" />
+    <Content Include="dist\out-tsc\src\environments\environment.js.map" />
+    <Content Include="dist\out-tsc\src\environments\environment.prod.js" />
+    <Content Include="dist\out-tsc\src\environments\environment.prod.js.map" />
+    <Content Include="dist\out-tsc\src\main.js" />
+    <Content Include="dist\out-tsc\src\main.js.map" />
+    <Content Include="dist\out-tsc\src\polyfills.js" />
+    <Content Include="dist\out-tsc\src\polyfills.js.map" />
+    <Content Include="dist\out-tsc\src\test.js" />
+    <Content Include="dist\out-tsc\src\test.js.map" />
+    <Content Include="e2e\protractor.conf.js" />
+    <Content Include="e2e\tsconfig.json" />
+    <Content Include="karma.conf.js" />
+    <Content Include="package-lock.json" />
+    <Content Include="src\**\*" />
+    <Content Include="tsconfig.app.json" />
+    <Content Include="tsconfig.json" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Content Include="tsconfig.spec.json" />
+    <Content Include="tslint.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dist\" />
+    <Folder Include="dist\ClientApp\" />
+    <Folder Include="dist\out-tsc\" />
+    <Folder Include="dist\out-tsc\e2e\" />
+    <Folder Include="dist\out-tsc\e2e\src\" />
+    <Folder Include="dist\out-tsc\src\" />
+    <Folder Include="dist\out-tsc\src\app\" />
+    <Folder Include="dist\out-tsc\src\environments\" />
+    <Folder Include="e2e\" />
+    <Folder Include="e2e\src\" />
+    <Folder Include="src\" />
+    <Folder Include="src\app\" />
+    <Folder Include="src\assets\" />
+    <Folder Include="src\environments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="e2e\src\app.e2e-spec.ts" />
+    <TypeScriptCompile Include="e2e\src\app.po.ts" />
+    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\app.component.ts" />
+    <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\c-workflow-t.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\c-workflow-t.component.ts" />
+    <TypeScriptCompile Include="src\app\check-login.ts" />
+    <TypeScriptCompile Include="src\app\home.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\home.component.ts" />
+    <TypeScriptCompile Include="src\app\login.spec.ts" />
+    <TypeScriptCompile Include="src\app\login.ts" />
+    <TypeScriptCompile Include="src\app\material.module.ts" />
+    <TypeScriptCompile Include="src\app\project.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\project.service.ts" />
+    <TypeScriptCompile Include="src\app\project.ts" />
+    <TypeScriptCompile Include="src\app\projectData.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\user.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\user.service.ts" />
+    <TypeScriptCompile Include="src\app\userData.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\workflow-t.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\workflow-t.component.ts" />
+    <TypeScriptCompile Include="src\app\workflows.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\workflows.component.ts" />
+    <TypeScriptCompile Include="src\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="src\environments\environment.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\polyfills.ts" />
+    <TypeScriptCompile Include="src\test.ts" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
