@@ -6,6 +6,9 @@ export class ProjectData {
   is_domain: boolean = false;
   is_wf: boolean = false;
   wf: workflow = new workflow();
+  links: { self: string } = { self: '' };
+  options: { parent_id: string } = { parent_id: '' };
+  tags: [] = [];
 }
 
 class workflow {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ProjectData } from './projectData';
 
 @Component({
   templateUrl: './home.component.html',
@@ -13,10 +14,14 @@ export class HomeComponent implements OnInit {
     private http: HttpClient
   ) { }
 
+  projects: ProjectData[] = [];
+  displayedColumns: string[] = ['description','domain_id','id'];
+
   ngOnInit(): void {
-    this.http.get<{}>('/project').subscribe(
+    this.http.get<{ projects: ProjectData[] }>('/project').subscribe(
       data => {
-        console.log(data);
+        Array.prototype.push.apply(this.projects, data.projects);
+        console.log(this.projects)
       },
       err => catchError(err)
     );
