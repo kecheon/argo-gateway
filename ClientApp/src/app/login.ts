@@ -8,8 +8,8 @@ export class Login implements OnInit {
 
   constructor() { }
 
-  @Input() username: string = '';
-  @Input() password: string = '';
+  username: string = '';
+  password: string = '';
 
 
   ngOnInit(): void {

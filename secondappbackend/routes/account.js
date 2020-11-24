@@ -3,10 +3,8 @@ const router = express.Router();
 const passport = require('passport');
 
 router.post('/login',
-    passport.authenticate('keystone', { failureRedirect: '/login' }), (req, res) => {
-        console.log(req.user);
-        res.redirect('/');
-    }
+    passport.authenticate('keystone', { failureRedirect: '/login' }),
+    (req, res) => res.redirect('/')
 );
 
 // need for user info retrieval
@@ -18,8 +16,6 @@ router.post('/login',
 });*/
 
 router.get('/checkLogin', function (req, res) {
-    console.log(Object.keys(req));
-    console.log(req.user);
     if (req.isAuthenticated())
         res.sendStatus(200);
     else res.sendStatus(401);

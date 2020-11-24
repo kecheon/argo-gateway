@@ -18,7 +18,6 @@ router.get('/', (req, res) => {
         }, (err, response, body) => {
             if (err)
                 console.error(err);
-            console.log(body);
             res.send(body);
         });
     }

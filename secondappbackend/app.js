@@ -86,7 +86,10 @@ passport.use(new KeystoneStrategy({
         return identity(null, user);
     }
 }*/ (req, done) => {
+    console.log(Object.keys(req));
+    console.log(Object.keys(req.token));
     req.user.tokenId = req.token.id;
+    console.log(req.token);
     done(null, req.user)
     }
 ));
