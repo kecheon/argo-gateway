@@ -150,6 +150,7 @@ app.use(express.static(rootPath, { index: false }));
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
+app.use('/kube', require('./routes/kubectl'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
