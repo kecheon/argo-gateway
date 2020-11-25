@@ -133,6 +133,9 @@
     <Content Include="routes\project.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="routes\user.js">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="pkgcloud\" />

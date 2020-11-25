@@ -86,11 +86,52 @@ passport.use(new KeystoneStrategy({
         return identity(null, user);
     }
 }*/ (req, done) => {
-    console.log(Object.keys(req));
-    console.log(Object.keys(req.token));
-    req.user.tokenId = req.token.id;
-    console.log(req.token);
-    done(null, req.user)
+        req.user.tokenId = req.token.id;
+        request({
+            url: 'http://183.111.177.141/identity/v3/auth/projects',
+            headers: {
+                'x-auth-token': req.user.tokenId
+            }
+        }, (err, response, body) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            else if (!body.projects?.length < 1) {
+                console.error('project property error');
+                return;
+            }
+            const first_project_id = JSON.parse(body).projects[0].id;
+            console.log(first_project_id);
+            request.post({
+                url: 'http://183.111.177.141/identity/v3/auth/tokens',
+                headers: {
+                    'x-auth-token': req.user.tokenId
+                },
+                body: JSON.stringify({
+                    auth: {
+                        identity: {
+                            methods: ['token'],
+                            token: {
+                                id: req.user.tokenId
+                            }
+                        },
+                        scope: {
+                            project: {
+                                id: first_project_id
+                            }
+                        }
+                    }
+                })
+            }, (err, response, body) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                req.user.tokenId2 = response.headers['x-subject-token'];
+                done(null, req.user);
+            });
+        });
     }
 ));
 
@@ -108,6 +149,7 @@ app.use(express.static(rootPath, { index: false }));
 
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
+app.use('/user', require('./routes/user'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
