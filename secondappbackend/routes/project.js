@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const request = require('request');
+const axios = require('axios');
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     if (req.isUnauthenticated())
         res.sendStatus(401);
     else if (!req.user.tokenId) {
@@ -9,16 +9,18 @@ router.get('/', (req, res) => {
         res.sendStatus(500);
     }
     else {
-        request({
-            url: 'http://183.111.177.141/identity/v3/auth/projects',
-            headers: {
-                'x-auth-token': req.user.tokenId
-            }
-        }, (err, response, body) => {
-            if (err)
-                console.error(err);
-            res.send(body);
-        });
+        try {
+            const response = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+                headers: {
+                    'x-auth-token': req.user.tokenId
+                }
+            });
+            res.send(response.data);
+        }
+        catch (err) {
+            console.error(err);
+            res.sendStatus(500);
+        }
     }
 });
 
@@ -27,30 +29,34 @@ router.get('/:id', (req, res) => {
         res.sendStatus(401);
         return;
     }
-    request.post({
-        url: 'http://183.111.177.141/identity/v3/auth/tokens',
-        headers: {
-            'x-auth-token': req.user.tokenId
-        }
-    }, {
-        auth: {
-            identity: {
-                methods: ['token'],
-                token: {
-                    id: req.user.tokenId
+    try {
+        const response = axios.post('http://183.111.177.141/identity/v3/auth/tokens',
+            {
+                auth: {
+                    identity: {
+                        methods: ['token'],
+                        token: {
+                            id: req.user.tokenId
+                        }
+                    },
+                    scope: {
+                        project: {
+                            id: req.params.id
+                        }
+                    }
                 }
             },
-            scope: {
-                project: {
-                    id: req.params.id
+            {
+                headers: {
+                    'x-auth-token': req.user.tokenId
                 }
-            }
-        }
-    }, (err, response, body) => {
-        if (err)
-            console.error(err);
-        res.send(body);
-    })
+            })
+        res.send(response.data);
+    }
+    catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });
 
 module.exports = router;

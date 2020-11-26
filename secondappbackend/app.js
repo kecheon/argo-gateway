@@ -5,12 +5,13 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-const request = require('request');
+const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
 
 const KeystoneStrategy = require('./passport-keystone');
+const { error } = require('console');
 
 const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
@@ -87,28 +88,16 @@ passport.use(new KeystoneStrategy({
     }
 }*/ (req, done) => {
         req.user.tokenId = req.token.id;
-        request({
-            url: 'http://183.111.177.141/identity/v3/auth/projects',
+        axios.get('http://183.111.177.141/identity/v3/auth/projects', {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
-        }, (err, response, body) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            else if (!body.projects?.length < 1) {
-                console.error('project property error');
-                return;
-            }
-            const first_project_id = JSON.parse(body).projects[0].id;
-            console.log(first_project_id);
-            request.post({
-                url: 'http://183.111.177.141/identity/v3/auth/tokens',
-                headers: {
-                    'x-auth-token': req.user.tokenId
-                },
-                body: JSON.stringify({
+        }).then(res => {
+            if (res.data.projects?.length < 1)
+                throw error('project property error');
+            const first_project_id = res.data.projects[0].id;
+            return axios.post('http://183.111.177.141/identity/v3/auth/tokens',
+                {
                     auth: {
                         identity: {
                             methods: ['token'],
@@ -122,16 +111,15 @@ passport.use(new KeystoneStrategy({
                             }
                         }
                     }
-                })
-            }, (err, response, body) => {
-                if (err) {
-                    console.error(err);
-                    return;
+                }, {
+                headers: {
+                    'x-auth-token': req.user.tokenId
                 }
-                req.user.tokenId2 = response.headers['x-subject-token'];
-                done(null, req.user);
-            });
-        });
+            })
+        }).then(res => {
+            req.user.tokenId2 = res.headers['x-subject-token'];
+            done(null, req.user);
+        }).catch(err => console.error(err));
     }
 ));
 

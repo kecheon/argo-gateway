@@ -1,22 +1,75 @@
 const router = require('express').Router();
-const request = require('request');
+const axios = require('axios');
 
-router.get('/', (req, res) => {
+const ksUserUrl = 'http://183.111.177.141/identity/v3/users';
+
+router.get('/', async (req, res) => {
     if (req.isUnauthenticated()) {
         res.sendStatus(401);
         return;
     }
-    request({
-        url: 'http://183.111.177.141/identity/v3/users',
-        headers: {
-            'x-auth-token':req.user.tokenId2
-        }
-    }, (err, response, body) => {
-            if (err) console.error(err);
-            console.log(response);
-            console.log(body);
-            res.send('got list');
-    })
-})
+    else if (!req.user.tokenId2) {
+        res.status(401).send('second token needed');
+        return;
+    }
+    try {
+        const response = await axios.get(ksUserUrl, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    if (req.isUnauthenticated()) {
+        res.sendStatus(401);
+        return;
+    }
+    else if (!req.user.tokenId2) {
+        res.status(401).send('second token needed');
+        return;
+    }
+    try {
+        const response = await axios.get(ksUserUrl + '/' + req.params.id, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
+
+router.post('/', async (req, res) => {
+    if (req.isUnauthenticated()) {
+        res.sendStatus(401);
+        return;
+    }
+    else if (!req.user.tokenId2) {
+        res.status(401).send('second token needed');
+        return;
+    }
+    try {
+        const response = await axios.post(ksUserUrl, req.body, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.sendStatus(response.status);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 module.exports = router;

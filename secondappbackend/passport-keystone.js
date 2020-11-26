@@ -1,4 +1,4 @@
-var passport = require('passport-strategy'),
+const passport = require('passport-strategy'),
     util = require('util'),
     Identity = require('./pkgcloud/pkgcloud').providers.openstack.identity;
 
