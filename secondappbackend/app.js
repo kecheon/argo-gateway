@@ -11,7 +11,6 @@ const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
 
 const KeystoneStrategy = require('./passport-keystone');
-const { error } = require('console');
 
 const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
@@ -52,76 +51,44 @@ passport.deserializeUser(function (obj, done) {
 
 passport.use(new KeystoneStrategy({
     authUrl: 'http://183.111.177.141/identity/v3/auth/tokens'
-}, /*(req, identity, done) => {
-        console.log('req: ');
-        console.log(req);
-        console.log('identity: ');
-        console.log(identity);
-        console.log('done function: ?');
-        console.dir(done);
-    if (!req.user) {
-
-        // Handle V3 API differences
-        var newCatalog = {};
-        if (identity.serviceCatalog) {
-            newCatalog = identity.serviceCatalog;
-        } else {
-            newCatalog = identity.raw.access.serviceCatalog;
-        }
-
-        var user = {
-            id: identity.user.id,
-            token: identity.token.id,
-            username: identity.user.name,
-            serviceCatalog: newCatalog,
-            domainName:'default'
-        };
-
-        // Set session expiration to token expiration
-        req.session.cookie.expires = Date.parse(identity.token.expires) - Date.now();
-
-        done(null, user);
-    } else {
-        // user already exists
-        var user = req.user; // pull the user out of the session
-        return identity(null, user);
-    }
-}*/ (req, done) => {
-        req.user.tokenId = req.token.id;
-        axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+}, async (req, done) => {
+    req.user.tokenId = req.token.id;
+    try {
+        const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
-        }).then(res => {
-            if (res.data.projects?.length < 1)
-                throw error('project property error');
-            const first_project_id = res.data.projects[0].id;
-            return axios.post('http://183.111.177.141/identity/v3/auth/tokens',
-                {
-                    auth: {
-                        identity: {
-                            methods: ['token'],
-                            token: {
-                                id: req.user.tokenId
-                            }
-                        },
-                        scope: {
-                            project: {
-                                id: first_project_id
-                            }
+        });
+        if (projectres.data.projects?.length < 1)
+            throw new Error('project property error');
+        const first_project_id = projectres.data.projects[0].id;
+        const tokenres = await axios.post('http://183.111.177.141/identity/v3/auth/tokens',
+            {
+                auth: {
+                    identity: {
+                        methods: ['token'],
+                        token: {
+                            id: req.user.tokenId
+                        }
+                    },
+                    scope: {
+                        project: {
+                            id: first_project_id
                         }
                     }
-                }, {
-                headers: {
-                    'x-auth-token': req.user.tokenId
                 }
-            })
-        }).then(res => {
-            req.user.tokenId2 = res.headers['x-subject-token'];
-            done(null, req.user);
-        }).catch(err => console.error(err));
+            }, {
+            headers: {
+                'x-auth-token': req.user.tokenId
+            }
+        });
+        req.user.tokenId2 = tokenres.headers['x-subject-token'];
+        done(null, req.user);
     }
-));
+    catch (err) {
+        console.error(err);
+    }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
