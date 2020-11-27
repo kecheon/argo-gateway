@@ -1,10 +1,10 @@
 'use strict';
-var debug = require('debug');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const debug = require('debug');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
@@ -41,13 +41,9 @@ app.use(session({
     saveUninitialized: false
 }));
 
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
 
-passport.deserializeUser(function (obj, done) {
-    done(null, obj);
-});
+passport.deserializeUser((obj, done) => done(null, obj));
 
 passport.use(new KeystoneStrategy({
     authUrl: 'http://183.111.177.141/identity/v3/auth/tokens'
@@ -95,9 +91,7 @@ app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
     '/cluster-workflow-templates/?', '/login', '/login/*'],
-    function (req, res) {
-        res.sendFile(path.join(rootPath, 'index.html'));
-    });
+    (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
 ///////////////////////////
 app.use(express.static(rootPath, { index: false }));
@@ -136,6 +130,5 @@ app.use(function (err, req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
-});
+var server = app.listen(app.get('port'), ()=>
+    debug('Express server listening on port ' + server.address().port));

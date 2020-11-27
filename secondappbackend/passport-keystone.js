@@ -47,7 +47,8 @@ function Strategy(options, verify) {
         options = {};
     }
 
-    if (!verify) { throw new TypeError('KeystoneStrategy requires a verify callback'); }
+    if (!verify)
+        throw new TypeError('KeystoneStrategy requires a verify callback');
 
     this._usernameField = options.usernameField || 'username';
     this._passwordField = options.passwordField || 'password';
@@ -103,20 +104,17 @@ Strategy.prototype.authenticate = function (req, options) {
     config.region = this._region;
     config.tenantId = this._tenantId;
 
-    if (config.domainName) {
+    if (config.domainName)
         config.keystoneAuthVersion = 'v3';
-    }
 
-    if (!config.username || !config.password) {
+    if (!config.username || !config.password)
         return this.fail({ message: options.badRequestMessage || 'Missing credentials' }, 400);
-    }
     var self = this;
 
-    if (!config.authUrl) {
+    if (!config.authUrl)
         return this.fail({ message: options.badRequestMessage || 'Missing Identity Endpoint' }, 400);
-    }
 
-    var verified = function (self) {
+    const verified = (self) => {
         // Callback given to user given verify function.
         return function (err, user, info) {
             if (err) return self.error(err);
