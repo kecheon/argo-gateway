@@ -18,7 +18,17 @@ router.get('/', async (req, res) => {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        res.send(response.data);
+        let users = response.user.filter(elem => elem.is_wf && ('default_project_id' in elem)
+            && ('domain_id' in elem));
+        users.forEach(elem => {
+            delete elem.is_wf;
+            delete elem.links;
+            delete elem.options;
+            delete elem.password_expires_at;
+            elem.sa = elem.wf.k8s_sa;
+            delete elem.wf;
+        })
+        res.send(users);
     }
     catch (err) {
         console.error(err);

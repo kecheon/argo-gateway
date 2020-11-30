@@ -22,7 +22,9 @@ export class AppComponent implements OnInit {
   isOpened: boolean = true;
   sidenavMode: 'side' | 'over' | 'push' = 'side';
 
-  user: UserData = {};
+  user: {
+    name: string
+  } = {name:''};
 
   handleMenu(sidemenu: any) {
     if (window.outerWidth < 800)
@@ -30,9 +32,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._userService.getUser()
-      .subscribe(user => this.user.name = user, err => {
-        this.user = {};
+    this._userService.getAccountUser()
+      .subscribe(data => this.user.name = data, err => {
+        this.user = { name: '' };
         catchError(err);
       });
   }

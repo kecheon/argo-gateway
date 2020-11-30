@@ -13,7 +13,8 @@ import { WorkflowsComponent } from './workflows.component';
 import { WorkflowTComponent } from './workflow-t.component';
 import { CWorkflowTComponent } from './c-workflow-t.component';
 import { MaterialModule } from './material.module';
-import {LoggedIn,NotLoggedIn } from './check-login'
+import {LoggedIn,NotLoggedIn } from './check-login';
+import { UsermanagerComponent } from './usermanager.component'
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {LoggedIn,NotLoggedIn } from './check-login'
     HomeComponent,
     WorkflowsComponent,
     WorkflowTComponent,
-    CWorkflowTComponent
+    CWorkflowTComponent,
+    UsermanagerComponent
   ],
   imports: [
     BrowserModule,

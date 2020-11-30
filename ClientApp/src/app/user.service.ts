@@ -14,7 +14,22 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  getUser(): Observable<string>{
+  getAccountUser(): Observable<string>{
     return this.http.get('/account/info', { responseType:'text' });
+  }
+  getUsers(): Observable<UserData[]> {
+    return this.http.get<UserData[]>('/user');
+  }
+
+  getUser(id: string): Observable<UserData> {
+    return this.http.get<UserData>('/user/' + id);
+  }
+
+  createUser(user: UserData): Observable<string> {
+    return this.http.post('/user', user, { responseType:'text' });
+  }
+
+  deleteUser(id: string): Observable<string> {
+    return this.http.delete('/user/' + id, { responseType: 'text' });
   }
 }
