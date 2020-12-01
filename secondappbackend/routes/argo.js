@@ -246,6 +246,63 @@ router.put('/cron-workflows/:namespace/:name/suspend', ensureAuthenticated, asyn
     }
 });
 
+router.post('/events/:namespace/:discriminator', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.post(endurl + 'events/' + req.params.namespace + '/'
+            + req.params.discriminator, req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/info', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'info', {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/userinfo', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'userinfo', {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/version', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'version', {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         if ((tokenId in req.user) && (tokenId2 in req.user) && (k8s_token in req.user))
