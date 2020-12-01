@@ -87,7 +87,7 @@ router.post('/cluster-workflow-templates/lint', ensureAuthenticated, async (req,
     }
 });
 
-router.get('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+router.get('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cluster-workflow-templates/' + req.params.name, {
             headers: {
@@ -101,7 +101,7 @@ router.get('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) 
     }
 });
 
-router.put('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+router.put('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
     try {
         const response = await axios.put(endurl + 'cluster-workflow-templates/' + req.params.name, req.body, {
             headers: {
@@ -115,7 +115,7 @@ router.put('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) 
     }
 });
 
-router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'cluster-workflow-templates/' + req.params.name, {
             headers: {
@@ -129,6 +129,122 @@ router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, (req, re
     }
 });
 
+router.get('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data.items);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.post('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.post(endurl + 'cron-workflows/' + req.params.namespace, req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.post('/cron-workflows/:namespace/lint', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.post(endurl + 'cron-workflows/' + req.params.namespace + '/lint', req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace + '/' +
+            req.params.name, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.put('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
+            req.params.name, req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.delete('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.delete(endurl + 'cron-workflows/' + req.params.namespace + '/' +
+            req.params.name, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.put('/cron-workflows/:namespace/:name/resume', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
+            req.params.name + '/resume', req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.put('/cron-workflows/:namespace/:name/suspend', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
+            req.params.name + '/suspend', req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
