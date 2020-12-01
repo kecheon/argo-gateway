@@ -6,8 +6,9 @@ import { HomeComponent } from './home.component';
 import { CWorkflowTComponent } from './c-workflow-t.component';
 import { WorkflowTComponent } from './workflow-t.component';
 import { WorkflowsComponent } from './workflows.component';
+import { UsermanagerComponent } from './usermanager.component';
 
-import { LoggedIn, NotLoggedIn } from './check-login';
+import { LoggedIn, NotLoggedIn, IsAdmin } from './check-login';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'cluster-workflow-templates', component: CWorkflowTComponent,
     canActivate: [LoggedIn]
+  },
+  {
+    path: 'user-manager', component: UsermanagerComponent,
+    canActivate: [IsAdmin]
   }
 ];
 

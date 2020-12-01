@@ -42,3 +42,22 @@ export class LoggedIn implements CanActivate {
       }));
   }
 }
+
+@Injectable()
+export class IsAdmin implements CanActivate {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) { }
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ) {
+    return this.http.get('/user/admin', { responseType: 'text' })
+      .pipe(map(res => true), catchError(err => {
+        if (err.status != 401) return of(err);
+        else return this.router.navigate(['/']);
+      }));
+  }
+}

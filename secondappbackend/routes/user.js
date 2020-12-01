@@ -36,6 +36,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/admin', (res, res) => {
+    if (req.isUnauthenticated()) {
+        res.sendStatus(401);
+        return;
+    }
+    else if (!req.user.tokenId2) {
+        res.status(401).send('second token needed');
+        return;
+    }
+    else if (res.user.name == 'admin')
+        res.send('admin ok');
+    else
+        res.status(401).send('not admin');
+});
+
 router.get('/:id', async (req, res) => {
     if (req.isUnauthenticated()) {
         res.sendStatus(401);
