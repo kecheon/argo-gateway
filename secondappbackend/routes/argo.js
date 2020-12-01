@@ -61,7 +61,21 @@ router.get('/cluster-workflow-templates', ensureAuthenticated, async (req, res) 
 
 router.post('/cluster-workflow-templates', ensureAuthenticated, async (req, res) => {
     try {
-        const response = axios.post(endurl + 'cluster-workflow-templates', req.body, {
+        const response = await axios.post(endurl + 'cluster-workflow-templates', req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.post('/cluster-workflow-templates/lint', ensureAuthenticated, async (req, res) => {
+    try {
+        const response = await axios.post(endurl + 'cluster-workflow-templates/lint', req.body, {
             headers: {
                 Authorization: req.user.k8s_token
             }
