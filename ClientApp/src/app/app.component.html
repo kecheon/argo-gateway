@@ -366,6 +366,12 @@
             Cluster Workflow Templates
           </button>
         </mat-list-item>
+        <mat-list-item>
+          <button mat-button [disabled]="!user.name" routerLink="/user-manager"
+                  (click)="handleMenu(sidemenu)">
+            User Manager ( admin only )
+          </button>
+        </mat-list-item>
       </mat-list>
     </mat-drawer>
     <mat-drawer-content fxLayout="column">
