@@ -14,6 +14,8 @@ const KeystoneStrategy = require('./passport-keystone');
 
 const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
+const k8sstore = require('./k8stoken');
+
 const sqlOptions = {
     host: 'localhost',
     port: 3306,
@@ -79,6 +81,11 @@ passport.use(new KeystoneStrategy({
             }
         });
         req.user.tokenId2 = tokenres.headers['x-subject-token'];
+        const k8sadmin_session = await k8k8sstore.getSession();
+        const data = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute();
+        req.user.k8s_endpoint = data[3];
+        req.user.k8s_token = data[5];
+
         done(null, req.user);
     }
     catch (err) {
@@ -100,6 +107,25 @@ app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
 app.use('/kube', require('./routes/kubectl'));
+app.get('/kubetoken', (req, res) => {
+    if (req.isUnauthenticated()) {
+        res.sendStatus(401);
+        return;
+    }
+    else if (!req.user.tokenId2) {
+        res.status(401).send('second token needed');
+        return;
+    }
+    else {
+        if (k8s_token in req.user)
+            res.send(req.user.k8s_token);
+        else {
+            console.error('somethings wrong, authenticated but no k8s token');
+            res.sendStatus(500);
+        }
+
+    }
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
