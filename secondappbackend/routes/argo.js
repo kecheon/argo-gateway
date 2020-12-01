@@ -87,6 +87,48 @@ router.post('/cluster-workflow-templates/lint', ensureAuthenticated, async (req,
     }
 });
 
+router.get('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'cluster-workflow-templates/' + req.params.name, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.put('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+    try {
+        const response = await axios.put(endurl + 'cluster-workflow-templates/' + req.params.name, req.body, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, (req, res) => {
+    try {
+        const response = await axios.delete(endurl + 'cluster-workflow-templates/' + req.params.name, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
