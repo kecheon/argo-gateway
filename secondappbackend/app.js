@@ -81,7 +81,7 @@ passport.use(new KeystoneStrategy({
             }
         });
         req.user.tokenId2 = tokenres.headers['x-subject-token'];
-        const k8sadmin_session = await k8k8sstore.getSession();
+        const k8sadmin_session = await k8sstore.getSession();
         const data = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute();
         req.user.k8s_endpoint = data[3];
         req.user.k8s_token = data[5];

@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/admin', (res, res) => {
+router.get('/admin', (req, res) => {
     if (req.isUnauthenticated()) {
         res.sendStatus(401);
         return;
