@@ -97,7 +97,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
-    '/cluster-workflow-templates/?', '/login', '/login/*','/user-manager/?'],
+    '/cluster-workflow-templates/?', '/login', '/login','/user-manager/?'],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
 ///////////////////////////
@@ -107,7 +107,9 @@ app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
 app.use('/kube', require('./routes/kubectl'));
-app.get('/kubetoken', (req, res) => {
+
+// security flaw
+/*app.get('/kubetoken', (req, res) => {
     if (req.isUnauthenticated()) {
         res.sendStatus(401);
         return;
@@ -125,7 +127,7 @@ app.get('/kubetoken', (req, res) => {
         }
 
     }
-})
+})*/
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

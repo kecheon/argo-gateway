@@ -134,6 +134,9 @@
     </Content>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="routes\argo.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="routes\kubectl.js">
       <SubType>Code</SubType>
     </Content>
