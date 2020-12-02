@@ -3,7 +3,9 @@ const axios = require('axios');
 
 const endurl = 'http://20.194.32.137:32000/api/v1/';
 
-router.get('/archived-workflows', ensureAuthenticated, async (req, res) => {
+router.all('/*', ensureAuthenticated);
+
+router.get('/archived-workflows', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'archived-workflows', {
             headers: {
@@ -17,7 +19,7 @@ router.get('/archived-workflows', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/archived-workflows/:uid', ensureAuthenticated, async (req, res) => {
+router.get('/archived-workflows/:uid', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'archived-workflows/' + req.params.uid, {
             headers: {
@@ -31,7 +33,7 @@ router.get('/archived-workflows/:uid', ensureAuthenticated, async (req, res) => 
     }
 });
 
-router.delete('/archived-workflows/:uid', ensureAuthenticated, async (req, res) => {
+router.delete('/archived-workflows/:uid', async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'archived-workflows/' + req.params.uid, {
             headers: {
@@ -45,7 +47,7 @@ router.delete('/archived-workflows/:uid', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.get('/cluster-workflow-templates', ensureAuthenticated, async (req, res) => {
+router.get('/cluster-workflow-templates', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cluster-workflow-templates', {
             headers: {
@@ -59,7 +61,7 @@ router.get('/cluster-workflow-templates', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.post('/cluster-workflow-templates', ensureAuthenticated, async (req, res) => {
+router.post('/cluster-workflow-templates', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'cluster-workflow-templates', req.body, {
             headers: {
@@ -73,7 +75,7 @@ router.post('/cluster-workflow-templates', ensureAuthenticated, async (req, res)
     }
 });
 
-router.post('/cluster-workflow-templates/lint', ensureAuthenticated, async (req, res) => {
+router.post('/cluster-workflow-templates/lint', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'cluster-workflow-templates/lint', req.body, {
             headers: {
@@ -87,7 +89,7 @@ router.post('/cluster-workflow-templates/lint', ensureAuthenticated, async (req,
     }
 });
 
-router.get('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
+router.get('/cluster-workflow-templates/:name', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cluster-workflow-templates/' + req.params.name, {
             headers: {
@@ -101,7 +103,7 @@ router.get('/cluster-workflow-templates/:name', ensureAuthenticated, async (req,
     }
 });
 
-router.put('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
+router.put('/cluster-workflow-templates/:name', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'cluster-workflow-templates/' + req.params.name, req.body, {
             headers: {
@@ -115,7 +117,7 @@ router.put('/cluster-workflow-templates/:name', ensureAuthenticated, async (req,
     }
 });
 
-router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, async (req, res) => {
+router.delete('/cluster-workflow-templates/:name', async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'cluster-workflow-templates/' + req.params.name, {
             headers: {
@@ -129,7 +131,7 @@ router.delete('/cluster-workflow-templates/:name', ensureAuthenticated, async (r
     }
 });
 
-router.get('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) => {
+router.get('/cron-workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace, {
             headers: {
@@ -143,7 +145,7 @@ router.get('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) =
     }
 });
 
-router.post('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) => {
+router.post('/cron-workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'cron-workflows/' + req.params.namespace, req.body, {
             headers: {
@@ -157,7 +159,7 @@ router.post('/cron-workflows/:namespace', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.post('/cron-workflows/:namespace/lint', ensureAuthenticated, async (req, res) => {
+router.post('/cron-workflows/:namespace/lint', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'cron-workflows/' + req.params.namespace + '/lint', req.body, {
             headers: {
@@ -171,7 +173,7 @@ router.post('/cron-workflows/:namespace/lint', ensureAuthenticated, async (req, 
     }
 });
 
-router.get('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.get('/cron-workflows/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace + '/' +
             req.params.name, {
@@ -186,7 +188,7 @@ router.get('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, 
     }
 });
 
-router.put('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.put('/cron-workflows/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
             req.params.name, req.body, {
@@ -201,7 +203,7 @@ router.put('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, 
     }
 });
 
-router.delete('/cron-workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.delete('/cron-workflows/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'cron-workflows/' + req.params.namespace + '/' +
             req.params.name, {
@@ -216,7 +218,7 @@ router.delete('/cron-workflows/:namespace/:name', ensureAuthenticated, async (re
     }
 });
 
-router.put('/cron-workflows/:namespace/:name/resume', ensureAuthenticated, async (req, res) => {
+router.put('/cron-workflows/:namespace/:name/resume', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
             req.params.name + '/resume', req.body, {
@@ -231,7 +233,7 @@ router.put('/cron-workflows/:namespace/:name/resume', ensureAuthenticated, async
     }
 });
 
-router.put('/cron-workflows/:namespace/:name/suspend', ensureAuthenticated, async (req, res) => {
+router.put('/cron-workflows/:namespace/:name/suspend', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'cron-workflows/' + req.params.namespace + '/' +
             req.params.name + '/suspend', req.body, {
@@ -246,7 +248,7 @@ router.put('/cron-workflows/:namespace/:name/suspend', ensureAuthenticated, asyn
     }
 });
 
-router.post('/events/:namespace/:discriminator', ensureAuthenticated, async (req, res) => {
+router.post('/events/:namespace/:discriminator', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'events/' + req.params.namespace + '/'
             + req.params.discriminator, req.body, {
@@ -261,7 +263,7 @@ router.post('/events/:namespace/:discriminator', ensureAuthenticated, async (req
     }
 });
 
-router.get('/info', ensureAuthenticated, async (req, res) => {
+router.get('/info', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'info', {
             headers: {
@@ -275,7 +277,7 @@ router.get('/info', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/userinfo', ensureAuthenticated, async (req, res) => {
+router.get('/userinfo', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'userinfo', {
             headers: {
@@ -289,7 +291,7 @@ router.get('/userinfo', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/version', ensureAuthenticated, async (req, res) => {
+router.get('/version', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'version', {
             headers: {
@@ -303,7 +305,7 @@ router.get('/version', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/stream/events/:namespace', ensureAuthenticated, async (req, res) => {
+router.get('/stream/events/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'stream/events/' + req.params.namespace, {
             headers: {
@@ -317,7 +319,7 @@ router.get('/stream/events/:namespace', ensureAuthenticated, async (req, res) =>
     }
 });
 
-router.get('/workflow-events/:namespace', ensureAuthenticated, async (req, res) => {
+router.get('/workflow-events/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflow-events/' + req.params.namespace, {
             headers: {
@@ -331,7 +333,7 @@ router.get('/workflow-events/:namespace', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.get('/workflows/:namespace', ensureAuthenticated, async (req, res) => {
+router.get('/workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/' + req.params.namespace, {
             headers: {
@@ -345,7 +347,7 @@ router.get('/workflows/:namespace', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.post('/workflows/:namespace', ensureAuthenticated, async (req, res) => {
+router.post('/workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/' + req.params.namespace, req.body, {
             headers: {
@@ -359,7 +361,7 @@ router.post('/workflows/:namespace', ensureAuthenticated, async (req, res) => {
     }
 });
 
-router.post('/workflows/:namespace/lint', ensureAuthenticated, async (req, res) => {
+router.post('/workflows/:namespace/lint', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/' + req.params.namespace +'/lint',
             req.body, {
@@ -374,7 +376,7 @@ router.post('/workflows/:namespace/lint', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.post('/workflows/:namespace/submit', ensureAuthenticated, async (req, res) => {
+router.post('/workflows/:namespace/submit', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/' + req.params.namespace + '/submit',
             req.body, {
@@ -389,7 +391,7 @@ router.post('/workflows/:namespace/submit', ensureAuthenticated, async (req, res
     }
 });
 
-router.get('/workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.get('/workflows/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/'
             + req.params.namespace + '/' + req.params.name, {
@@ -404,7 +406,7 @@ router.get('/workflows/:namespace/:name', ensureAuthenticated, async (req, res) 
     }
 });
 
-router.delete('/workflows/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.delete('/workflows/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'workflows/'
             + req.params.namespace + '/' + req.params.name, {
@@ -419,7 +421,7 @@ router.delete('/workflows/:namespace/:name', ensureAuthenticated, async (req, re
     }
 });
 
-router.get('/workflows/:namespace/:name/log', ensureAuthenticated, async (req, res) => {
+router.get('/workflows/:namespace/:name/log', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/'
             + req.params.namespace + '/' + req.params.name + '/log', {
@@ -434,7 +436,7 @@ router.get('/workflows/:namespace/:name/log', ensureAuthenticated, async (req, r
     }
 });
 
-router.put('/workflows/:namespace/:name/resubmit', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/resubmit', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/resubmit', req.body, {
@@ -449,7 +451,7 @@ router.put('/workflows/:namespace/:name/resubmit', ensureAuthenticated, async (r
     }
 });
 
-router.put('/workflows/:namespace/:name/resume', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/resume', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/resume', req.body, {
@@ -464,7 +466,7 @@ router.put('/workflows/:namespace/:name/resume', ensureAuthenticated, async (req
     }
 });
 
-router.put('/workflows/:namespace/:name/retry', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/retry', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/retry', req.body, {
@@ -479,7 +481,7 @@ router.put('/workflows/:namespace/:name/retry', ensureAuthenticated, async (req,
     }
 });
 
-router.put('/workflows/:namespace/:name/set', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/set', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/set', req.body, {
@@ -494,7 +496,7 @@ router.put('/workflows/:namespace/:name/set', ensureAuthenticated, async (req, r
     }
 });
 
-router.put('/workflows/:namespace/:name/stop', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/stop', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/stop', req.body, {
@@ -509,7 +511,7 @@ router.put('/workflows/:namespace/:name/stop', ensureAuthenticated, async (req, 
     }
 });
 
-router.put('/workflows/:namespace/:name/suspend', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/suspend', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/suspend', req.body, {
@@ -524,7 +526,7 @@ router.put('/workflows/:namespace/:name/suspend', ensureAuthenticated, async (re
     }
 });
 
-router.put('/workflows/:namespace/:name/terminate', ensureAuthenticated, async (req, res) => {
+router.put('/workflows/:namespace/:name/terminate', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows' + req.params.namespace + '/'
             + req.params.name + '/terminate', req.body, {
@@ -539,7 +541,7 @@ router.put('/workflows/:namespace/:name/terminate', ensureAuthenticated, async (
     }
 });
 
-router.get('/workflows/:namespace/:name/:podname/log', ensureAuthenticated, async (req, res) => {
+router.get('/workflows/:namespace/:name/:podname/log', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/'
             + req.params.namespace + '/' + req.params.name + '/' + req.params.podname + '/log', {
@@ -554,7 +556,7 @@ router.get('/workflows/:namespace/:name/:podname/log', ensureAuthenticated, asyn
     }
 });
 
-router.get('/workflow-templates/:namespace', ensureAuthenticated, async (req, res) => {
+router.get('/workflow-templates/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows-templates/' + req.params.namespace, {
             headers: {
@@ -568,7 +570,7 @@ router.get('/workflow-templates/:namespace', ensureAuthenticated, async (req, re
     }
 });
 
-router.post('/workflow-templates/:namespace', ensureAuthenticated, async (req, res) => {
+router.post('/workflow-templates/:namespace', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'workflows-templates/' + req.params.namespace,
             req.body, {
@@ -583,7 +585,7 @@ router.post('/workflow-templates/:namespace', ensureAuthenticated, async (req, r
     }
 });
 
-router.post('/workflow-templates/:namespace/lint', ensureAuthenticated, async (req, res) => {
+router.post('/workflow-templates/:namespace/lint', async (req, res) => {
     try {
         const response = await axios.post(endurl + 'workflows-templates/'
             + req.params.namespace + '/lint', req.body, {
@@ -598,7 +600,7 @@ router.post('/workflow-templates/:namespace/lint', ensureAuthenticated, async (r
     }
 });
 
-router.get('/workflow-templates/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.get('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows-templates/'
             + req.params.namespace + '/' + req.params.name, {
@@ -613,7 +615,7 @@ router.get('/workflow-templates/:namespace/:name', ensureAuthenticated, async (r
     }
 });
 
-router.put('/workflow-templates/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.put('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.put(endurl + 'workflows-templates/'
             + req.params.namespace + '/'+req.params.name, req.body, {
@@ -628,7 +630,7 @@ router.put('/workflow-templates/:namespace/:name', ensureAuthenticated, async (r
     }
 });
 
-router.delete('/workflow-templates/:namespace/:name', ensureAuthenticated, async (req, res) => {
+router.delete('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
         const response = await axios.delete(endurl + 'workflows-templates/'
             + req.params.namespace + '/' + req.params.name, {
