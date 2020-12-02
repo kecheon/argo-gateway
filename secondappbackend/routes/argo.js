@@ -647,7 +647,7 @@ router.delete('/workflow-templates/:namespace/:name', async (req, res) => {
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        if ((tokenId in req.user) && (tokenId2 in req.user) && (k8s_token in req.user))
+        if (('tokenId' in req.user) && ('tokenId2' in req.user) && ('k8s_token' in req.user))
             next();
         else {
             console.error('authenticated but some tokens are missing');
