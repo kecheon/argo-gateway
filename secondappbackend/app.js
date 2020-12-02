@@ -17,10 +17,10 @@ const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 const k8sstore = require('./k8stoken');
 
 const sqlOptions = {
-    host: 'localhost',
+    host: '20.194.32.137',
     port: 3306,
-    user: 'alan',
-    password: '1234',
+    user: 'argo',
+    password: 'devstack',
     database: 'tempdb'
 }
 

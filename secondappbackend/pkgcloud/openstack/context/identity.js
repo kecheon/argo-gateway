@@ -185,7 +185,6 @@ Identity.prototype.authorize = function (options, callback) {
   // Don't keep a copy of the credentials in memory
   delete self._authenticationPayload;
     request(authenticationOptions, function (err, response, body) {
-        console.log(response.headers);
     // check for a network error, or a handled error
     var err2 = getError(err, response, body);
 
