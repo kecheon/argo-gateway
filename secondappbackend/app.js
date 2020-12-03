@@ -57,7 +57,7 @@ passport.use(new KeystoneStrategy({
                 'x-auth-token': req.user.tokenId
             }
         });
-        if (projectres.data.projects?.length < 1)
+        if (projectres.data.projects.length < 1)
             throw new Error('project property error');
         const first_project_id = projectres.data.projects[0].id;
         const tokenres = await axios.post('http://183.111.177.141/identity/v3/auth/tokens',

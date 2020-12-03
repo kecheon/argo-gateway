@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const passport = require('passport');
+const KeystoneStrategy = require('../passport-keystone');
 
 router.post('/login',
-    passport.authenticate('keystone', { failureRedirect: '/login' }),
+    passport.authenticate(KeystoneStrategy.name, { failureRedirect: '/login' }),
     (req, res) => res.redirect('/')
 );
 
