@@ -8,8 +8,10 @@
     <form action="/account/login" ngNoForm
           method="post" fxLayout="column">
       <mat-form-field>
-        <input matInput type="text" name="username" placeholder="user id"
-               ngModel required>
+        <mat-label>Username(email)</mat-label>
+        <input matInput type="text" name="username" placeholder="aaa@abc.com"
+               ngModel [formControl]="email" required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
       <div fxLayout="column">
         <button mat-raised-button (click)="resetId()" type="button" color="accent">
