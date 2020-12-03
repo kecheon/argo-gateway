@@ -6,13 +6,15 @@
       <mat-label>
         name
       </mat-label>
-      <input mat-input required>
+      <input mat-input [formControl]="name" required>
+      <mat-error *ngIf="name.invalid">{{getNameErrorMsg()}}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>
         e-mail
       </mat-label>
-      <input mat-input required>
+      <input mat-input [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getEmailErrorMsg()}}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
