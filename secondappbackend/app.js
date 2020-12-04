@@ -24,6 +24,7 @@ var app = express();
 app.use(cors());
 
 app.use(cors());
+applyPassportStrategy(passport)
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
@@ -31,10 +32,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-applyPassportStrategy(passport)
 
 passport.serializeUser((user, done) => done(null, user));
-
 passport.deserializeUser((obj, done) => done(null, obj));
 
 passport.use(new KeystoneStrategy({

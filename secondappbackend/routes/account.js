@@ -43,9 +43,10 @@ const loginValidation = [
 //     }
 // })
 router.post('/login',
-    passport.authenticate('keystone', { failureRedirect: '/login' }),
+    passport.authenticate('keystone'),
     (req, res) => {
         const { user } = req;
+        console.log(user);
         const jwtToken = jwt.sign({ user: user }, 'do not need to know',         
             {
               expiresIn: 1000000,
