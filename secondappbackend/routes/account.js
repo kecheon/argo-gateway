@@ -3,8 +3,12 @@ const passport = require('passport');
 const KeystoneStrategy = require('../passport-keystone');
 
 router.post('/login',
-    passport.authenticate('keystone', { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/')
+    passport.authenticate('keystone'),
+    (req, res) => {
+        console.log(req);
+        const data = {status: 'success', user: req.user};
+        res.status(200).json(data)
+    }
 );
 
 // need for user info retrieval

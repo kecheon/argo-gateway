@@ -107,7 +107,7 @@ app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
 app.use('/kube', require('./routes/kubectl'));
-app.use('/argo', require('./routes/argo'));
+app.use('/api/v1', require('./routes/argo'));
 
 // security flaw
 /*app.get('/kubetoken', (req, res) => {
