@@ -6,15 +6,19 @@
       <mat-label>
         name
       </mat-label>
-      <input mat-input [formControl]="name" required>
+      <input mat-input name="name" [formControl]="name" required>
       <mat-error *ngIf="name.invalid">{{getNameErrorMsg()}}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>
         e-mail
       </mat-label>
-      <input mat-input [formControl]="email" required>
+      <input mat-input name="email" placeholder="aaa@abc.com" [formControl]="email" required>
       <mat-error *ngIf="email.invalid">{{getEmailErrorMsg()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" name="password" placeholder="password" [formControl]="password" required>
+      <mat-error *ngIf="password.invalid">{{getPasswordErrrorMsg()}}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>

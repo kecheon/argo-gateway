@@ -5,8 +5,10 @@ export class UserData {
   email: string;
   enabled: boolean;
   default_project_id: string;
+  default_project_name: string;
   descriotion: string;
   sa: string;
+  default_project_role: string;
 }
 
 export class UserCreationData {

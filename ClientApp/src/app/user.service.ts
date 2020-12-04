@@ -14,8 +14,8 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  getAccountUser(): Observable<string>{
-    return this.http.get('/account/info', { responseType:'text' });
+  getAccountUser(): Observable<UserData>{
+    return this.http.get<UserData>('/account/info');
   }
   getUsers(): Observable<UserData[]> {
     return this.http.get<UserData[]>('/user');
