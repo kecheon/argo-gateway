@@ -7,7 +7,7 @@ const headers = {
     Authorization: 'Bearer gAAAAABfyOebWvjdszziwArZYj0IOafq__GUebCMAgrD7Wc8Jv35UrOSGZg4hGeG4ScXd3k0AgRmSxGb6YwxjD13l1KyCsbRnL66iOFtfLilhm0aEbpJjMrMuM7ZqsSXQo6jSwrFOUhLyfFC9Wrh-IReOA8fB5eEQAmUyu2FHOhDezIa5uwwrLsSiJuivO_dBBH5eRhBGm7H'
 }
 
-// router.all('/*', passport.authenticate('jwt', { session: false }));
+router.all('/*', passport.authenticate('jwt', { session: false }));
 /********** 
 req.user object is only set when you use a passport authentication strategy that uses sessions. 
 In this case, the authentication is stateless since you have specified {session: false}, which is how it should be for an api. Thus, the session does not have a user object. Here is how I set my req.user object in the passport.authenticate middleware:
