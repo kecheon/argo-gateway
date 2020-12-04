@@ -27,7 +27,7 @@ router.get('/notLoggedIn', function (req, res) {
 });
 
 router.get('/info', (req, res) => {
-    if (req.isAuthenticated()) res.send(req.user.name);
+    if (req.isAuthenticated()) res.send(req.user);
     else res.sendStatus(401);
 });
 

@@ -52,14 +52,33 @@ passport.use(new KeystoneStrategy({
 }, async (req, done) => {
     req.user.tokenId = req.token.id;
     try {
-        const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+        /*const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
         });
         if (projectres.data.projects?.length < 1)
             throw new Error('project property error');
-        const first_project_id = projectres.data.projects[0].id;
+        const first_project_id = projectres.data.projects[0].id;*/
+        const userinfo = await axios.get('http://183.111.177.141/identity/v3/users/' + req.user.id, {
+            headers: {
+                'x-auth-token': req.user.tokenId
+            }
+        });
+        let default_project_id = '';
+        if ('default_project_id' in userinfo)
+            default_project_id = userinfo.default_project_id;
+        else {
+            const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+                headers: {
+                    'x-auth-token': req.user.tokenId
+                }
+            });
+            if (projectres.data.projects?.length < 1)
+                throw new Error('no project id');
+            else
+                default_project_id = projectres.data.projects[0].id;
+        }
         const tokenres = await axios.post('http://183.111.177.141/identity/v3/auth/tokens',
             {
                 auth: {
@@ -71,7 +90,7 @@ passport.use(new KeystoneStrategy({
                     },
                     scope: {
                         project: {
-                            id: first_project_id
+                            id: default_project_id
                         }
                     }
                 }
@@ -81,6 +100,10 @@ passport.use(new KeystoneStrategy({
             }
         });
         req.user.tokenId2 = tokenres.headers['x-subject-token'];
+        const tokenresdata = tokenres.data.token;
+        req.user.roles = tokenresdata.roles.map(elem => elem.name).filter(elem => /^wf\-/.test(elem));
+        req.user.default_project_id = tokenresdata.project.id;
+        req.user.default_project_name = tokenresdata.project.name;
         const k8sadmin_session = await k8sstore.getSession();
         const result = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute()
         const data = result.fetchOne();
