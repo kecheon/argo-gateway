@@ -27,7 +27,19 @@ router.get('/notLoggedIn', function (req, res) {
 });
 
 router.get('/info', (req, res) => {
-    if (req.isAuthenticated()) res.send(req.user);
+    if (req.isAuthenticated()) {
+        const user = req.user;
+        const userinfo = {
+            domain: user.domain,
+            id: user.id,
+            name: user.name,
+            roles: user.roles,
+            default_project_id: user.default_project_id,
+            default_project_name: user.default_project_name
+        };
+        res.send(userinfo);
+
+    }
     else res.sendStatus(401);
 });
 

@@ -109,7 +109,6 @@ passport.use(new KeystoneStrategy({
         const data = result.fetchOne();
         req.user.k8s_endpoint = data[3];
         req.user.k8s_token = 'Bearer ' + data[5];
-
         done(null, req.user);
     }
     catch (err) {
