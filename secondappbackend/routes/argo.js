@@ -1,9 +1,38 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 
 const endurl = 'http://20.194.32.137:32000/api/v1/';
 
-router.all('/*', ensureAuthenticated);
+// router.all('/*', passport.authenticate('jwt', { session: false }));
+/********** 
+req.user object is only set when you use a passport authentication strategy that uses sessions. 
+In this case, the authentication is stateless since you have specified {session: false}, which is how it should be for an api. Thus, the session does not have a user object. Here is how I set my req.user object in the passport.authenticate middleware:
+Modify your jwtOptions to enable passing the req object to JwtStrategy function:
+const jwtOptions = {  
+    // Telling Passport to check authorization headers for JWT
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    // Telling Passport where to find the secret
+    secretOrKey: config.secret,
+    passReqToCallback: true, //<= Important, so that the verify function can accept the req param ie verify(req,payload,done)
+  };
+Modify the parameters to your JwtStrategy to include the request object as the first parameter; then within the if (user) block, just assign the returned user object to req.user:
+const jwtLogin = new JwtStrategy(jwtOptions, function(req, payload, done) {
+    User.findById(payload._id, function(err, user) {
+      if (err) { return done(err, false); }
+
+      if (user) {
+        req.user = user; // <= Add this line
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    });
+  });
+That is it: now any route that has the passport.authenticate("jwt", {session: false}) middleware will receive req.user upon successful authentication.
+
+now every authenticated request has req.user 
+**********************/
 
 router.get('/archived-workflows', async (req, res) => {
     try {
@@ -292,10 +321,12 @@ router.get('/userinfo', async (req, res) => {
 });
 
 router.get('/version', async (req, res) => {
+    console.log(req.username);
+    console.log(req.prjToken);
     try {
         const response = await axios.get(endurl + 'version', {
             headers: {
-                Authorization: req.user.k8s_token
+                Authorization: 'Bearer gAAAAABfyOebWvjdszziwArZYj0IOafq__GUebCMAgrD7Wc8Jv35UrOSGZg4hGeG4ScXd3k0AgRmSxGb6YwxjD13l1KyCsbRnL66iOFtfLilhm0aEbpJjMrMuM7ZqsSXQo6jSwrFOUhLyfFC9Wrh-IReOA8fB5eEQAmUyu2FHOhDezIa5uwwrLsSiJuivO_dBBH5eRhBGm7H'
             }
         });
         res.send(response.data);

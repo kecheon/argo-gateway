@@ -1,11 +1,76 @@
 const router = require('express').Router();
 const passport = require('passport');
-const KeystoneStrategy = require('../passport-keystone');
+const jwt = require('jsonwebtoken');
+const { check } = require('express-validator');
+const endpoint = 'http://183.111.177.141/identity/v3';
+const axios = require('axios');
 
+const loginValidation = [
+    check('username')
+      .exists()
+      .withMessage('username empty'),
+    check('password')
+      .exists()
+      .withMessage('PASSWORD_IS_EMPTY')
+      .withMessage('PASSWORD_LENGTH_MUST_BE_MORE_THAN_8'),
+  ];
+
+// router.post('/login', loginValidation, async (req, res) => {
+//     const { username, password } = req.body;
+//     const data = {
+//         auth: {
+//             identity: {
+//                 methods: ['password'],
+//                 password: {
+//                     user: {name: username, domain: {id: 'default'}, password}
+//                 }
+//             }
+//         }
+//     };
+//     const url = `${endpoint}/auth/tokens`;
+//     const response = await axios.post(url, data);
+//     if (response.status === 201) {
+//         const token = response.headers['x-subject-token']
+//         const jwtToken = jwt.sign({ user: username }, 'do not need to know',         
+//         {
+//             expiresIn: 1000000,
+//         });
+//         const role = {role: { name: 'admin', level: 0 }};
+//         const userToReturn = { username, ...{ jwtToken }, ...role };
+//         console.log(userToReturn)
+//         delete userToReturn.hashedPassword;
+//         res.status(200).json(userToReturn);
+//     }
+// })
 router.post('/login',
-    passport.authenticate(KeystoneStrategy.name, { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/')
+    passport.authenticate('keystone', { failureRedirect: '/login' }),
+    (req, res) => {
+        const { user } = req;
+        const jwtToken = jwt.sign({ user: user }, 'do not need to know',         
+            {
+              expiresIn: 1000000,
+            });
+        const role = {role: { name: 'admin', level: 0 }};
+        const userToReturn = { ...user, ...{ jwtToken }, ...role };
+        console.log(userToReturn)
+        delete userToReturn.hashedPassword;
+        res.status(200).json(userToReturn)
+    }
 );
+// router.post('/login',
+//     passport.authenticate('keystone', { failureRedirect: '/login' }), async (req, res) => {
+//         const { user } = req;
+//         const jwtToken = await jwt.sign({ user: user }, 'do not need to know',         
+//             {
+//               expiresIn: 1000000,
+//             });
+//         const role = {role: { name: 'admin', level: 0 }};
+//         const userToReturn = { ...user, ...{ jwtToken }, ...role };
+//         console.log(userToReturn)
+//         delete userToReturn.hashedPassword;
+//         res.status(200).json(userToReturn);
+//     }
+// );
 
 // need for user info retrieval
 /*router.get('/info', function (req, res) {
