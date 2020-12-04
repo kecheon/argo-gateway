@@ -6,12 +6,11 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const session = require('express-session');
-const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
-const cors = require('cors');
+const applyPassportStrategy = require('./passport-jwt');
 const KeystoneStrategy = require('./passport-keystone');
 const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
+const cors = require('cors');
 const k8sstore = require('./k8stoken');
 
 const sqlOptions = {
@@ -21,10 +20,10 @@ const sqlOptions = {
     password: 'devstack',
     database: 'tempdb'
 }
-
 var app = express();
 app.use(cors());
 
+app.use(cors());
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
@@ -32,22 +31,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const sessionStore = new SqlStore(sqlOptions);
-
-app.use(session({
-    key: 'argo_cookie',
-    secret: 'do not need to know',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false
-}));
+applyPassportStrategy(passport)
 
 passport.serializeUser((user, done) => done(null, user));
 
 passport.deserializeUser((obj, done) => done(null, obj));
 
 passport.use(new KeystoneStrategy({
-    authUrl: 'http://183.111.177.141/identity/v3/auth/tokens'
+    authUrl: 'http://183.111.177.141/identity/v3/auth/tokens',
+    session: false
 }, async (req, done) => {
     req.user.tokenId = req.token.id;
     try {
@@ -73,7 +65,7 @@ passport.use(new KeystoneStrategy({
                     'x-auth-token': req.user.tokenId
                 }
             });
-            if (projectres.data.projects?.length < 1)
+            if (projectres.data.projects.length < 1)
                 throw new Error('no project id');
             else
                 default_project_id = projectres.data.projects[0].id;
@@ -116,7 +108,6 @@ passport.use(new KeystoneStrategy({
 }));
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
     '/cluster-workflow-templates/?', '/login', '/login','/user-manager/?'],
