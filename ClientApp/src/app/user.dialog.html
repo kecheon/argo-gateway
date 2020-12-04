@@ -1,0 +1,20 @@
+<h2 mat-dialog-title *ngIf="isNew">User Creation</h2>
+<h2 mat-dialog-title *ngIf="!isNew">Edit User</h2>
+<mat-dialog-content>
+  <form (ngSubmit)="submit(userForm)" fxLayout="column" #userForm="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>
+        name
+      </mat-label>
+      <input mat-input [formControl]="name" required>
+      <mat-error *ngIf="name.invalid">{{getNameErrorMsg()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>
+        e-mail
+      </mat-label>
+      <input mat-input [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getEmailErrorMsg()}}</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>

@@ -1,12 +1,10 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   templateUrl: './login.html',
   styleUrls: ['./login.sass']
 })
 export class Login implements OnInit {
-
-  constructor() { }
 
   username: string = '';
   password: string = '';
@@ -19,5 +17,4 @@ export class Login implements OnInit {
     this.username = '';
     this.password = '';
   }
-
 }
