@@ -9,11 +9,9 @@ const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
-
+const cors = require('cors');
 const KeystoneStrategy = require('./passport-keystone');
-
-const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
-
+const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
 const k8sstore = require('./k8stoken');
 
 const sqlOptions = {
@@ -25,6 +23,7 @@ const sqlOptions = {
 }
 
 var app = express();
+app.use(cors());
 
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));

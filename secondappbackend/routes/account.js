@@ -3,7 +3,7 @@ const passport = require('passport');
 const KeystoneStrategy = require('../passport-keystone');
 
 router.post('/login',
-    passport.authenticate(KeystoneStrategy.name, { failureRedirect: '/login' }),
+    passport.authenticate('keystone', { failureRedirect: '/login' }),
     (req, res) => res.redirect('/')
 );
 
