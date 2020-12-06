@@ -295,10 +295,12 @@ router.post('/events/:namespace/:discriminator', async (req, res) => {
     }
 });
 
-router.get('/info', async (req, res) => {
+router.get('/info', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const response = await axios.get(endurl + 'info', {
-            headers: headers
+            headers: {
+                Authorization: req.user.k8s_token
+            }
         });
         res.send(response.data);
     }
@@ -321,12 +323,12 @@ router.get('/userinfo', async (req, res) => {
     }
 });
 
-router.get('/version', async (req, res) => {
-    console.log(req.username);
-    console.log(req.prjToken);
+router.get('/version', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const response = await axios.get(endurl + 'version', {
-            headers: headers
+            headers: {
+                Authorization: req.user.k8s_token
+            }
         });
         res.send(response.data);
     }

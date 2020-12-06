@@ -94,7 +94,7 @@ var lookup = function (obj, field) {
  * @api protected
  */
 Strategy.prototype.authenticate = function (req, options) {
-    var config = {};
+    var config = {session: false};
     options = options || {};
     config.username = lookup(req.body, this._usernameField) || lookup(req.query, this._usernameField);
     config.password = lookup(req.body, this._passwordField) || lookup(req.query, this._passwordField);
