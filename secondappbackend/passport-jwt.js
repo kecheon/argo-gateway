@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const axios = require('axios');
 const endpoint = 'http://183.111.177.141/identity/v3';
 
 const Strategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
-const k8s_token = 'Bearer gAAAAABfyOebWvjdszziwArZYj0IOafq__GUebCMAgrD7Wc8Jv35UrOSGZg4hGeG4ScXd3k0AgRmSxGb6YwxjD13l1KyCsbRnL66iOFtfLilhm0aEbpJjMrMuM7ZqsSXQo6jSwrFOUhLyfFC9Wrh-IReOA8fB5eEQAmUyu2FHOhDezIa5uwwrLsSiJuivO_dBBH5eRhBGm7H'
+const k8s_token = process.env.K8S_TOKEN;
 
 const applyPassportStrategy = passport => {
   const options = {};
