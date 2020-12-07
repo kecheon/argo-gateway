@@ -3,9 +3,6 @@ const axios = require('axios');
 const passport = require('passport');
 
 const endurl = 'http://20.194.32.137:32000/api/v1/';
-const headers = {
-    Authorization: 'Bearer gAAAAABfyOebWvjdszziwArZYj0IOafq__GUebCMAgrD7Wc8Jv35UrOSGZg4hGeG4ScXd3k0AgRmSxGb6YwxjD13l1KyCsbRnL66iOFtfLilhm0aEbpJjMrMuM7ZqsSXQo6jSwrFOUhLyfFC9Wrh-IReOA8fB5eEQAmUyu2FHOhDezIa5uwwrLsSiJuivO_dBBH5eRhBGm7H'
-}
 
 router.all('/*', passport.authenticate('jwt', { session: false }));
 /********** 
