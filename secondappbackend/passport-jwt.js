@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const blacklist = require('express-jwt-blacklist');
 const axios = require('axios');
 const endpoint = 'http://183.111.177.141/identity/v3';
 
@@ -13,6 +13,7 @@ const applyPassportStrategy = passport => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
   options.secretOrKey = secret;
+  options.isRevoked = blacklist.isRevoked;
   options.passReqToCallback = true;
   passport.use(
     new Strategy(options, async (req, payload, done) => {
