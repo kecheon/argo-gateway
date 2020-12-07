@@ -7,11 +7,12 @@ const Strategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
 // const k8s_token = process.env.K8S_TOKEN;
+const secret = process.env.SECRET;
 
 const applyPassportStrategy = passport => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-  options.secretOrKey = 'do not need to know';
+  options.secretOrKey = secret;
   options.passReqToCallback = true;
   passport.use(
     new Strategy(options, async (req, payload, done) => {
