@@ -9,10 +9,11 @@ const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
+const cors = require('cors');
 
 const KeystoneStrategy = require('./passport-keystone');
 
-const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
+const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
 
 const k8sstore = require('./k8stoken');
 
@@ -25,6 +26,8 @@ const sqlOptions = {
 }
 
 var app = express();
+
+app.use(cors());
 
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));
@@ -74,7 +77,7 @@ passport.use(new KeystoneStrategy({
                     'x-auth-token': req.user.tokenId
                 }
             });
-            if (projectres.data.projects?.length < 1)
+            if (projectres.data.projects.length < 1)
                 throw new Error('no project id');
             else
                 default_project_id = projectres.data.projects[0].id;
@@ -130,7 +133,7 @@ app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
 app.use('/kube', require('./routes/kubectl'));
-app.use('/argo', require('./routes/argo'));
+app.use('/api/v1', require('./routes/argo'));
 
 // security flaw
 /*app.get('/kubetoken', (req, res) => {

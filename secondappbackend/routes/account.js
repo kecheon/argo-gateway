@@ -3,7 +3,14 @@ const passport = require('passport');
 
 router.post('/login',
     passport.authenticate('keystone', { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/')
+    // (req, res) => res.redirect('/')
+    (req, res) => {
+        res.json({status: 200, data: {
+            name: 'admin',
+            roles: [{name: 'admin', level: 0}],
+            jwtToken: ''
+        }})
+    }
 );
 
 // need for user info retrieval
