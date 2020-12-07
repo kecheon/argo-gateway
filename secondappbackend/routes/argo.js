@@ -334,6 +334,7 @@ router.get('/version', passport.authenticate('jwt', { session: false }), async (
         res.send(response.data);
     }
     catch (err) {
+        console.log(err);
         res.status(400).send(err);
     }
 });

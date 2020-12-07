@@ -33,9 +33,40 @@ const applyPassportStrategy = passport => {
         const response = await axios.post(url, data);
         if (response.status === 201) {
           console.log(response.data.token.user);
+          const token = response.headers['x-subject-token']
+          // 2. get project list with unscoped access token
+          const projectListEndPoint = `${endpoint}/auth/projects`;
+          const headers = {
+              headers: { 
+                  'X-Auth-Token': token
+              }
+          }
+          const prjListResponse = await axios.get(projectListEndPoint, headers);
+          const { projects }= prjListResponse.data;
+          const prjScopedTokenEndPoint = `${endpoint}/auth/tokens`;
+          const authData = {
+              'auth': {
+                  'identity': {
+                      'methods': ['token'],
+                      'token': { 'id': token }
+                  },
+                  'scope': {
+                      'project': {
+                          'id': projects[0].id
+                      }
+                  }
+              }
+          }
+          const authHeaders = { 
+            'X-Auth-Token': token,
+            'Content-Type': 'application/json'
+          }
+          const prjTokenResponse = await axios.post(prjScopedTokenEndPoint, authData, {headers: authHeaders});
+          const prjToken = prjTokenResponse.headers['x-subject-token'];
+
           return done(null, {
               user: response.data.token.user,
-              k8s_token
+              k8s_token: `Bearer ${prjToken}`
           });
         }
         console.log('no token issued');
