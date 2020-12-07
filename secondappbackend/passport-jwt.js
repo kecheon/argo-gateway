@@ -15,7 +15,7 @@ const applyPassportStrategy = passport => {
   options.passReqToCallback = true;
   passport.use(
     new Strategy(options, async (req, payload, done) => {
-      const username = payload.user.name;
+      const name = payload.user.name;
       const password = payload.user.password;
     
       const data = {
@@ -23,7 +23,7 @@ const applyPassportStrategy = passport => {
             identity: {
                 methods: ['password'],
                 password: {
-                    user: {name: username, domain: {id: 'default'}, password}
+                    user: {name, domain: {id: 'default'}, password}
                 }
             }
         }

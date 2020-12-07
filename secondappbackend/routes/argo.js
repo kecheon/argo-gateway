@@ -89,6 +89,7 @@ router.get('/cluster-workflow-templates', async (req, res) => {
         res.send(response.data.items);
     }
     catch (err) {
+        console.log(err)
         res.status(400).send(err);
     }
 });

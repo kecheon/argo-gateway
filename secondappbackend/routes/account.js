@@ -57,7 +57,7 @@ router.get('/info', (req, res) => {
     else res.sendStatus(401);
 });
 
-router.get('/logout', ensureAuthenticated, (req, res) => {
+router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 });
