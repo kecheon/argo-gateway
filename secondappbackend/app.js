@@ -10,11 +10,15 @@ const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
 
+const KsInfo = require('./ksinfo.json');
+
+const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
+
 const KeystoneStrategy = require('./passport-keystone');
 
 const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
-const k8sstore = require('./k8stoken');
+const tempdb_session = require('./connect-db');
 
 const sqlOptions = {
     host: '20.194.32.137',
@@ -23,6 +27,13 @@ const sqlOptions = {
     password: 'devstack',
     database: 'tempdb'
 }
+
+/*tempdb_session.getSession().then(
+    session => session.sql(`CREATE TABLE IF NOT EXISTS 'tempdb'.'tenant_session' (
+        'id' int(4),
+        'token' varchar(255) NOT NULL
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8;`)
+);*/
 
 var app = express();
 
@@ -47,12 +58,75 @@ passport.serializeUser((user, done) => done(null, user));
 
 passport.deserializeUser((obj, done) => done(null, obj));
 
+async function getAdminToken() {
+    try {
+        const response1 = await axios.post(KsIdentityURL + 'auth/tokens', {
+            auth: {
+                identity: {
+                    methods: ['password'],
+                    password: {
+                        user: {
+                            name: 'admin',
+                            domain: { id: 'default' }
+                        },
+                        password: 'devstack'
+                    }
+                }
+            }
+        });
+        //////////////////////////
+        const adminInfo = await axios.get(KsIdentityURL + 'users/' + response1.data.token.user.id, {
+            headers: {
+                'x-auth-token': response1.headers['x-subject-token']
+            }
+        });
+        let default_project_id = '';
+        if ('default_project_id' in adminInfo)
+            default_project_id = adminInfo.default_project_id;
+        else {
+            const projectres = await axios.get(KsIdentityURL + 'auth/projects', {
+                headers: {
+                    'x-auth-token': response1.headers['x-subject-token']
+                }
+            });
+            if (projectres.data.projects?.length < 1)
+                throw new Error('no project id');
+            else
+                default_project_id = projectres.data.projects[0].id;
+        }
+        const tokenres = await axios.post(KsIdentityURL + 'auth/tokens',
+            {
+                auth: {
+                    identity: {
+                        methods: ['token'],
+                        token: {
+                            id: response1.headers['x-subject-token']
+                        }
+                    },
+                    scope: {
+                        project: {
+                            id: default_project_id
+                        }
+                    }
+                }
+            }, {
+            headers: {
+                    'x-auth-token': response1.headers['x-subject-token']
+            }
+        });
+        return tokenres.headers['x-subject-token'];
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
 passport.use(new KeystoneStrategy({
-    authUrl: 'http://183.111.177.141/identity/v3/auth/tokens'
+    authUrl: KsIdentityURL+'auth/tokens'
 }, async (req, done) => {
     req.user.tokenId = req.token.id;
     try {
-        /*const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+        /*const projectres = await axios.get(KsIdentityURL + 'auth/projects', {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
@@ -60,7 +134,7 @@ passport.use(new KeystoneStrategy({
         if (projectres.data.projects?.length < 1)
             throw new Error('project property error');
         const first_project_id = projectres.data.projects[0].id;*/
-        const userinfo = await axios.get('http://183.111.177.141/identity/v3/users/' + req.user.id, {
+        const userinfo = await axios.get(KsIdentityURL + 'users/' + req.user.id, {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
@@ -69,7 +143,7 @@ passport.use(new KeystoneStrategy({
         if ('default_project_id' in userinfo)
             default_project_id = userinfo.default_project_id;
         else {
-            const projectres = await axios.get('http://183.111.177.141/identity/v3/auth/projects', {
+            const projectres = await axios.get(KsIdentityURL + 'auth/projects', {
                 headers: {
                     'x-auth-token': req.user.tokenId
                 }
@@ -79,7 +153,7 @@ passport.use(new KeystoneStrategy({
             else
                 default_project_id = projectres.data.projects[0].id;
         }
-        const tokenres = await axios.post('http://183.111.177.141/identity/v3/auth/tokens',
+        const tokenres = await axios.post(KsIdentityURL + 'auth/tokens',
             {
                 auth: {
                     identity: {
@@ -102,9 +176,12 @@ passport.use(new KeystoneStrategy({
         req.user.tokenId2 = tokenres.headers['x-subject-token'];
         const tokenresdata = tokenres.data.token;
         req.user.roles = tokenresdata.roles.map(elem => elem.name).filter(elem => /^wf\-/.test(elem));
+        // grant access to admin token to tadmin
+        if (req.user.roles.includes('wf-tenant-admin'))
+            res.user.admin_token = getAdminToken();
         req.user.default_project_id = tokenresdata.project.id;
         req.user.default_project_name = tokenresdata.project.name;
-        const k8sadmin_session = await k8sstore.getSession();
+        const k8sadmin_session = await tempdb_session.getSession();
         const result = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute()
         const data = result.fetchOne();
         req.user.k8s_endpoint = data[3];
@@ -129,7 +206,7 @@ app.use(express.static(rootPath, { index: false }));
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
-app.use('/kube', require('./routes/kubectl'));
+app.use('/namespace', require('./routes/namespace'));
 app.use('/argo', require('./routes/argo'));
 
 // security flaw

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 
-const endurl = 'http://20.194.32.137:32000/api/v1/';
+const endurl = require('../ksinfo.json').ARGO_API_URL;
 
 router.all('/*', ensureAuthenticated);
 

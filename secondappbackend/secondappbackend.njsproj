@@ -32,7 +32,13 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="favicon.ico" />
-    <Content Include="k8stoken.js">
+    <Content Include="connect-db.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="ksinfo.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="ksinfo.json">
       <SubType>Code</SubType>
     </Content>
     <Content Include="passport-keystone.js">
@@ -137,7 +143,7 @@
     <Content Include="routes\argo.js">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="routes\kubectl.js">
+    <Content Include="routes\namespace.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="routes\project.js">

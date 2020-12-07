@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const axios = require('axios');
 
-const ksUserUrl = 'http://183.111.177.141/identity/v3/users';
+const KsInfo = require('../ksinfo.json');
+
+const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
 
 router.get('/', async (req, res) => {
     if (req.isUnauthenticated()) {
