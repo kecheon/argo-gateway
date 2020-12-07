@@ -6,7 +6,7 @@ const endpoint = 'http://183.111.177.141/identity/v3';
 const Strategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
-const k8s_token = process.env.K8S_TOKEN;
+// const k8s_token = process.env.K8S_TOKEN;
 
 const applyPassportStrategy = passport => {
   const options = {};
