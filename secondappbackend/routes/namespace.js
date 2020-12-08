@@ -108,6 +108,7 @@ router.post('/', (req, res) => {
                 'x-auth-token': tokenId
             }
         });
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
