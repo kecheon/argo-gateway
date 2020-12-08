@@ -21,6 +21,7 @@
     "lodash": "^4.17.20",
     "morgan": "^1.10.0",
     "@mysql/xdevapi": "^8.0.22",
+    "@kubernetes/client-node": "^0.13.0",
     "passport": "^0.4.1",
     "passport-strategy": "^1.0.0",
     "request": "^2.88.2",
