@@ -2,7 +2,9 @@ const router = require('express').Router();
 const axios = require('axios');
 //const spawn = require('child_process');
 
-const KsUrl = 'http://183.111.177.141/identity/v3/';
+const KsInfo = require('../ksinfo.json');
+
+const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 router.all('/*', ensureAuthenticated);
 
@@ -48,7 +50,7 @@ router.get('/:id', async (req, res) => {
         return;
     }
     try {
-        tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+        const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
         const response = await axios.get(KsUrl + 'projects/' + req.params.id, {
             headers: {
                 'x-auth-token': tokenId
@@ -74,7 +76,7 @@ router.get('/switch/:name', async (req, res) => {
                 scope: {
                     project: {
                         domain: { id: 'default' },
-                        name:req.params.name
+                        name: req.params.name
                     }
                 }
             }
@@ -86,11 +88,29 @@ router.get('/switch/:name', async (req, res) => {
         res.send({
             id: data.project.id,
             name: data.project.name,
-            roles:req.user.roles
+            roles: req.user.roles
         });
     }
     catch (err) {
         res.status(500).send(err);
+    }
+});
+
+router.post('/', (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+        const response = await axios.post(KsUrl + 'projects/' + req.params.id,req.body, {
+            headers: {
+                'x-auth-token': tokenId
+            }
+        });
+    }
+    catch (err) {
+        res.status(400).send(err);
     }
 })
 
