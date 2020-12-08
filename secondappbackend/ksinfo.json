@@ -9,5 +9,5 @@
   "KS_PASSWORD": "devstack",
   "KS_REGION_NAME": "RegionOne",
   "KS_INTERFACE": "public",
-  "KS_IDENTITY_API_VERSION":3
+  "KS_IDENTITY_API_VERSION": 3
 }

@@ -6,3 +6,4 @@ secondappbackend/package-lock.json
 _reference.js
 */node_modules/
 .vs/
+test*

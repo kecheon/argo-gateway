@@ -35,12 +35,13 @@
     <Content Include="connect-db.js">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="ksinfo.js">
+    <Content Include="k8s-init.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="ksinfo.json">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="kube.config.json" />
     <Content Include="passport-keystone.js">
       <SubType>Code</SubType>
     </Content>
@@ -153,6 +154,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="routes\user.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="testk8s.js">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
