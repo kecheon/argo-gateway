@@ -6,6 +6,8 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
+const k8sClient = require('../k8s-init');
+
 router.all('/*', ensureAuthenticated);
 
 /*router.get('/sa/:account/:namespace', (req, res) => {
@@ -103,12 +105,31 @@ router.post('/', async (req, res) => {
     }
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
-        const response = await axios.post(KsUrl + 'projects/' + req.params.id,req.body, {
+        const ksResponse = await axios.post(KsUrl + 'projects/' + req.params.id, req.body, {
             headers: {
                 'x-auth-token': tokenId
             }
         });
+        const k8sRes = await k8sClient.createNamespace(req.body);
+
         res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const response = axios.delete(KsUrl + 'projects/' + req.params.id, {
+            headers: {
+                'x-auth-token': tokenId
+            }
+        });
     }
     catch (err) {
         res.status(400).send(err);
