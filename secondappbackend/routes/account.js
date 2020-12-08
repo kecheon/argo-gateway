@@ -5,7 +5,9 @@ router.post('/login',
     passport.authenticate('keystone', { failureRedirect: '/login' }),
     (req, res) => {
         // res.redirect('/')
-        res.json({status: 'success', roles: req.user.roles })
+        // sends user data for client's navigation except credentials
+        const { name, id, roles, domain } = req.user;
+        res.json({status: 'success', user: {name, id, roles, domain} })
     }
 );
 
