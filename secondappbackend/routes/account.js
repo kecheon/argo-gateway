@@ -3,7 +3,10 @@ const passport = require('passport');
 
 router.post('/login',
     passport.authenticate('keystone', { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/')
+    (req, res) => {
+        // res.redirect('/')
+        res.json({status: 'success', roles: req.user.roles })
+    }
 );
 
 // need for user info retrieval
@@ -45,7 +48,8 @@ router.get('/info', (req, res) => {
 
 router.get('/logout', ensureAuthenticated, (req, res) => {
     req.logout();
-    res.redirect('/');
+    // res.redirect('/');
+    res.json({status: 'success'});
 });
 
 

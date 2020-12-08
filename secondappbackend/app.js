@@ -18,7 +18,7 @@ const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION
 const KeystoneStrategy = require('./passport-keystone');
 
 // const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
-const rootPath = path.join(__dirname, '../argo/ui/dist/app');
+const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
 
 const tempdb_session = require('./connect-db');
 
@@ -200,7 +200,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
-        '/cluster-workflow-templates/?', '/login', '/user-manager/?',
+        '/cluster-workflow-templates/?', '/login', '/logout', '/user-manager/?',
         '/overview/?', '/users/list/?', '/users/namespaces/?', '/users/roles/?',
     ],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
