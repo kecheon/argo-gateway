@@ -209,7 +209,7 @@ app.use(express.static(rootPath, { index: false }));
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
-app.use('/namespace', require('./routes/namespace'));
+// app.use('/api/v1/namespace', require('./routes/namespace'));
 app.use('/api/v1', require('./routes/argo'));
 
 // security flaw
