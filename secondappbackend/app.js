@@ -9,6 +9,7 @@ const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
+const cors = require('cors');
 
 const KsInfo = require('./ksinfo.json');
 
@@ -16,7 +17,8 @@ const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION
 
 const KeystoneStrategy = require('./passport-keystone');
 
-const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
+// const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
+const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
 
 const tempdb_session = require('./connect-db');
 
@@ -36,6 +38,7 @@ const sqlOptions = {
 );*/
 
 var app = express();
+app.use(cors());
 
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));
@@ -196,7 +199,7 @@ passport.use(new KeystoneStrategy({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
+app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?', '/overview/?', '/users/list/?', '/users/namespaces/?', '/users/roles/?',
     '/cluster-workflow-templates/?', '/login', '/login','/user-manager/?'],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
@@ -207,7 +210,7 @@ app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
 app.use('/namespace', require('./routes/namespace'));
-app.use('/argo', require('./routes/argo'));
+app.use('/api/v1', require('./routes/argo'));
 
 // security flaw
 /*app.get('/kubetoken', (req, res) => {
