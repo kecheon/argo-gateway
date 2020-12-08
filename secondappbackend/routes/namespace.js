@@ -96,7 +96,7 @@ router.get('/switch/:name', async (req, res) => {
     }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
         res.sendStatus(401);
         return;
