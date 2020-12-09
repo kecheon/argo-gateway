@@ -105,7 +105,7 @@ router.post('/', async (req, res) => {
     }
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
-        const ksResponse = await axios.post(KsUrl + 'projects/' + req.params.id, req.body, {
+        const ksResponse = await axios.post(KsUrl + 'projects', req.body, {
             headers: {
                 'x-auth-token': tokenId
             }
