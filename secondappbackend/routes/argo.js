@@ -347,6 +347,20 @@ router.get('/workflows/:namespace', async (req, res) => {
     }
 });
 
+router.get('/workflows', async (req, res) => {
+    try {
+        const response = await axios.get(endurl + req.url, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data.items);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 router.post('/workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflows/' + req.params.namespace, req.body, {
