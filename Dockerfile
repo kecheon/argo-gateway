@@ -11,18 +11,18 @@ COPY ./secondappbackend/package.json .
 RUN npm install && \
 	npm cache clean --force
 
-WORKDIR ../
+WORKDIR /usr/src/app
 RUN git clone -b docker https://github.com/kecheon/argo.git
 
-WORKDIR argo/ui
+WORKDIR /usr/src/app/argo/ui
 RUN npm install && \
 	npm cache clean --force
 RUN npm run build 
 
-WORKDIR ../../
-COPY . /usr/src/app
+WORKDIR /usr/src/app
+COPY . .
 
-WORKDIR secondappbackend
+WORKDIR /usr/src/app/secondappbackend
 
 EXPOSE 3000
 
