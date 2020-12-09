@@ -199,6 +199,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
+    '/cron-worklows/?','/archived-workflows/?',
     '/cluster-workflow-templates/?', '/login','/user-manager/?'],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
@@ -233,12 +234,15 @@ app.use('/argo', require('./routes/argo'));
 })*/
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
+*/
+app.use((req, res) => {
+    res.redirect('/notfound');
+});
 // error handlers
 
 // development error handler
