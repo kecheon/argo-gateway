@@ -8,7 +8,7 @@ export class UserData {
   default_project_name: string;
   descriotion: string;
   sa: string;
-  default_project_role: string;
+  default_project_roles: string[];
 }
 
 export class UserCreationData {
