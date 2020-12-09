@@ -9,6 +9,7 @@ const axios = require('axios');
 const session = require('express-session');
 const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
+const fernet = require('fernet');
 
 const KsInfo = require('./ksinfo.json');
 
@@ -25,7 +26,8 @@ const sqlOptions = {
     port: 3306,
     user: 'argo',
     password: 'devstack',
-    database: 'tempdb'
+    database: 'tempdb',
+    expiration:3600000
 }
 
 /*tempdb_session.getSession().then(
