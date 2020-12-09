@@ -3,16 +3,26 @@ const axios = require('axios');
 
 const endurl = require('../ksinfo.json').ARGO_API_URL;
 
-router.all('/*', ensureAuthenticated);
+router.all('', ensureAuthenticated);
 
 router.get('/archived-workflows', async (req, res) => {
+    /*let url =
+        ('minStartedAt' in req.query) ?
+            endurl + 'archived-workflows/?minStartedAt=' + encodeURIComponent(req.query.minStartedAt) : endurl + 'archived-workflows';
+    if ('maxStartedAt' in req.query)
+        url += '&maxStartedAt=' + encodeURIComponent(req.query.maxStartedAt);*/
     try {
+        //const response = await axios.get(url, {
         const response = await axios.get(endurl + 'archived-workflows', {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(items);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -54,7 +64,11 @@ router.get('/cluster-workflow-templates', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(items);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -125,6 +139,24 @@ router.delete('/cluster-workflow-templates/:name', async (req, res) => {
             }
         });
         res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/cron-workflows', async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'cron-workflows/', {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(items);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -319,6 +351,24 @@ router.get('/stream/events/:namespace', async (req, res) => {
     }
 });
 
+router.get('/workflow-events', async (req, res) => {
+    try {
+        const response = await axios.get(endurl + req.url, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(items);
+        else
+            res.sendStatus(204);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 router.get('/workflow-events/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'workflow-events/' + req.params.namespace, {
@@ -340,7 +390,11 @@ router.get('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(items);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -572,11 +626,12 @@ router.get('/workflows/:namespace/:name/:podname/log', async (req, res) => {
 
 router.get('/workflow-templates', async (req, res) => {
     try {
-        const response = await axios.get(endurl + 'workflow-templates', {
+        const response = await axios.get(endurl + 'workflow-templates/', {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
+        console.log(response.data);
         res.send(response.data.items);
     }
     catch (err) {
