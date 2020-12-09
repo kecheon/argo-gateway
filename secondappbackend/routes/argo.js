@@ -354,7 +354,7 @@ router.post('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
@@ -578,7 +578,7 @@ router.post('/workflow-templates/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
@@ -593,7 +593,7 @@ router.post('/workflow-templates/:namespace/lint', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
