@@ -12,7 +12,7 @@ router.get('/', checkAdmin, async (req, res) => {
     try {
         const response = await axios.get(KsRoleUrl, {
             headers: {
-                'x-auth-token': req.user.tokenId2
+                'x-auth-token': tokenId
             }
         });
         let roles = response.data.roles.filter(elem => elem.is_wf);
@@ -33,7 +33,7 @@ router.get('/:id', checkAdmin, async (req, res) => {
     try {
         const response = await axios.get(KsRoleUrl + '/' + req.params.id, {
             headers: {
-                'x-auth-token': req.user.tokenId2
+                'x-auth-token': tokenId
             }
         });
         let role = response.data.role;
