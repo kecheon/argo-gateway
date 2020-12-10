@@ -73,8 +73,11 @@ router.get('/:id', async (req, res) => {
         delete project.tags, delete project.options, delete project.links;
         if (project.is_cluster)
             res.sendStatus(404);
-        else
+        else {
+            delete project.tags, delete project.options, delete project.links;
+            delete project.is_wf, delete project.is_cluster;
             res.send(project);
+        }
     }
     catch (err) {
         res.status(400).send(err);

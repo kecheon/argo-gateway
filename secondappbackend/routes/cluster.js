@@ -54,8 +54,17 @@ router.get('/:id', async (req, res) => {
             }
         });
         let project = response.data.project;
-        delete project.tags, delete project.options, delete project.links;
-        res.send(project);
+        if (!(project?.is_wf)) {
+            res.status(400).send('requested cluster is not properly set.(is_wf)');
+            return;
+        }
+        if (!project.is_cluster)
+            res.sendStatus(404);
+        else {
+            delete project.is_wf, delete project.is_cluster;
+            delete project.tags, delete project.options, delete project.links;
+            res.send(project);
+        }
     }
     catch (err) {
         res.status(400).send(err);
