@@ -7,7 +7,7 @@ const KsRoleUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '
 
 router.all('*', ensureAuthenticated);
 
-router.get('/', checkAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
     const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
     try {
         const response = await axios.get(KsRoleUrl, {
@@ -28,7 +28,7 @@ router.get('/', checkAdmin, async (req, res) => {
     }
 });
 
-router.get('/:id', checkAdmin, async (req, res) => {
+router.get('/:id', async (req, res) => {
     const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
     try {
         const response = await axios.get(KsRoleUrl + '/' + req.params.id, {
@@ -37,7 +37,7 @@ router.get('/:id', checkAdmin, async (req, res) => {
             }
         });
         let role = response.data.role;
-        delete role.is_wf, delete role.options, delete.links;
+        delete role.is_wf, delete role.options, delete role.links;
         res.send(role);
     }
     catch (err) {
@@ -45,17 +45,15 @@ router.get('/:id', checkAdmin, async (req, res) => {
     }
 });
 
-function checkAdmin(req, res, next) {
-    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin')))
-        res.sendStatus(401);
-    else
-        next();
-}
-
+// Caution.  different from the one from other api namespace
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        if (('tokenId' in req.user) && ('tokenId2' in req.user) && ('k8s_token' in req.user))
-            next();
+        if (('tokenId' in req.user) && ('tokenId2' in req.user) && ('k8s_token' in req.user)) {
+            if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin')))
+                res.sendStatus(401);
+            else
+                next();
+        }
         else {
             console.error('authenticated but some tokens are missing');
             res.sendStatus(500);
