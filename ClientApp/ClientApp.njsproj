@@ -42,58 +42,14 @@
     <Content Include="e2e\tsconfig.json" />
     <Content Include="karma.conf.js" />
     <Content Include="package-lock.json" />
-    <Content Include="src\app\app-routing.module.ts" />
-    <Content Include="src\app\app.component.html" />
-    <Content Include="src\app\app.component.sass" />
-    <Content Include="src\app\app.component.spec.ts" />
-    <Content Include="src\app\app.component.ts" />
-    <Content Include="src\app\app.module.ts" />
-    <Content Include="src\app\c-workflow-t.component.html" />
-    <Content Include="src\app\c-workflow-t.component.sass" />
-    <Content Include="src\app\c-workflow-t.component.spec.ts" />
-    <Content Include="src\app\c-workflow-t.component.ts" />
-    <Content Include="src\app\check-login.ts" />
-    <Content Include="src\app\home.component.html" />
-    <Content Include="src\app\home.component.sass" />
-    <Content Include="src\app\home.component.spec.ts" />
-    <Content Include="src\app\home.component.ts" />
-    <Content Include="src\app\login.html" />
-    <Content Include="src\app\login.sass" />
-    <Content Include="src\app\login.spec.ts" />
-    <Content Include="src\app\login.ts" />
-    <Content Include="src\app\material.module.ts" />
-    <Content Include="src\app\project.service.spec.ts" />
-    <Content Include="src\app\project.service.ts" />
-    <Content Include="src\app\project.ts" />
-    <Content Include="src\app\projectData.ts" />
-    <Content Include="src\app\user.dialog.ts" />
-    <Content Include="src\app\user.service.spec.ts" />
-    <Content Include="src\app\user.service.ts" />
-    <Content Include="src\app\userData.ts" />
-    <Content Include="src\app\usermanager.component.html" />
-    <Content Include="src\app\usermanager.component.sass" />
-    <Content Include="src\app\usermanager.component.spec.ts" />
-    <Content Include="src\app\usermanager.component.ts" />
-    <Content Include="src\app\workflow-t.component.html" />
-    <Content Include="src\app\workflow-t.component.sass" />
-    <Content Include="src\app\workflow-t.component.spec.ts" />
-    <Content Include="src\app\workflow-t.component.ts" />
-    <Content Include="src\app\workflows.component.html" />
-    <Content Include="src\app\workflows.component.sass" />
-    <Content Include="src\app\workflows.component.spec.ts" />
-    <Content Include="src\app\workflows.component.ts" />
+    <Content Include="src\app\**\*.html" />
     <Content Include="src\assets\.gitkeep" />
     <Content Include="src\environments\environment.prod.ts" />
     <Content Include="src\environments\environment.ts" />
     <Content Include="src\favicon.ico" />
     <Content Include="src\index.html" />
-    <Content Include="src\main.ts" />
-    <Content Include="src\polyfills.ts" />
-    <Content Include="src\styles.sass" />
-    <Content Include="src\test.ts" />
-    <Content Include="src\app\user.dialog.html">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="src\**\*.ts" />
+    <Content Include="src\**\*.sass" />
     <Content Include="tsconfig.app.json" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -120,38 +76,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="e2e\src\app.e2e-spec.ts" />
     <TypeScriptCompile Include="e2e\src\app.po.ts" />
-    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
-    <TypeScriptCompile Include="src\app\app.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\app.component.ts" />
-    <TypeScriptCompile Include="src\app\app.module.ts" />
-    <TypeScriptCompile Include="src\app\c-workflow-t.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\c-workflow-t.component.ts" />
-    <TypeScriptCompile Include="src\app\check-login.ts" />
-    <TypeScriptCompile Include="src\app\home.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\home.component.ts" />
-    <TypeScriptCompile Include="src\app\login.spec.ts" />
-    <TypeScriptCompile Include="src\app\login.ts" />
-    <TypeScriptCompile Include="src\app\material.module.ts" />
-    <TypeScriptCompile Include="src\app\project.service.spec.ts" />
-    <TypeScriptCompile Include="src\app\project.service.ts" />
-    <TypeScriptCompile Include="src\app\project.ts" />
-    <TypeScriptCompile Include="src\app\projectData.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\user.dialog.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\user.service.spec.ts" />
-    <TypeScriptCompile Include="src\app\user.service.ts" />
-    <TypeScriptCompile Include="src\app\userData.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\usermanager.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\usermanager.component.ts" />
-    <TypeScriptCompile Include="src\app\workflow-t.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\workflow-t.component.ts" />
-    <TypeScriptCompile Include="src\app\workflows.component.spec.ts" />
-    <TypeScriptCompile Include="src\app\workflows.component.ts" />
+    <TypeScriptCompile Include="src\app\*.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />

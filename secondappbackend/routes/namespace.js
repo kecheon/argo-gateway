@@ -105,14 +105,14 @@ router.post('/', async (req, res) => {
     }
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
-        const ksResponse = await axios.post(KsUrl + 'projects/' + req.params.id, req.body, {
+        const ksResponse = await axios.post(KsUrl + 'projects', req.body, {
             headers: {
                 'x-auth-token': tokenId
             }
         });
         const k8sRes = await k8sClient.createNamespace(req.body);
 
-        res.send(response.data);
+        res.send(ksResponse.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -125,11 +125,20 @@ router.delete('/:id', async (req, res) => {
         return;
     }
     try {
-        const response = axios.delete(KsUrl + 'projects/' + req.params.id, {
+        const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+        const response = await axios.get(KsUrl + 'projects/' + req.params.id, {
             headers: {
                 'x-auth-token': tokenId
             }
         });
+        const projectName = response.data.project.nmae;
+        const ksResponse = await axios.delete(KsUrl + 'projects/' + req.params.id, {
+            headers: {
+                'x-auth-token': tokenId
+            }
+        });
+        const k8sResponse = await k8sClient.deleteNamespace(projectName);
+        res.send('namespace deleted');
     }
     catch (err) {
         res.status(400).send(err);

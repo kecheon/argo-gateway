@@ -7,3 +7,5 @@ _reference.js
 */node_modules/
 .vs/
 test*
+kube.config.json
+uiapp/

@@ -14,7 +14,11 @@ import { WorkflowTComponent } from './workflow-t.component';
 import { CWorkflowTComponent } from './c-workflow-t.component';
 import { MaterialModule } from './material.module';
 import {LoggedIn,NotLoggedIn } from './check-login';
-import { UsermanagerComponent } from './usermanager.component'
+import { UsermanagerComponent } from './usermanager.component';
+import { ConfirmDialog } from './confirm.dialog';
+import { ErrorAlert } from './error.alert';
+import { UserService } from './user.service';
+import { NotfoundComponent } from './notfound.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,8 @@ import { UsermanagerComponent } from './usermanager.component'
     WorkflowsComponent,
     WorkflowTComponent,
     CWorkflowTComponent,
-    UsermanagerComponent
+    UsermanagerComponent,
+    NotfoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +39,8 @@ import { UsermanagerComponent } from './usermanager.component'
     HttpClientModule,
     MaterialModule
   ],
-  providers: [ProjectService, LoggedIn, NotLoggedIn],
+  providers: [ProjectService, LoggedIn, NotLoggedIn,
+    ErrorAlert, ConfirmDialog, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
