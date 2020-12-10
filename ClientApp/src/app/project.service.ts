@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Project } from './project';
+import { ProjectData } from './projectData';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,15 @@ export class ProjectService {
     private http: HttpClient
   ) { }
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>('/project');
+  getProjects(): Observable<ProjectData[]> {
+    return this.http.get<ProjectData[]>('/project');
+  }
+
+  getNamespaces(): Observable<ProjectData[]> {
+    return this.http.get<ProjectData[]>('/namespace');
+  }
+
+  getClusters(): Observable<ProjectData[]> {
+    return this.http.get<ProjectData[]>('/cluster');
   }
 }

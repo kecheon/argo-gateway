@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProjectData } from './projectData';
+import { ProjectService } from './project.service';
+import { ErrorAlert } from './error.alert';
 
 @Component({
   templateUrl: './home.component.html',
@@ -11,28 +13,37 @@ import { ProjectData } from './projectData';
 export class HomeComponent implements AfterViewInit {
 
   constructor(
-    private http: HttpClient
+    private projectService: ProjectService,
+    private errorAlert: ErrorAlert
   ) { }
 
   projectDatabase: ProjectDatabase|null = null;
-  displayedColumns: string[] = ['description', 'domain_id', 'id'];
+  displayedColumns: string[] = ['description', 'domain_id', 'id','name'];
   isLoading: boolean = true;
-  projects: ProjectData[] = [];
+  namespaces: ProjectData[] = [];
+  clusters: ProjectData[] = [];
 
   ngAfterViewInit() {
-    this.projectDatabase = new ProjectDatabase(this.http);
-    this.projectDatabase.getProjects().subscribe(data => 
-      this.projects = data.projects,
-      err => catchError(err));
+    this.projectDatabase = new ProjectDatabase(this.projectService);
+    this.projectDatabase.getNamespaces().subscribe(data =>
+      this.namespaces = data,
+      err => this.errorAlert.open(err));
+    this.projectDatabase.getClusters().subscribe(data =>
+      this.clusters = data,
+      err => this.errorAlert.open(err));
   }
 }
 
 class ProjectDatabase {
   constructor(
-    private http: HttpClient
+    private projectService: ProjectService
   ) { }
 
-  getProjects(): Observable<{ projects: ProjectData[] }> {
-    return this.http.get<{ projects: ProjectData[] }>('/project');
+  getNamespaces(): Observable<ProjectData[]> {
+    return this.projectService.getNamespaces();
+  }
+
+  getClusters(): Observable<ProjectData[]> {
+    return this.projectService.getClusters();
   }
 }
