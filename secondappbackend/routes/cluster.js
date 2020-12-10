@@ -6,21 +6,7 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
-const k8sClient = require('../k8s-init');
-
-router.all('/*', ensureAuthenticated);
-
-/*router.get('/sa/:account/:namespace', (req, res) => {
-    const args = ['get', 'serviceaccount',
-        req.params.account, '-n', req.params.namespace,
-        '-o', 'json'];
-    const kbctl = spawn('kubectl', args);
-    kbctl.on('data', (data) => {
-
-    })
-})*/
-
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     try {
         const response = null;
         if (req.user.roles.includes('wf-app-admin')) {
@@ -38,7 +24,7 @@ router.get('/', async (req, res) => {
                 }
             });
         }
-        projects = response.data.projects.filter(elem => elem.is_wf&&!elem.is_cluster);
+        projects = response.data.projects.filter(elem => elem.is_wf && elem.is_cluster);
         res.send(projects);
     }
     catch (err) {
@@ -59,49 +45,39 @@ router.get('/:id', async (req, res) => {
             }
         });
         let project = response.data.project;
-        if (!(project?.is_wf)) {
-            res.status(400).send('requested cluster is not properly set.(is_wf)');
-            return;
-        }
         delete project.tags, delete project.options, delete project.links;
-        if (project.is_cluster)
-            res.sendStatus(404);
-        else
-            res.send(project);
+        res.send(project);
     }
     catch (err) {
         res.status(400).send(err);
     }
 });
 
-router.get('/switch/:name', async (req, res) => {
+router.get('/:id', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
     try {
-        const response = await axios.post(KsUrl + 'auth/tokens', {
-            auth: {
-                identity: {
-                    methods: ['token'],
-                    token: { id: req.user.tokenId2 }
-                },
-                scope: {
-                    project: {
-                        domain: { id: 'default' },
-                        name: req.params.name
-                    }
-                }
+        const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+        const response = await axios.get(KsUrl + 'projects/' + req.params.id, {
+            headers: {
+                'x-auth-token': tokenId
             }
         });
-        const data = response.data.token;
-        req.user.default_project_id = data.project.id;
-        req.user.default_project_name = data.project.name;
-        req.user.roles = data.roles.map(elem => elem.name).filter(elem => /^wf\-/.test(elem));
-        res.send({
-            id: data.project.id,
-            name: data.project.name,
-            roles: req.user.roles
-        });
+        let project = response.data.project;
+        if (!(project.is_wf)) {
+            res.status(400).send('requested cluster is not properly set.(is_wf)');
+            return;
+        }
+        delete project.tags, delete project.options, delete project.links;
+        if (project.is_cluster)
+            res.send(project);
+        else
+            res.sendStatus(404);
     }
     catch (err) {
-        res.status(500).send(err);
+        res.status(400).send(err);
     }
 });
 
@@ -112,7 +88,7 @@ router.post('/', async (req, res) => {
     }
     let project = req.body;
     project.is_wf = true;
-    project.is_cluster = false;
+    project.is_cluster = true;
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
         const ksResponse = await axios.post(KsUrl + 'projects', project, {
@@ -120,6 +96,7 @@ router.post('/', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
+        
         const k8sRes = await k8sClient.createNamespace(req.body);
 
         res.send(ksResponse.data);
@@ -142,8 +119,8 @@ router.delete('/:id', async (req, res) => {
             }
         });
         const project = reponse.data.project;
-        if (!project.is_wf || project.is_cluster) {
-            res.status(400).send('required id is not a valid namespace id');
+        if (!project.is_wf || !project.is_cluster) {
+            res.status(400).send('required id is not a valid cluster id');
             return;
         }
         const projectName = project.name;

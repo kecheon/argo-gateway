@@ -210,6 +210,7 @@ app.use(express.static(rootPath, { index: false }));
 
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
+app.use('/cluster', require('./routes/cluster'));
 app.use('/user', require('./routes/user'));
 app.use('/namespace', require('./routes/namespace'));
 app.use('/argo', require('./routes/argo'));
