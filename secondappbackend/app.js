@@ -205,7 +205,8 @@ app.use(passport.session());
 
 app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
     '/cron-worklows/?','/archived-workflows/?','/notfound',
-    '/cluster-workflow-templates/?', '/login','/user-manager/?'
+    '/cluster-workflow-templates/?', '/login','/user-manager/?',
+    '/overview', '/users/list', '/users/namespaces'
 ],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
@@ -215,7 +216,7 @@ app.use(express.static(rootPath, { index: false }));
 app.use('/account', require('./routes/account'));
 app.use('/project', require('./routes/project'));
 app.use('/user', require('./routes/user'));
-app.use('/api/v1/namespace', require('./routes/namespace'));
+app.use('/namespace', require('./routes/namespace'));
 app.use('/api/v1', require('./routes/argo'));
 
 // security flaw

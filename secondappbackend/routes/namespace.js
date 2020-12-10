@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
         res.send(projects);
     }
     catch (err) {
+        console.log(err);
         res.status(400).send(err);
     }
 });
