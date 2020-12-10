@@ -38,7 +38,14 @@ router.get('/', async (req, res) => {
                 }
             });
         }
-        projects = response.data.projects.filter(elem => elem.is_wf&&!elem.is_cluster);
+        projects = response.data.projects.filter(elem => elem.is_wf && !elem.is_cluster);
+        projects.forEach(elem => {
+            delete elem.is_wf;
+            delete elem.is_cluster;
+            delete elem.tags;
+            delete elem.options;
+            delete elem.links;
+        });
         res.send(projects);
     }
     catch (err) {

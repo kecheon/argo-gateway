@@ -16,6 +16,10 @@ router.get('/', async (req, res) => {
             }
         });
         let roles = response.data.roles.filter(elem => elem.is_wf);
+        if (roles.length == 0) {
+            res.send(204);
+            return;
+        }
         roles.forEach(elem => {
             delete elem.is_wf;
             delete elem.options;
