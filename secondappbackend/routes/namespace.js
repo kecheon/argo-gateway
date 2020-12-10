@@ -8,7 +8,7 @@ const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 const k8sClient = require('../k8s-init');
 
-router.all('/*', ensureAuthenticated);
+router.all('*', ensureAuthenticated);
 
 /*router.get('/sa/:account/:namespace', (req, res) => {
     const args = ['get', 'serviceaccount',

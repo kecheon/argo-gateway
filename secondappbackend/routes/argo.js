@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const endurl = require('../ksinfo.json').ARGO_API_URL;
 
-router.all('', ensureAuthenticated);
+router.all('*', ensureAuthenticated);
 
 router.get('/archived-workflows', async (req, res) => {
     /*let url =

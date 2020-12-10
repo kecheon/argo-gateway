@@ -6,6 +6,8 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
+router.all('*', ensureAuthenticated);
+
 router.get('/', async (req, res) => {
     try {
         let response = null;
