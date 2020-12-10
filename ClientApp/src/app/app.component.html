@@ -323,22 +323,16 @@
     </button>
     <span fxFlex></span>
     <!--<button *ngIf="!user.name" mat-button routerLink="/signup">회원가입</button>-->
-    <button *ngIf="!user.name" mat-button routerLink="/login">로그인</button>
-    <!--<div *ngIf="user">
-      <mat-menu #alertMenu>
-        <button *ngFor="let msg of msgs; let i=index" mat-menu-item (click)="confirmMsg(i)">
-          {{msg}}
-        </button>
-      </mat-menu>
+    <button *ngIf="!user" mat-button routerLink="/login">Log in</button>
+    <div *ngIf="user">
       <button mat-icon-button [mat-menu-trigger-for]="accountMenu">
         <mat-icon>person</mat-icon>
       </button>
       <mat-menu #accountMenu="matMenu">
-        <button mat-menu-item routerLink="/user-info">정보관리</button>
-        <button mat-menu-item>친구관리</button>
+        <button mat-menu-item (click)="showAccountInfo()">User Information</button>
+        <a mat-button target="_self" href="/account/logout">Log out</a>
       </mat-menu>
-    </div>-->
-    <a *ngIf="user.name" mat-button target="_self" href="/account/logout">로그아웃</a>
+    </div>
   </mat-toolbar>
   <mat-drawer-container>
     <mat-drawer #sidemenu [mode]="sidenavMode" [opened]="isOpened">
@@ -349,25 +343,25 @@
           </button>
         </mat-list-item>
         <mat-list-item>
-          <button mat-button [disabled]="!user.name" routerLink="/workflows"
+          <button mat-button [disabled]="!user" routerLink="/workflows"
                   (click)="handleMenu(sidemenu)">
             Workflows
           </button>
         </mat-list-item>
         <mat-list-item>
-          <button mat-button [disabled]="!user.name" routerLink="/workflow-templates"
+          <button mat-button [disabled]="!user" routerLink="/workflow-templates"
                   (click)="handleMenu(sidemenu)">
             Workflow templates
           </button>
         </mat-list-item>
         <mat-list-item>
-          <button mat-button [disabled]="!user.name" routerLink="/cluster-workflow-templates"
+          <button mat-button [disabled]="!user" routerLink="/cluster-workflow-templates"
                   (click)="handleMenu(sidemenu)">
             Cluster Workflow Templates
           </button>
         </mat-list-item>
         <mat-list-item>
-          <button mat-button [disabled]="!user.name" routerLink="/user-manager"
+          <button mat-button [disabled]="!user" routerLink="/user-manager"
                   (click)="handleMenu(sidemenu)">
             User Manager ( admin only )
           </button>

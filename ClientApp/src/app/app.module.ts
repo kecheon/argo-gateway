@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,8 +16,8 @@ import { CWorkflowTComponent } from './c-workflow-t.component';
 import { MaterialModule } from './material.module';
 import {LoggedIn,NotLoggedIn } from './check-login';
 import { UsermanagerComponent } from './usermanager.component';
-import { ConfirmDialog } from './confirm.dialog';
-import { ErrorAlert } from './error.alert';
+import { ConfirmDialog, ConfirmDialogTemplate, ConfirmDialogTemplate2 } from './confirm.dialog';
+import { ErrorAlert, ErrorDialog } from './error.alert';
 import { UserService } from './user.service';
 import { NotfoundComponent } from './notfound.component';
 
@@ -30,6 +31,14 @@ import { NotfoundComponent } from './notfound.component';
     CWorkflowTComponent,
     UsermanagerComponent,
     NotfoundComponent,
+    ConfirmDialogTemplate,
+    ConfirmDialogTemplate2,
+    ErrorDialog
+  ],
+  entryComponents: [
+    ConfirmDialogTemplate,
+    ConfirmDialogTemplate2,
+    ErrorDialog
   ],
   imports: [
     BrowserModule,
@@ -39,8 +48,9 @@ import { NotfoundComponent } from './notfound.component';
     HttpClientModule,
     MaterialModule
   ],
-  providers: [ProjectService, LoggedIn, NotLoggedIn,
-    ErrorAlert, ConfirmDialog, UserService],
+  providers: [ProjectService, LoggedIn, NotLoggedIn, ErrorAlert, ConfirmDialog,
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+    UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
