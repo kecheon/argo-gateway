@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        let users = response.user.filter(elem => elem.is_wf && ('default_project_id' in elem)
+        let users = response.data.users.filter(elem => elem.is_wf && ('default_project_id' in elem)
             && ('domain_id' in elem));
         users.forEach(elem => {
             delete elem.is_wf;

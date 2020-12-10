@@ -144,6 +144,7 @@
     <Content Include="routes\argo.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="routes\cluster.js" />
     <Content Include="routes\namespace.js">
       <SubType>Code</SubType>
     </Content>
