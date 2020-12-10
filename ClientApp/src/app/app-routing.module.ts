@@ -7,6 +7,7 @@ import { CWorkflowTComponent } from './c-workflow-t.component';
 import { WorkflowTComponent } from './workflow-t.component';
 import { WorkflowsComponent } from './workflows.component';
 import { UsermanagerComponent } from './usermanager.component';
+import { NotfoundComponent } from './notfound.component';
 
 import { LoggedIn, NotLoggedIn, IsAdmin } from './check-login';
 
@@ -34,6 +35,8 @@ const routes: Routes = [
   {
     path: 'user-manager', component: UsermanagerComponent,
     canActivate: [IsAdmin]
+  }, {
+    path: 'notfound', component: NotfoundComponent
   }
 ];
 

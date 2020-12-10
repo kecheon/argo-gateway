@@ -25,12 +25,6 @@ export class HomeComponent implements AfterViewInit {
       this.projects = data.projects,
       err => catchError(err));
   }
-
-  testToken() {
-    this.http.get<string>('/user').subscribe(msg => console.log(msg),
-      err => catchError(err));
-  }
-
 }
 
 class ProjectDatabase {

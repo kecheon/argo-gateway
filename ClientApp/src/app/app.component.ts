@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this._userService.getAccountUser()
-      .subscribe(data => this.user.name = data, err => {
+      .subscribe(data => this.user.name = data.name, err => {
         this.user = { name: '' };
         catchError(err);
       });

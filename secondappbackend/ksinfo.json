@@ -1,0 +1,13 @@
+{
+  "ARGO_API_URL": "http://20.194.32.137:32000/api/v1/",
+  "KS_AUTH_URL": "http://183.111.177.141/identity/",
+  "KS_PROJECT_ID": "449082e6de0a4a109464ce247d25fc3a",
+  "KS_PROJECT_NAME": "admin",
+  "KS_USER_DOMAIN_NAME": "Default",
+  "KS_PROJECT_DOMAIN_ID": "default",
+  "KS_USERNAME": "admin",
+  "KS_PASSWORD": "devstack",
+  "KS_REGION_NAME": "RegionOne",
+  "KS_INTERFACE": "public",
+  "KS_IDENTITY_API_VERSION": 3
+}

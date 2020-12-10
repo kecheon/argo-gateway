@@ -1,11 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const passport = require('passport');
-
-const endurl = 'http://20.194.32.137:32000/api/v1/';
-const headers = {
-    Authorization: 'Bearer gAAAAABfyOebWvjdszziwArZYj0IOafq__GUebCMAgrD7Wc8Jv35UrOSGZg4hGeG4ScXd3k0AgRmSxGb6YwxjD13l1KyCsbRnL66iOFtfLilhm0aEbpJjMrMuM7ZqsSXQo6jSwrFOUhLyfFC9Wrh-IReOA8fB5eEQAmUyu2FHOhDezIa5uwwrLsSiJuivO_dBBH5eRhBGm7H'
-}
+const endurl = require('../ksinfo.json').ARGO_API_URL;
 
 router.all('/*', passport.authenticate('jwt', { session: false }));
 /********** 
@@ -38,13 +34,23 @@ now every authenticated request has req.user
 **********************/
 
 router.get('/archived-workflows', async (req, res) => {
+    /*let url =
+        ('minStartedAt' in req.query) ?
+            endurl + 'archived-workflows/?minStartedAt=' + encodeURIComponent(req.query.minStartedAt) : endurl + 'archived-workflows';
+    if ('maxStartedAt' in req.query)
+        url += '&maxStartedAt=' + encodeURIComponent(req.query.maxStartedAt);*/
     try {
+        //const response = await axios.get(url, {
         const response = await axios.get(endurl + 'archived-workflows', {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -86,7 +92,7 @@ router.get('/cluster-workflow-templates', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send(response.data);
     }
     catch (err) {
         console.log(err)
@@ -164,6 +170,21 @@ router.delete('/cluster-workflow-templates/:name', async (req, res) => {
     }
 });
 
+router.get('/cron-workflows', async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'cron-workflows/', {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        const items = response.data.items;
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 router.get('/cron-workflows/:namespace', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace, {
@@ -171,7 +192,7 @@ router.get('/cron-workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -352,9 +373,27 @@ router.get('/stream/events/:namespace', async (req, res) => {
     }
 });
 
-router.get('/workflow-events/:namespace', async (req, res) => {
+router.get('/workflow-events', async (req, res) => {
+    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflow-events/' : endurl + req.url;
     try {
-        const response = await axios.get(endurl + 'workflow-events/' + req.params.namespace, {
+        const response = await axios.get(requestUrl, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/workflow-events/:namespace', async (req, res) => {
+    const requestUrl =
+        Object.keys(req.query).length == 0 ?
+            endurl + 'workflow-events/' + req.params.namespace : endurl + req.url;
+    try {
+        const response = await axios.get(requestUrl, {
             headers: {
                 Authorization: req.user.k8s_token
             }
@@ -367,13 +406,31 @@ router.get('/workflow-events/:namespace', async (req, res) => {
 });
 
 router.get('/workflows/:namespace', async (req, res) => {
+    const requestUrl =
+        Object.keys(req.query).length == 0 ?
+            endurl + 'workflows/' + req.params.namespace : endurl + req.url;
     try {
-        const response = await axios.get(endurl + 'workflows/' + req.params.namespace, {
+        const response = await axios.get(requestUrl, {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        return response.data
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/workflows', async (req, res) => {
+    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflows/' : endurl + req.url;
+    try {
+        const response = await axios.get(requestUrl, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -387,7 +444,7 @@ router.post('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
@@ -589,14 +646,28 @@ router.get('/workflows/:namespace/:name/:podname/log', async (req, res) => {
     }
 });
 
-router.get('/workflow-templates/:namespace', async (req, res) => {
+router.get('/workflow-templates', async (req, res) => {
     try {
-        const response = await axios.get(endurl + 'workflows-templates/' + req.params.namespace, {
+        const response = await axios.get(endurl + 'workflow-templates/', {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send(response.data);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.get('/workflow-templates/:namespace', async (req, res) => {
+    try {
+        const response = await axios.get(endurl + 'workflow-templates/' + req.params.namespace, {
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -605,13 +676,13 @@ router.get('/workflow-templates/:namespace', async (req, res) => {
 
 router.post('/workflow-templates/:namespace', async (req, res) => {
     try {
-        const response = await axios.post(endurl + 'workflows-templates/' + req.params.namespace,
+        const response = await axios.post(endurl + 'workflow-templates/' + req.params.namespace,
             req.body, {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
@@ -620,13 +691,13 @@ router.post('/workflow-templates/:namespace', async (req, res) => {
 
 router.post('/workflow-templates/:namespace/lint', async (req, res) => {
     try {
-        const response = await axios.post(endurl + 'workflows-templates/'
+        const response = await axios.post(endurl + 'workflow-templates/'
             + req.params.namespace + '/lint', req.body, {
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data.items);
+        res.send('created successfully');
     }
     catch (err) {
         res.status(400).send(err);
@@ -635,7 +706,7 @@ router.post('/workflow-templates/:namespace/lint', async (req, res) => {
 
 router.get('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
-        const response = await axios.get(endurl + 'workflows-templates/'
+        const response = await axios.get(endurl + 'workflow-templates/'
             + req.params.namespace + '/' + req.params.name, {
             headers: {
                 Authorization: req.user.k8s_token
@@ -650,7 +721,7 @@ router.get('/workflow-templates/:namespace/:name', async (req, res) => {
 
 router.put('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
-        const response = await axios.put(endurl + 'workflows-templates/'
+        const response = await axios.put(endurl + 'workflow-templates/'
             + req.params.namespace + '/'+req.params.name, req.body, {
             headers: {
                 Authorization: req.user.k8s_token
@@ -665,7 +736,7 @@ router.put('/workflow-templates/:namespace/:name', async (req, res) => {
 
 router.delete('/workflow-templates/:namespace/:name', async (req, res) => {
     try {
-        const response = await axios.delete(endurl + 'workflows-templates/'
+        const response = await axios.delete(endurl + 'workflow-templates/'
             + req.params.namespace + '/' + req.params.name, {
             headers: {
                 Authorization: req.user.k8s_token

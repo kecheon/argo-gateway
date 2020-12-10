@@ -59,7 +59,8 @@ router.get('/info', (req, res) => {
 
 router.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/');
+    // res.redirect('/');
+    res.json({status: 'success'});
 });
 
 
