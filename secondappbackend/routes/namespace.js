@@ -51,8 +51,8 @@ router.get('/:id', async (req, res) => {
         res.sendStatus(401);
         return;
     }
+    const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
     try {
-        const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
         const response = await axios.get(KsUrl + 'projects/' + req.params.id, {
             headers: {
                 'x-auth-token': tokenId
@@ -110,16 +110,16 @@ router.post('/', async (req, res) => {
         res.sendStatus(401);
         return;
     }
-    if (!('parent_id' in req.body)) {
+    /*if (!('parent_id' in req.body)) {
         res.status(400).send('parent_id is missing.');
         return;
-    }
+    }*/
     let project = req.body;
     project.is_wf = true;
     project.is_cluster = false;
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
-        const clResponse = await axios.get(KsUrl + 'projects/' + project.parent_id, {
+        /*const clResponse = await axios.get(KsUrl + 'projects/' + project.parent_id, {
             headers: {
                 'x-auth-token': tokenId
             }
@@ -128,7 +128,7 @@ router.post('/', async (req, res) => {
         if (!parent.is_wf || !parent.is_cluster) {
             res.status(400).send('invalid parent id');
             return;
-        }
+        }*/
         const ksResponse = await axios.post(KsUrl + 'projects', project, {
             headers: {
                 'x-auth-token': tokenId
@@ -155,7 +155,7 @@ router.delete('/:id', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
-        const project = reponse.data.project;
+        const project = response.data.project;
         if (!project.is_wf || project.is_cluster) {
             res.status(400).send('required id is not a valid namespace id');
             return;

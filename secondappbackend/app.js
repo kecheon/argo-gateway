@@ -214,6 +214,7 @@ app.use('/cluster', require('./routes/cluster'));
 app.use('/user', require('./routes/user'));
 app.use('/namespace', require('./routes/namespace'));
 app.use('/argo', require('./routes/argo'));
+app.use('/role', require('./routes/role'));
 
 // security flaw
 /*app.get('/kubetoken', (req, res) => {
