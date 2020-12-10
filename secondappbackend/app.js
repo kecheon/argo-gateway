@@ -19,7 +19,7 @@ const KeystoneStrategy = require('./passport-keystone');
 
 const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
-const tempdb_session = require('./connect-db');
+//const tempdb_session = require('./connect-db');
 
 const sqlOptions = {
     host: '20.194.32.137',
@@ -183,11 +183,13 @@ passport.use(new KeystoneStrategy({
             res.user.admin_token = getAdminToken();
         req.user.default_project_id = tokenresdata.project.id;
         req.user.default_project_name = tokenresdata.project.name;
-        const k8sadmin_session = await tempdb_session.getSession();
-        const result = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute()
-        const data = result.fetchOne();
-        req.user.k8s_endpoint = data[3];
-        req.user.k8s_token = 'Bearer ' + data[5];
+        //const k8sadmin_session = await tempdb_session.getSession();
+        //const result = await k8sadmin_session.sql(`SELECT * FROM tempdb.cluster_infos WHERE name='admin'`).execute()
+        //const data = result.fetchOne();
+        //req.user.k8s_endpoint = data[3];
+        const k8users = require('./kube.config.json').users;
+        const adminuser = k8users.find(elem => elem.name == 'kubernetes-admin');
+        req.user.k8s_token = 'Bearer ' + adminuser.user.token;
         done(null, req.user);
     }
     catch (err) {

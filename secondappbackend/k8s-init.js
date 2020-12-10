@@ -1,5 +1,5 @@
 const k8s = require('@kubernetes/client-node');
-const tempdb_session = require('./connect-db');
+//const tempdb_session = require('./connect-db');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
