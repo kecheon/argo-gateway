@@ -8,3 +8,4 @@ _reference.js
 .vs/
 test*
 kube.config.json
+uiapp/
