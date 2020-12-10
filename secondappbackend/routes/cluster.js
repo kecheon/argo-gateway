@@ -6,9 +6,9 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const response = null;
+        let response = null;
         if (req.user.roles.includes('wf-app-admin')) {
             // send all project for wf-app-admin
             response = await axios.get(KsUrl + 'projects', {
@@ -89,6 +89,7 @@ router.post('/', async (req, res) => {
     let project = req.body;
     project.is_wf = true;
     project.is_cluster = true;
+    project.parent_id = 'default';
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
         const ksResponse = await axios.post(KsUrl + 'projects', project, {
