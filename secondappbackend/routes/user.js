@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
             elem.sa = elem.wf.k8s_sa;
             delete elem.wf;
         })
-        res.send(users);
+        res.json({users});
     }
     catch (err) {
         console.error(err);
