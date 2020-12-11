@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const blacklist = require('express-jwt-blacklist');
 const { check } = require('express-validator');
 
 const loginValidation = [
@@ -58,9 +59,8 @@ router.get('/info', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-    req.logout();
-    // res.redirect('/');
-    res.json({status: 'success'});
+    blacklist.revoke(req.user);
+    res.sendStatus(200);
 });
 
 

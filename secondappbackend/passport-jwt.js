@@ -1,20 +1,24 @@
 require('dotenv').config();
-
+const blacklist = require('express-jwt-blacklist');
 const axios = require('axios');
 const endpoint = 'http://183.111.177.141/identity/v3';
 
 const Strategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
+const secret = process.env.SECRET;
 // const k8s_token = process.env.K8S_TOKEN;
 
 const applyPassportStrategy = passport => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-  options.secretOrKey = 'do not need to know';
+  options.secretOrKey = secret;
+  options.isRevoked = blacklist.isRevoked;
   options.passReqToCallback = true;
   passport.use(
     new Strategy(options, async (req, payload, done) => {
+      console.log('==================================');
+      console.log(req.user);
       const name = payload.user.name;
       const password = payload.user.password;
     
@@ -67,6 +71,7 @@ const applyPassportStrategy = passport => {
           const k8users = require('./kube.config.json').users;
           const adminuser = k8users.find(elem => elem.name == 'kubernetes-admin');
           user.k8s_token = 'Bearer ' + adminuser.user.token;
+          user.tokenId2 = `Bearer ${prjToken}`;
           return done(null, user);
         }
         console.log('no token issued');

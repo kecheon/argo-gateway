@@ -1,19 +1,14 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 
 const KsInfo = require('../ksinfo.json');
 
 const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
 
+router.all('/*', passport.authenticate('jwt', { session: false }));
 router.get('/', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
+    console.log(req.user);
     try {
         const response = await axios.get(ksUserUrl, {
             headers: {
@@ -39,11 +34,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/admin', (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
+    if (!req.user.tokenId2) {
         res.status(401).send('second token needed');
         return;
     }
@@ -54,11 +45,7 @@ router.get('/admin', (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
+    if (!req.user.tokenId2) {
         res.status(401).send('second token needed');
         return;
     }
@@ -77,11 +64,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
+    if (!req.user.tokenId2) {
         res.status(401).send('second token needed');
         return;
     }
@@ -100,11 +83,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id/namespace', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
+    if (!req.user.tokenId2) {
         res.status(401).send('second token needed');
         return;
     }
@@ -123,11 +102,7 @@ router.get('/:id/namespace', async (req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
+    if (!req.user.tokenId2) {
         res.status(401).send('second token needed');
         return;
     }
