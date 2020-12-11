@@ -12,7 +12,7 @@ RUN npm install && \
 	npm cache clean --force
 
 WORKDIR /usr/src/app
-RUN git clone -b docker https://github.com/kecheon/argo.git
+RUN git clone -b jwt https://github.com/kecheon/argo.git
 
 WORKDIR /usr/src/app/argo/ui
 RUN npm install && \
