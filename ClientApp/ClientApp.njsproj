@@ -109,7 +109,38 @@
   <ItemGroup>
     <TypeScriptCompile Include="e2e\src\app.e2e-spec.ts" />
     <TypeScriptCompile Include="e2e\src\app.po.ts" />
-    <TypeScriptCompile Include="src\app\*.ts" />
+    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\app.component.ts" />
+    <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\c-workflow-t.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\c-workflow-t.component.ts" />
+    <TypeScriptCompile Include="src\app\check-login.ts" />
+    <TypeScriptCompile Include="src\app\confirm.dialog.ts" />
+    <TypeScriptCompile Include="src\app\error.alert.ts" />
+    <TypeScriptCompile Include="src\app\home.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\home.component.ts" />
+    <TypeScriptCompile Include="src\app\login.spec.ts" />
+    <TypeScriptCompile Include="src\app\login.ts" />
+    <TypeScriptCompile Include="src\app\material.module.ts" />
+    <TypeScriptCompile Include="src\app\notfound.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\notfound.component.ts" />
+    <TypeScriptCompile Include="src\app\project.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\project.service.ts" />
+    <TypeScriptCompile Include="src\app\projectData.ts" />
+    <TypeScriptCompile Include="src\app\user.dialog.ts" />
+    <TypeScriptCompile Include="src\app\user.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\user.service.ts" />
+    <TypeScriptCompile Include="src\app\userData.ts" />
+    <TypeScriptCompile Include="src\app\usermanager.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\usermanager.component.ts" />
+    <TypeScriptCompile Include="src\app\workflow-t.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\workflow-t.component.ts" />
+    <TypeScriptCompile Include="src\app\workflows.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\workflows.component.ts" />
+    <TypeScriptCompile Include="src\app\workflowData.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
