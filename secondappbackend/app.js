@@ -19,7 +19,7 @@ const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION
 
 
 // const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
-const rootPath = path.join(__dirname, '../../argo/ui/dist/app');
+const rootPath = path.join(__dirname, '../dist/app');
 
 //const tempdb_session = require('./connect-db');
 
@@ -119,8 +119,10 @@ async function getAdminToken() {
 }
 
 passport.use(new KeystoneStrategy({
-    authUrl: KsIdentityURL+'auth/tokens'
+    authUrl: KsIdentityURL+'auth/tokens',
+    session: false
 }, async (req, done) => {
+    console.log(req);
     req.user.tokenId = req.token.id;
     try {
         /*const projectres = await axios.get(KsIdentityURL + 'auth/projects', {
@@ -210,6 +212,7 @@ app.use('/cluster', require('./routes/cluster'));
 app.use('/user', require('./routes/user'));
 app.use('/namespace', require('./routes/namespace'));
 app.use('/api/v1', require('./routes/argo'));
+app.use('/role', require('./routes/role'));
 
 // security flaw
 /*app.get('/kubetoken', (req, res) => {

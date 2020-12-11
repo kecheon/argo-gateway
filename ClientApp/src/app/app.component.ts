@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from './user.service';
 import { UserData } from './userData';
 import { catchError } from 'rxjs/operators';
+import { ConfirmDialog } from './confirm.dialog';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   constructor(
-    private _userService: UserService
+    private _userService: UserService,
+    private confirmDialog: ConfirmDialog
   ) {
     if (window.outerWidth < 800) {
       this.sidenavMode = 'over';
@@ -22,9 +24,7 @@ export class AppComponent implements OnInit {
   isOpened: boolean = true;
   sidenavMode: 'side' | 'over' | 'push' = 'side';
 
-  user: {
-    name: string
-  } = {name:''};
+  user: UserData;
 
   handleMenu(sidemenu: any) {
     if (window.outerWidth < 800)
@@ -33,9 +33,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this._userService.getAccountUser()
-      .subscribe(data => this.user.name = data.name, err => {
-        this.user = { name: '' };
-        catchError(err);
-      });
+      .subscribe(data => this.user = data,
+        err =>catchError(err));
+  }
+
+  showAccountInfo() {
+    this.confirmDialog.open([
+      'id: ' + this.user.id,
+      'name: ' + this.user.name,
+      'default project: ' + this.user.default_project_name
+      ]
+    );
   }
 }

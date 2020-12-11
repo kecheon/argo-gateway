@@ -46,11 +46,7 @@ router.get('/archived-workflows', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -95,7 +91,6 @@ router.get('/cluster-workflow-templates', async (req, res) => {
         res.send(response.data);
     }
     catch (err) {
-        console.log(err)
         res.status(400).send(err);
     }
 });
@@ -177,7 +172,6 @@ router.get('/cron-workflows', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
         res.send(response.data);
     }
     catch (err) {
@@ -375,6 +369,7 @@ router.get('/stream/events/:namespace', async (req, res) => {
 
 router.get('/workflow-events', async (req, res) => {
     const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflow-events/' : endurl + req.url;
+    console.log(requestUrl);
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -415,7 +410,7 @@ router.get('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        return response.data
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -579,7 +574,7 @@ router.put('/workflows/:namespace/:name/set', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        res.send(response.data)
     }
     catch (err) {
         res.status(400).send(err);
