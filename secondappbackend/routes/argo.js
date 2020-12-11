@@ -18,11 +18,7 @@ router.get('/archived-workflows', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -64,11 +60,7 @@ router.get('/cluster-workflow-templates', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -152,11 +144,7 @@ router.get('/cron-workflows', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -359,11 +347,7 @@ router.get('/workflow-events', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
@@ -397,11 +381,7 @@ router.get('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
+        res.send(response.data);
     }
     catch (err) {
         res.status(400).send(err);
