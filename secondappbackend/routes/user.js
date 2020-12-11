@@ -4,11 +4,11 @@ const passport = require('passport');
 
 const KsInfo = require('../ksinfo.json');
 
-const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
+const ksUserUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
 
 router.all('/*', passport.authenticate('jwt', { session: false }));
 router.get('/', async (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     try {
         const response = await axios.get(ksUserUrl, {
             headers: {

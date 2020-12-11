@@ -18,7 +18,6 @@ const KsInfo = require('./ksinfo.json');
 const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 
-// const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 const rootPath = path.join(__dirname, '../dist/app');
 
 //const tempdb_session = require('./connect-db');

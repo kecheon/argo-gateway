@@ -1,14 +1,17 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 //const spawn = require('child_process');
 
 const KsInfo = require('../ksinfo.json');
 
-const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
+const KsUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 const k8sClient = require('../k8s-init');
 
-router.all('*', ensureAuthenticated);
+// router.all('*', ensureAuthenticated);
+
+router.all('/*', passport.authenticate('jwt', { session: false }));
 
 /*router.get('/sa/:account/:namespace', (req, res) => {
     const args = ['get', 'serviceaccount',
@@ -21,6 +24,7 @@ router.all('*', ensureAuthenticated);
 })*/
 
 router.get('/', async (req, res) => {
+    console.log(req.user);
     try {
         let response = null;
         if (req.user.roles.includes('wf-app-admin')) {

@@ -2,6 +2,7 @@ require('dotenv').config();
 const blacklist = require('express-jwt-blacklist');
 const axios = require('axios');
 const endpoint = 'http://183.111.177.141/identity/v3';
+const getAdminToken = require('./getAdminToken');
 
 const Strategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -17,7 +18,6 @@ const applyPassportStrategy = passport => {
   options.passReqToCallback = true;
   passport.use(
     new Strategy(options, async (req, payload, done) => {
-      console.log('==================================');
       console.log(req.user);
       const name = payload.user.name;
       const password = payload.user.password;
@@ -66,12 +66,17 @@ const applyPassportStrategy = passport => {
           }
           const prjTokenResponse = await axios.post(prjScopedTokenEndPoint, authData, {headers: authHeaders});
           const prjToken = prjTokenResponse.headers['x-subject-token'];
-          const user = response.data.token.user;
-          // user.k8s_token = `Bearer ${prjToken}`;
+          const user = prjTokenResponse.data.token.user;
+          user.admin_token = await getAdminToken();
           const k8users = require('./kube.config.json').users;
           const adminuser = k8users.find(elem => elem.name == 'kubernetes-admin');
           user.k8s_token = 'Bearer ' + adminuser.user.token;
-          user.tokenId2 = `Bearer ${prjToken}`;
+          user.tokenId = token;
+          user.tokenId2 = prjToken;
+          user.default_project_id = projects[0].id;
+          user.default_project_name = projects[0].name;
+          // TODO temporary hard coded
+          user.roles = ['wf-app-admin'];
           return done(null, user);
         }
         console.log('no token issued');
