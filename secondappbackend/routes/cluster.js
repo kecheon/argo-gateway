@@ -6,6 +6,8 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
+router.all('*', ensureAuthenticated);
+
 router.get('/', async (req, res) => {
     try {
         let response = null;
@@ -25,6 +27,13 @@ router.get('/', async (req, res) => {
             });
         }
         projects = response.data.projects.filter(elem => elem.is_wf && elem.is_cluster);
+        projects.forEach(elem => {
+            delete elem.is_wf;
+            delete elem.is_cluster;
+            delete elem.tags;
+            delete elem.options;
+            delete elem.links;
+        });
         res.send(projects);
     }
     catch (err) {
@@ -45,8 +54,17 @@ router.get('/:id', async (req, res) => {
             }
         });
         let project = response.data.project;
-        delete project.tags, delete project.options, delete project.links;
-        res.send(project);
+        if (!(project?.is_wf)) {
+            res.status(400).send('requested cluster is not properly set.(is_wf)');
+            return;
+        }
+        if (!project.is_cluster)
+            res.sendStatus(404);
+        else {
+            delete project.is_wf, delete project.is_cluster;
+            delete project.tags, delete project.options, delete project.links;
+            res.send(project);
+        }
     }
     catch (err) {
         res.status(400).send(err);

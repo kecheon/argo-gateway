@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const endurl = require('../ksinfo.json').ARGO_API_URL;
 
-router.all('', ensureAuthenticated);
+router.all('*', ensureAuthenticated);
 
 router.get('/archived-workflows', async (req, res) => {
     /*let url =
@@ -64,7 +64,11 @@ router.get('/cluster-workflow-templates', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -149,7 +153,10 @@ router.get('/cron-workflows', async (req, res) => {
             }
         });
         const items = response.data.items;
-        res.send(response.data);
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -352,7 +359,11 @@ router.get('/workflow-events', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
@@ -386,7 +397,11 @@ router.get('/workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        return response.data
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);
