@@ -233,6 +233,8 @@
     <Folder Include="argoui\src\app\cron-workflows\components\" />
     <Folder Include="argoui\src\app\cron-workflows\components\cron-workflow-details\" />
     <Folder Include="argoui\src\app\cron-workflows\components\cron-workflow-list\" />
+    <Folder Include="argoui\src\app\help\" />
+    <Folder Include="argoui\src\app\help\components\" />
     <Folder Include="argoui\src\app\login\" />
     <Folder Include="argoui\src\app\login\components\" />
     <Folder Include="argoui\src\app\reports\" />
