@@ -4,8 +4,9 @@ ClientApp/**/*.map
 ClientApp/package-lock.json
 secondappbackend/package-lock.json
 _reference.js
-*/node_modules/
+node_modules/
 .vs/
 test*
 kube.config.json
 uiapp/
+*.user
