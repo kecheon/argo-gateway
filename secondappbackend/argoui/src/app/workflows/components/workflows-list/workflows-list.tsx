@@ -103,8 +103,8 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
 
     private subscription: Subscription;
 
-    constructor(props: RouteComponentProps<State>, context: any) {
-        super(props, context);
+    constructor(props: RouteComponentProps<any>) {
+        super(props);
         const savedOptions = WorkflowsList.getOptions();
         this.state = {
             pagination: {
