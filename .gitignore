@@ -1,11 +1,54 @@
 ClientApp/dist/
 ClientApp/**/*.js
 ClientApp/**/*.map
-ClientApp/package-lock.json
-secondappbackend/package-lock.json
+package-lock.json
+yarn.lock
 _reference.js
-*/node_modules/
+node_modules/
 .vs/
 test*
 kube.config.json
 uiapp/
+*.user
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# compiled output
+dist/
+tmp/
+out-tsc/
+# Only exists if Bazel was run
+bazel-out/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings

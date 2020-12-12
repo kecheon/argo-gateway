@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const axios = require('axios');
 //const spawn = require('child_process');
 
@@ -6,7 +7,8 @@ const KsInfo = require('../ksinfo.json');
 
 const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
-router.all('*', ensureAuthenticated);
+// router.all('*', ensureAuthenticated);
+router.all('/*', passport.authenticate('jwt', { session: false }));
 
 router.get('/', async (req, res) => {
     try {

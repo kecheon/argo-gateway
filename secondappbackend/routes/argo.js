@@ -426,7 +426,11 @@ router.get('/workflows', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        res.send(response.data);
+        const items = response.data.items;
+        if (items?.length > 0)
+            res.send(response.data);
+        else
+            res.sendStatus(204);
     }
     catch (err) {
         res.status(400).send(err);

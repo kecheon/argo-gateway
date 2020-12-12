@@ -7,7 +7,7 @@
   },
   "description": "secondappbackend",
   "author": {
-    "name": ""
+    "name": "Alan Anderson"
   },
   "dependencies": {
     "@kubernetes/client-node": "^0.13.0",
