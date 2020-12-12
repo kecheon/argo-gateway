@@ -45,6 +45,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="kube.config.json" />
+    <Content Include="package.json" />
     <Content Include="passport-keystone.js">
       <SubType>Code</SubType>
     </Content>
