@@ -53,9 +53,12 @@ router.get('/notLoggedIn', function (req, res) {
     else res.sendStatus(400);
 });
 
-router.get('/info', (req, res) => {
-    if (req.isAuthenticated()) res.send(req.user.name);
-    else res.sendStatus(401);
+router.get('/info', passport.authenticate('jwt', {session: false}), 
+    (req, res) => {
+        delete req.user.k8s_token;
+        delete req.user.tokenId;
+        delete req.user.tokenId2;
+        res.json(req.user);
 });
 
 router.get('/logout', (req, res) => {
