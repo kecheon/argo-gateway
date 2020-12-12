@@ -66,8 +66,7 @@ const applyPassportStrategy = passport => {
           }
           const prjTokenResponse = await axios.post(prjScopedTokenEndPoint, authData, {headers: authHeaders});
           const prjToken = prjTokenResponse.headers['x-subject-token'];
-          const user = prjTokenResponse.data.token.user;
-          user.admin_token = await getAdminToken();
+          const { user, roles } = prjTokenResponse.data.token;
           const k8users = require('./kube.config.json').users;
           const adminuser = k8users.find(elem => elem.name == 'kubernetes-admin');
           user.k8s_token = 'Bearer ' + adminuser.user.token;
@@ -75,8 +74,9 @@ const applyPassportStrategy = passport => {
           user.tokenId2 = prjToken;
           user.default_project_id = projects[0].id;
           user.default_project_name = projects[0].name;
-          // TODO temporary hard coded
-          user.roles = ['wf-app-admin'];
+          user.roles = roles.map(elem => elem.name).filter(elem => /^wf\-/.test(elem));
+          // grant access to admin token to tadmin
+          if (user.roles.includes('wf-tenant-admin')) user.admin_token = getAdminToken();
           return done(null, user);
         }
         console.log('no token issued');
