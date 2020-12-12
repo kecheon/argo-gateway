@@ -51,7 +51,6 @@
     </Content>
     <Content Include="pkgcloud\**\*" />
     <Content Include="routes\**\*" />
-    <Content Include="argoui\.gitignore" />
     <Content Include="argoui\.prettierrc" />
     <Content Include="argoui\.snyk" />
     <Content Include="argoui\.yarnrc" />
