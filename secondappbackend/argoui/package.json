@@ -33,8 +33,7 @@
         "react-monaco-editor": "^0.36.0",
         "react-router-dom": "^4.2.2",
         "superagent": "^3.8.2",
-        "superagent-promise": "^1.1.0",
-        "swagger-ui-react": "^3.29.0"
+        "superagent-promise": "^1.1.0"
     },
     "devDependencies": {
         "@types/chart.js": "^2.9.24",
@@ -47,7 +46,6 @@
         "@types/react-dom": "^16.8.2",
         "@types/react-router-dom": "^4.2.3",
         "@types/superagent": "^3.5.7",
-        "@types/swagger-ui-react": "^3.23.2",
         "copy-webpack-plugin": "^4.3.1",
         "copyfiles": "^1.2.0",
         "file-loader": "^6.0.0",
@@ -70,8 +68,7 @@
         "typescript": "^3.9.2",
         "webfonts-generator": "^0.4.0",
         "webpack": "^4.35.0",
-        "webpack-cli": "^3.3.11",
-        "webpack-dev-server": "^3.7.2"
+        "webpack-cli": "^3.3.11"
     },
     "resolutions": {
         "@types/react": "16.8.5"
