@@ -35,7 +35,6 @@
   <ItemGroup>
     <Content Include=".browserslistrc" />
     <Content Include=".editorconfig" />
-    <Content Include=".gitignore" />
     <Content Include="angular.json" />
     <Content Include="dist\**\*" />
     <Content Include="e2e\protractor.conf.js" />
