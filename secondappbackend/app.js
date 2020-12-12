@@ -18,7 +18,7 @@ const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION
 const KeystoneStrategy = require('./passport-keystone');
 
 //const rootPath = path.join(__dirname, 'argoui/dist/app');
-//const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
+const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
 
 //const tempdb_session = require('./connect-db');
 
