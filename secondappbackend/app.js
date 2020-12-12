@@ -121,7 +121,6 @@ passport.use(new KeystoneStrategy({
     authUrl: KsIdentityURL+'auth/tokens',
     session: false
 }, async (req, done) => {
-    console.log(req);
     req.user.tokenId = req.token.id;
     try {
         /*const projectres = await axios.get(KsIdentityURL + 'auth/projects', {

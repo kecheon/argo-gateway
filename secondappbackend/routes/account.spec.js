@@ -26,7 +26,7 @@ test('login test', async () => {
   }
 });
 
-test('login test w wrong password', async () => {
+xtest('login test w wrong password', async () => {
   const endpoint = 'http://localhost:3000';
   const data = {
     "username": "admin",

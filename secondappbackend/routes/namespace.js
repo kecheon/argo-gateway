@@ -24,7 +24,6 @@ router.all('/*', passport.authenticate('jwt', { session: false }));
 })*/
 
 router.get('/', async (req, res) => {
-    console.log(req.user);
     try {
         let response = null;
         if (req.user.roles.includes('wf-app-admin')) {
@@ -50,7 +49,8 @@ router.get('/', async (req, res) => {
             delete elem.options;
             delete elem.links;
         });
-        res.send(projects);
+        console.log(projects);
+        res.json({namespaces: projects});
     }
     catch (err) {
         console.log(err);
