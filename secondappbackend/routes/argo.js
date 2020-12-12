@@ -339,7 +339,7 @@ router.get('/userinfo', async (req, res) => {
     }
 });
 
-router.get('/version', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/version', async (req, res) => {
     try {
         const response = await axios.get(endurl + 'version', {
             headers: {
