@@ -24,6 +24,9 @@ test('login test', async () => {
   } catch(err) {
     expect(err.response.status).toEqual(401);
   }
+
+  const infoRes = await axios.get(`${endpoint}/account/info`, { headers });
+  console.log(infoRes.data);
 });
 
 xtest('login test w wrong password', async () => {
