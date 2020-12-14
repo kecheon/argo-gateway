@@ -15,7 +15,7 @@ const config = {
     },
     output: {
         filename: "[name].[chunkhash].js",
-        path: __dirname + "../../dist/app"
+        path: __dirname + "../../../dist/app"
     },
 
     devtool: "source-map",

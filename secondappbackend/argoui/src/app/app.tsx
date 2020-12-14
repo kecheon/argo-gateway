@@ -8,11 +8,9 @@ import {ContextApis, Provider} from './shared/context';
 
 import {NotificationType} from 'argo-ui/src/index';
 import {Version} from '../models';
-import apidocs from './apidocs';
 import archivedWorkflows from './archived-workflows';
 import clusterWorkflowTemplates from './cluster-workflow-templates';
 import cronWorkflows from './cron-workflows';
-import help from './help';
 import login from './login';
 import reports from './reports';
 import ErrorBoundary from './shared/components/error-boundary';
@@ -27,8 +25,6 @@ const workflowTemplatesUrl = '/workflow-templates';
 const clusterWorkflowTemplatesUrl = '/cluster-workflow-templates';
 const cronWorkflowsUrl = '/cron-workflows';
 const archivedWorkflowsUrl = '/archived-workflows';
-const helpUrl = '/help';
-const apiDocsUrl = '/apidocs';
 const userInfoUrl = '/userinfo';
 const loginUrl = '/login';
 const timelineUrl = '/timeline';
@@ -71,16 +67,6 @@ const navItems = [
         title: 'User',
         path: userInfoUrl,
         iconClassName: 'fa fa-user-alt'
-    },
-    {
-        title: 'API Docs',
-        path: apiDocsUrl,
-        iconClassName: 'fa fa-code'
-    },
-    {
-        title: 'Help',
-        path: helpUrl,
-        iconClassName: 'fa fa-question-circle'
     }
 ];
 
@@ -135,7 +121,7 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
                         <Notifications notifications={this.notificationsManager.notifications} />
                         <ErrorBoundary>
                             <Switch>
-                                <Route exact={true} strict={true} path={'/')}>
+                                <Route exact={true} strict={true} path='/'>
                                     <Redirect to={workflowsUrl} />
                                 </Route>
                                 <Route exact={true} strict={true} path={timelineUrl}>
@@ -172,8 +158,6 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
                                 <Route path={cronWorkflowsUrl} component={cronWorkflows.component} />
                                 <Route path={archivedWorkflowsUrl} component={archivedWorkflows.component} />
                                 <Route path={reportsUrl} component={reports.component} />
-                                <Route exact={true} strict={true} path={helpUrl} component={help.component} />
-                                <Route exact={true} strict={true} path={apiDocsUrl} component={apidocs.component} />
                                 <Route exact={true} strict={true} path={userInfoUrl} component={userinfo.component} />
                                 <Route exact={true} strict={true} path={loginUrl} component={login.component} />
                             </Switch>
