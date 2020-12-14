@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {Event} from '../../../models';
 import {ErrorNotice} from '../../shared/components/error-notice';
 import {Notice} from '../../shared/components/notice';
@@ -88,7 +89,7 @@ export class EventsPanel extends React.Component<Props, State> {
         }
         this.subscription = services.workflows
             .watchEvents(this.props.namespace, this.fieldSelector)
-            .map(event => {
+            .pipe(map(event => {
                 const events = this.state.events || [];
                 const index = events.findIndex(item => item.metadata.uid === event.metadata.uid);
                 if (index > -1 && event.metadata.resourceVersion === events[index].metadata.resourceVersion) {
@@ -100,7 +101,7 @@ export class EventsPanel extends React.Component<Props, State> {
                     events.unshift(event);
                 }
                 return events;
-            })
+            }))
             .subscribe(
                 events => this.setState({events}),
                 error => this.setState({error})

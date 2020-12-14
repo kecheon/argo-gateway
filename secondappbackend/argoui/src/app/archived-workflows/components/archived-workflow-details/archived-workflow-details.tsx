@@ -1,5 +1,5 @@
-import {NotificationType, Page, SlidingPanel} from 'argo-ui';
-import * as classNames from 'classnames';
+import {Page, SlidingPanel} from 'argo-ui';
+import classNames from 'classnames';
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 import {Link, Workflow} from '../../../../models';
@@ -237,12 +237,7 @@ export class ArchivedWorkflowDetails extends BasePage<RouteComponentProps<any>, 
             .then(() => {
                 document.location.href = '/archived-workflows';
             })
-            .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to delete archived workflow ' + e,
-                    type: NotificationType.Error
-                });
-            });
+            .catch(e => console.error(e));
     }
 
     private openLink(link: Link) {

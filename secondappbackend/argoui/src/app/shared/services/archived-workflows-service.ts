@@ -3,21 +3,21 @@ import {Pagination} from '../pagination';
 import requests from './requests';
 
 export class ArchivedWorkflowsService {
-    public list(namespace: string, phases: string[], labels: string[], minStartedAt: Date, maxStartedAt: Date, pagination: Pagination) {
+    public list(namespace: string, phases: string[], labels: string[], minStartedAt: Date | [Date, Date], maxStartedAt: Date | [Date, Date], pagination: Pagination) {
         return requests
-            .get(`api/v1/archived-workflows?${this.queryParams({namespace, phases, labels, minStartedAt, maxStartedAt, pagination}).join('&')}`)
+            .get(`/argo/archived-workflows?${this.queryParams({namespace, phases, labels, minStartedAt, maxStartedAt, pagination}).join('&')}`)
             .then(res => res.body as models.WorkflowList);
     }
 
     public get(uid: string) {
-        return requests.get(`api/v1/archived-workflows/${uid}`).then(res => res.body as models.Workflow);
+        return requests.get(`/argo/archived-workflows/${uid}`).then(res => res.body as models.Workflow);
     }
 
     public delete(uid: string) {
-        return requests.delete(`api/v1/archived-workflows/${uid}`);
+        return requests.delete(`/argo/archived-workflows/${uid}`);
     }
 
-    private queryParams(filter: {namespace?: string; phases?: Array<string>; labels?: Array<string>; minStartedAt?: Date; maxStartedAt?: Date; pagination: Pagination}) {
+    private queryParams(filter: { namespace?: string; phases?: Array<string>; labels?: Array<string>; minStartedAt?: Date | [Date, Date]; maxStartedAt?: Date | [Date, Date]; pagination: Pagination}) {
         const queryParams: string[] = [];
         const fieldSelector = this.fieldSelectorParams(filter.namespace, filter.minStartedAt, filter.maxStartedAt);
         if (fieldSelector.length > 0) {
@@ -36,16 +36,18 @@ export class ArchivedWorkflowsService {
         return queryParams;
     }
 
-    private fieldSelectorParams(namespace: string, minStartedAt: Date, maxStartedAt: Date) {
+    private fieldSelectorParams(namespace: string, minStartedAt: Date | [Date, Date], maxStartedAt: Date | [Date, Date]) {
         let fieldSelector = '';
         if (namespace) {
             fieldSelector += 'metadata.namespace=' + namespace + ',';
         }
         if (minStartedAt) {
-            fieldSelector += 'spec.startedAt>' + minStartedAt.toISOString() + ',';
+            const minDate = Array.isArray(minStartedAt) ? minStartedAt[0] : minStartedAt;
+            fieldSelector += 'spec.startedAt>' + minDate.toISOString() + ',';
         }
         if (maxStartedAt) {
-            fieldSelector += 'spec.startedAt<' + maxStartedAt.toISOString() + ',';
+            const maxDate = Array.isArray(maxStartedAt) ? maxStartedAt[0] : maxStartedAt;
+            fieldSelector += 'spec.startedAt<' + maxDate.toISOString() + ',';
         }
         if (fieldSelector.endsWith(',')) {
             fieldSelector = fieldSelector.substr(0, fieldSelector.length - 1);

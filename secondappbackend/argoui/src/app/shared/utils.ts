@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs';
+import { Observable, from } from 'rxjs';
 import * as models from '../../models';
 import {NODE_PHASE} from '../../models';
 
@@ -32,10 +32,10 @@ export const Utils = {
 
     toObservable<T>(val: T | Observable<T> | Promise<T>): Observable<T> {
         const observable = val as Observable<T>;
-        if (observable && observable.subscribe && observable.catch) {
+        if (observable && observable.subscribe) {
             return observable as Observable<T>;
         }
-        return Observable.from([val as T]);
+        return from([val as T]);
     },
 
     tryJsonParse(input: string) {

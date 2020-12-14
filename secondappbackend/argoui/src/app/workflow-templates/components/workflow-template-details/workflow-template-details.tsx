@@ -1,4 +1,4 @@
-import {NotificationType, Page} from 'argo-ui';
+import {Page} from 'argo-ui';
 import {SlidingPanel} from 'argo-ui/src/index';
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
@@ -113,12 +113,7 @@ export class WorkflowTemplateDetails extends BasePage<RouteComponentProps<any>, 
         }
         services.workflowTemplate
             .delete(this.name, this.namespace)
-            .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to delete workflow template ' + e,
-                    type: NotificationType.Error
-                });
-            })
+            .catch(e => console.error(e))
             .then(() => {
                 document.location.href = '/workflow-templates';
             });

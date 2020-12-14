@@ -9,7 +9,8 @@ const path = require("path");
 const isProd = process.env.NODE_ENV === "production";
 
 const config = {
-    mode: isProd ? "production" : "development",
+    //mode: isProd ? "production" : "development",
+    mode:"development",
     entry: {
         main: "./src/app/index.tsx"
     },
@@ -65,7 +66,7 @@ const config = {
         }, {
             from: "node_modules/@fortawesome/fontawesome-free/webfonts", to: "assets/fonts"
         }, {
-            from: 'node_modules/monaco-editor/min/vs/base/browser/ui/codiconLabel/codicon/codicon.ttf', to: "."
+            from: 'node_modules/monaco-editor/min/vs/base/browser/ui/codicons/codicon/codicon.ttf', to: "."
         }]),
         new MonacoWebpackPlugin({ "languages": ["json", "yaml"] })
     ]

@@ -15,9 +15,9 @@ interface ArchivedWorkflowFilterProps {
     phaseItems: string[];
     selectedPhases: string[];
     selectedLabels: string[];
-    minStartedAt?: Date;
-    maxStartedAt?: Date;
-    onChange: (namespace: string, selectedPhases: string[], labels: string[], minStartedAt: Date, maxStartedAt: Date) => void;
+    minStartedAt?: Date | [Date, Date];
+    maxStartedAt?: Date | [Date, Date];
+    onChange: (namespace: string, selectedPhases: string[], labels: string[], minStartedAt: Date|[Date,Date], maxStartedAt: Date|[Date,Date]) => void;
 }
 
 export class ArchivedWorkflowFilters extends React.Component<ArchivedWorkflowFilterProps, {}> {
@@ -38,7 +38,7 @@ export class ArchivedWorkflowFilters extends React.Component<ArchivedWorkflowFil
                         <p className='wf-filters-container__title'>Labels</p>
                         <TagsInput
                             placeholder=''
-                            autocomplete={this.getLabelSuggestions(this.props.workflows)}
+                            //autocomplete={this.getLabelSuggestions(this.props.workflows)}
                             tags={this.props.selectedLabels}
                             onChange={tags => {
                                 this.props.onChange(this.props.namespace, this.props.selectedPhases, tags, this.props.minStartedAt, this.props.maxStartedAt);
@@ -59,7 +59,7 @@ export class ArchivedWorkflowFilters extends React.Component<ArchivedWorkflowFil
                     <div className='columns small-6 xlarge-12'>
                         <p className='wf-filters-container__title'>Started At</p>
                         <DatePicker
-                            selected={this.props.minStartedAt}
+                            selected={Array.isArray(this.props.minStartedAt) ? this.props.minStartedAt[0] : this.props.minStartedAt}
                             onChange={date => {
                                 this.props.onChange(this.props.namespace, this.props.selectedPhases, this.props.selectedLabels, date, this.props.maxStartedAt);
                             }}
@@ -69,7 +69,7 @@ export class ArchivedWorkflowFilters extends React.Component<ArchivedWorkflowFil
                             className='argo-field argo-textarea'
                         />
                         <DatePicker
-                            selected={this.props.maxStartedAt}
+                            selected={Array.isArray(this.props.maxStartedAt) ? this.props.maxStartedAt[0] : this.props.maxStartedAt}
                             onChange={date => {
                                 this.props.onChange(this.props.namespace, this.props.selectedPhases, this.props.selectedLabels, this.props.minStartedAt, date);
                             }}

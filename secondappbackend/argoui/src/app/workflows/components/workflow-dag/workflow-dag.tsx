@@ -1,5 +1,5 @@
 import {Ticker} from 'argo-ui';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as dagre from 'dagre';
 import * as React from 'react';
 

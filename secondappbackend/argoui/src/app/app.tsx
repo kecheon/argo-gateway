@@ -3,10 +3,10 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import {Redirect, Route, Router, Switch} from 'react-router';
 
-import {Layout, NavigationManager, Notifications, NotificationsManager, Popup, PopupManager, PopupProps} from 'argo-ui';
+import {Layout, NavigationManager, NotificationsManager, Popup, PopupManager, PopupProps} from 'argo-ui';
 import {ContextApis, Provider} from './shared/context';
 
-import {NotificationType} from 'argo-ui/src/index';
+//import { NotificationType } from 'argo-ui';
 import {Version} from '../models';
 import archivedWorkflows from './archived-workflows';
 import clusterWorkflowTemplates from './cluster-workflow-templates';
@@ -99,10 +99,11 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
             .then(() => services.info.getInfo())
             .then(info => this.setState({namespace: info.managedNamespace || Utils.getCurrentNamespace() || ''}))
             .catch(error => {
-                this.notificationsManager.show({
+                console.error(error);
+                /*this.notificationsManager.show({
                     content: 'Failed to load ' + error,
                     type: NotificationType.Error
-                });
+                });*/
             });
     }
 
@@ -118,7 +119,7 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
                 {this.state.popupProps && <Popup {...this.state.popupProps} />}
                 <Router history={history}>
                     <Layout navItems={navItems} version={() => <>{this.state.version ? this.state.version.version : 'unknown'}</>}>
-                        <Notifications notifications={this.notificationsManager.notifications} />
+
                         <ErrorBoundary>
                             <Switch>
                                 <Route exact={true} strict={true} path='/'>
