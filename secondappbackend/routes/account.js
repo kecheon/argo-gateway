@@ -34,8 +34,8 @@ router.get('/info', (req, res) => {
             id: user.id,
             name: user.name,
             roles: user.roles,
-            default_project_id: user.default_project_id,
-            default_project_name: user.default_project_name
+            primary_namespace_id: user.default_project_id,
+            primary_namespace_name: user.default_project_name
         };
         res.send(userinfo);
 
