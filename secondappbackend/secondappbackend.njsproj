@@ -475,6 +475,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="argoui\src\app\help\components\help.tsx" />
     <TypeScriptCompile Include="argoui\src\app\help\index.tsx" />
+    <TypeScriptCompile Include="argoui\src\models\kubernetes.ts" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\components\autocomplete\autocomplete-field.tsx" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\components\autocomplete\autocomplete.tsx" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\components\checkbox.spec.tsx" />

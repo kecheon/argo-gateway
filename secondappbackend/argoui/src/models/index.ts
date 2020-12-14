@@ -4,4 +4,4 @@ export * from './workflows';
 export * from './workflow-templates';
 export * from './cron-workflows';
 export * from './cluster-workflow-templates';
-export {models as kubernetes} from 'argo-ui';
+export * as kubernetes from './kubernetes';

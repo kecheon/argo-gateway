@@ -1,4 +1,4 @@
-import {ObjectMeta} from 'argo-ui/src/models/kubernetes';
+import {ObjectMeta} from '../../models/kubernetes';
 
 export const searchToMetadataFilter = (search: string) => {
     const filters: ((md: ObjectMeta) => boolean)[] = [];
