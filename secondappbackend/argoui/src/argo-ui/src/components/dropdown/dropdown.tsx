@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { BehaviorSubject, Subscription, fromEvent } from 'rxjs';
-import { merge, filter } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+//import { merge, filter } from 'rxjs/operators';
 
 export interface DropDownProps {
     isMenu?: boolean;

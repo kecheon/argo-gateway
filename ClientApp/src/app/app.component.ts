@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     this.confirmDialog.open([
       'id: ' + this.user.id,
       'name: ' + this.user.name,
-      'default project: ' + this.user.default_project_name
+      'primary namespace: ' + this.user.primary_namespace_name
       ]
     );
   }

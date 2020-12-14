@@ -4,8 +4,8 @@ export class UserData {
   domain_id: string;
   email: string;
   enabled: boolean;
-  default_project_id: string;
-  default_project_name: string;
+  primary_namespace_id: string;
+  primary_namespace_name: string;
   descriotion: string;
   sa: string;
   default_project_roles: string[];

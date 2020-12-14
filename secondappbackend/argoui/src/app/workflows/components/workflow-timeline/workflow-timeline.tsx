@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import moment from 'moment';
 import * as React from 'react';
-import { Observable, Subscription, fromEvent, interval } from 'rxjs';
+import { Subscription, fromEvent, interval } from 'rxjs';
 
 import * as models from '../../../../models';
 import {Utils} from '../../../shared/utils';
