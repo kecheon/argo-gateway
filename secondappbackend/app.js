@@ -150,7 +150,6 @@ passport.use(new KeystoneStrategy({
                 'x-auth-token': req.user.tokenId
             }
         });
-        console.log(userResponse.data);
         const userInfo = userResponse.data.user;
         if (!userInfo.is_wf || userInfo.is_cluster)
             throw new Error('account information is invalid');
