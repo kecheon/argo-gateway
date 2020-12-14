@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 
 const KsInfo = require('../ksinfo.json');
 
 const KsRoleUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/roles';
 
-router.all('*', ensureAuthenticated);
+// router.all('*', ensureAuthenticated);
+router.all('/*', passport.authenticate('jwt', { session: false }));
 
 router.get('/', async (req, res) => {
     const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
