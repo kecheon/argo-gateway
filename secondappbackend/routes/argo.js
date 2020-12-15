@@ -607,7 +607,7 @@ router.get('/overview-data/:namespace', async (req, res) => {
     catch (err) {
         res.status(400).send(err);
     }
-    res.send(overviewData);    
+    res.json(overviewData);    
 });
 
 router.get('/overview-workflows', async (req, res) => {
