@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="argoui\src\app\webpackv5.config.js" />
     <Content Include="argoui\src\argo-ui\package.json" />
     <Content Include="argoui\src\argo-ui\src\assets\favicon\favicon-16x16.png" />
     <Content Include="argoui\src\argo-ui\src\assets\favicon\favicon-32x32.png" />
@@ -183,8 +184,6 @@
     <Content Include="argoui\src\argo-ui\src\styles\icons\workflow.svg" />
     <Content Include="argoui\src\argo-ui\src\styles\icons\yaml.svg" />
     <Content Include="argoui\src\argo-ui\src\styles\main.scss" />
-    <Content Include="argoui\src\argo-ui\src\tsconfig.json" />
-    <Content Include="argoui\src\argo-ui\src\webpack.config.js" />
     <Content Include="favicon.ico" />
     <Content Include="connect-db.js">
       <SubType>Code</SubType>
@@ -509,7 +508,6 @@
     <TypeScriptCompile Include="argoui\src\argo-ui\src\components\utils.ts" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\context.tsx" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\index.ts" />
-    <TypeScriptCompile Include="argoui\src\argo-ui\src\setupTests.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
