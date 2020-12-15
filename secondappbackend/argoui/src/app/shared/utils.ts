@@ -1,6 +1,7 @@
 import { Observable, from } from 'rxjs';
 import * as models from '../../models';
-import {NODE_PHASE} from '../../models';
+import { NODE_PHASE } from '../../models';
+import axios, { AxiosPromise, AxiosResponse } from 'axios';
 
 export const Utils = {
     statusIconClasses(status: string): string {
@@ -81,7 +82,7 @@ export const Utils = {
         }
     },
 
-    getCurrentNamespace(): string {
-        return localStorage.getItem('current_namespace');
+    getAccountUser(): Promise<AxiosResponse<any>> {
+        return axios.get<any>('/account/user');
     }
 };

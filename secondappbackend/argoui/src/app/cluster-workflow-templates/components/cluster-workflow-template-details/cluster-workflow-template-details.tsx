@@ -33,8 +33,13 @@ export class ClusterWorkflowTemplateDetails extends BasePage<RouteComponentProps
         this.setQueryParams({sidePanel});
     }
 
+    private user: any;
+
     constructor(props: RouteComponentProps<any>, context: any) {
         super(props, context);
+        Utils.getAccountUser().then(
+            user => this.user = user
+        ).catch(err => console.error(err));
         this.state = {};
     }
 
@@ -43,7 +48,7 @@ export class ClusterWorkflowTemplateDetails extends BasePage<RouteComponentProps
             .get(this.name)
             .then(template => this.setState({error: null, template}))
             .then(() => services.info.getInfo())
-            .then(info => this.setState({namespace: info.managedNamespace || Utils.getCurrentNamespace() || 'default'}))
+            .then(info => this.setState({ namespace: this.user['primary_namespace_name'] || 'default'}))
             .catch(error => this.setState({error}));
     }
 

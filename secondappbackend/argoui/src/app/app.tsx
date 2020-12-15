@@ -76,6 +76,8 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
         apis: PropTypes.object
     };
 
+    private user: any;
+
     private popupManager: PopupManager;
     private notificationsManager: NotificationsManager;
     private navigationManager: NavigationManager;
@@ -89,6 +91,9 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
         Utils.onNamespaceChange = namespace => {
             this.setState({namespace});
         };
+        Utils.getAccountUser().then(
+            user => this.user = user
+        ).catch(err => console.error(err));
     }
 
     public componentDidMount() {
@@ -97,7 +102,7 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
             .getVersion()
             .then(version => this.setState({version}))
             .then(() => services.info.getInfo())
-            .then(info => this.setState({namespace: info.managedNamespace || Utils.getCurrentNamespace() || ''}))
+            .then(info => this.setState({ namespace: this.user['primary_namespace_name'] || 'default'}))
             .catch(error => {
                 console.error(error);
                 /*this.notificationsManager.show({
