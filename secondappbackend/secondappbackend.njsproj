@@ -441,7 +441,6 @@
     <Folder Include="argoui\src\argo-ui\src\components\tabs\" />
     <Folder Include="argoui\src\argo-ui\src\components\tooltip\" />
     <Folder Include="argoui\src\argo-ui\src\components\top-bar\" />
-    <Folder Include="argoui\src\argo-ui\src\models\" />
     <Folder Include="argoui\src\argo-ui\src\styles\" />
     <Folder Include="argoui\src\argo-ui\src\styles\elements\" />
     <Folder Include="argoui\src\argo-ui\src\styles\icons\" />
@@ -510,8 +509,6 @@
     <TypeScriptCompile Include="argoui\src\argo-ui\src\components\utils.ts" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\context.tsx" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\index.ts" />
-    <TypeScriptCompile Include="argoui\src\argo-ui\src\models\index.ts" />
-    <TypeScriptCompile Include="argoui\src\argo-ui\src\models\kubernetes.ts" />
     <TypeScriptCompile Include="argoui\src\argo-ui\src\setupTests.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

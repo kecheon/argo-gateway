@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "../../dist/app",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "target": "es2015",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "noUnusedLocals": false,
+    "declaration": false,
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  },
+  "include": [
+    "./**/*"
+  ]
+}

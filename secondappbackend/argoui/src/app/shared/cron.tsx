@@ -1,10 +1,9 @@
-import parser = require('cron-parser');
+import { parseExpression } from 'cron-parser';
 
 export function getNextScheduledTime(schedule: string, tz: string): string {
     let out = '';
     try {
-        out = parser
-            .parseExpression(schedule, {utc: !tz, tz})
+        out = parseExpression(schedule, {utc: !tz, tz})
             .next()
             .toISOString();
     } catch (e) {

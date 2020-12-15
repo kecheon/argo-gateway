@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import {Redirect, Route, Router, Switch} from 'react-router';
 
-import {Layout, NavigationManager, NotificationsManager, Popup, PopupManager, PopupProps} from 'argo-ui';
+import { Layout, NavigationManager, NotificationsManager, Popup, PopupManager, PopupProps } from 'argo-ui';
 import {ContextApis, Provider} from './shared/context';
 
 //import { NotificationType } from 'argo-ui';
