@@ -739,6 +739,41 @@ router.delete('/workflow-templates/:namespace/:name', async (req, res) => {
     }
 });
 
+router.get('/metering', async (req, res) => {
+
+    //get the workflows
+    try {
+        const response = await axios.get(endurl + 'workflows/', { headers: { Authorization: req.user.k8s_token } });
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        const items = response.data.items;
+        let tempWorkflows = [];
+        if (items.length > 0)
+            items.forEach(elem => tempWorkflows.push(elem));
+
+        //get archived-workflows      
+        const requestAWfUrl = endurl + 'archived-workflows?listOptions.fieldSelector=spec.startedAt%3E' + req.query.minStartedAt
+            + ',spec.startedAt%3C' + req.query.maxStartedAt;
+
+        const wfResponse = await axios.get(requestAWfUrl, { headers: { Authorization: req.user.k8s_token } });
+        if (!('items' in wfResponse.data))
+            throw new Error('no items in response');
+        const wfs = response.data.items;
+        let tempArchivedWorkflows = [];
+        if (wfs.length > 0)
+            wfs.forEach(async elem => {
+                const awfResponse = await axios.get(endurl + 'archived-workflows/' + item.metadata.uid, { headers: { Authorization: req.user.k8s_token } });
+                tempArchivedWorkflows.push(refinedWfItem(awfResponse.data));
+            });
+        const concatData = uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
+        const meteringData = concat.map(elem => { return { price: elem.resourceDurationCPU * 100 } });
+        res.send(meteringData);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         if (('tokenId' in req.user) && ('tokenId2' in req.user) && ('k8s_token' in req.user))
@@ -750,5 +785,86 @@ function ensureAuthenticated(req, res, next) {
     }
     else res.sendStatus(401);
 }
+
+// refine the workflow-items for overview, metering
+function refinedWfItem(item) {
+    if (!('metadata' in item) || !('status' in item)) {
+        console.error('invalid item data');
+        return;
+    }
+    const calledAt = new Date(); // set sametime
+    const metadata = item.metadata;
+    const status = item.status;
+    let wfItem = {
+        uid: metadata.uid,
+        namespace: metedata.namespace,
+        phase: status.phase,
+        finishedAt: status.finishedAt,
+        startedAt: status.startedAt
+    };
+
+    if (['Error', 'Running'].includes(status.phase)) {
+        wfItem.progress = 'None';
+        wfItem.nodeDuration = 0;
+        wfItem.nodeDurationFormatted = '0s';
+        wfItem.estimatedDuration = 0;
+        wfItem.estimatedDurationFormatted = '0s';
+        wfItem.clusterName = 'None';
+        wfItem.resourceDurationCPU = 0;
+        wfItem.resourceDurationMem = 0;
+    }
+    else {
+        wfItem.progress = status.progress;
+        node = status.nodes[metadata.name];
+        if (!('startedAt' in node)) {
+            console.error('no start time in node');
+            return;
+        }
+        const nodeStartedAt = new Date(node.startedAt);
+        const nodeFinishedDate = !node.finishedAt ? calledAt : new Date(node.finishedAt);
+        wfItem.nodeDuration = (nodeFinishedDate.getTime() - nodeStartedAt.getTime()) / 1000;
+        wfItem.nodeDurationFormatted = secondsToTime(wfItem.nodeDuration);
+        const startedDate = new Date(status.startedAt);
+        const finishedDate = !item.status.finishedAt ? calledAt : new Date(status.finishedAt);
+        wfItem.estimatedDuration = (finishedDate.getTime() - startedDate.getTime()) / 1000;
+        wfItem.estimatedDurationFormatted = secondsToTime(wfItem["estimatedDuration"]);
+        wfItem.clusterName = (("spec" in item) && ("nodeSelector" in item.spec)) ? item.spec.nodeSelector.clusterName : 'default';
+        wfItem.resourceDurationCPU = ("resourcesDuration" in status) ? status.resourcesDuration.cpu : 0;
+        wfItem.resourceDurationMem = ("resourcesDuration" in status) ? status.resourcesDuration.memory : 0;
+    }
+
+    return wfItem;
+}
+
+function secondsToTime(e) {
+    let forTime = e;
+
+    const d = Math.floor(e / (3600 * 24)).toString(),
+        h = Math.floor((e - d * 3600 * 24) / 3600).toString(),
+        m = Math.floor(e % 3600 / 60).toString(),
+        s = Math.floor(e % 60).toString();
+
+    if (d > 0)
+        forTime = d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
+    else if (h > 0)
+        forTime = h + 'h ' + m + 'm ' + s + 's';
+    else if (m > 0)
+        forTime = m + 'm ' + s + 's';
+    else
+        forTime = e + 's';
+
+    return forTime;
+}
+
+// duplicate check
+function uniqueArray(array) {
+    let a = array.concat();
+    for (let i = 0; i < a.length; i++)
+        for (let j = i + 1; j < a.length; j++)
+            if (a[i].uid === a[j].uid)
+                a.splice(j--, 1);
+    return a;
+}
+
 
 module.exports = router;

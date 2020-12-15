@@ -30,7 +30,7 @@ router.get('/info', (req, res) => {
     if (req.isAuthenticated()) {
         const user = req.user;
         const userinfo = {
-            domain: user.domain,
+            domain_id: user.domain,
             id: user.id,
             name: user.name,
             roles: user.roles,
