@@ -918,7 +918,7 @@ router.get('/overview-workflows',(req,res)=>{
         let totalResourceDurationCPU = 0;
         let totalResourceDurationMem = 0;
         const workflows=items.map(refinedWfItem);
-        items.forEach(item=>{
+        workflows.forEach(item=>{
             totalNodeDuration += item.nodeDuration;
             totalEstimatedDuration += item.estimatedDuration;
             totalResourceDurationCPU += item.resourceDurationCPU;
@@ -934,6 +934,42 @@ router.get('/overview-workflows',(req,res)=>{
     }
     catch(err){
         res.status(400).send(err);
+    }
+});
+
+router.get('/overview-workflows/:namespace', async (req, res) => {
+    try{
+        const response = await axios.get(endurl + 'workflows/' + req.params.namespace, {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if(!('items' in response.data)){
+            res.status(404).send('no overview data');
+            return;
+        }
+        const items=response.data.items;
+        let totalNodeDuration = 0;
+        let totalEstimatedDuration = 0;
+        let totalResourceDurationCPU = 0;
+        let totalResourceDurationMem = 0;
+        const workflows=items.map(refinedWfItem);
+        workflows.forEach(item=>{
+            totalNodeDuration += item.nodeDuration;
+            totalEstimatedDuration += item.estimatedDuration;
+            totalResourceDurationCPU += item.resourceDurationCPU;
+            totalResourceDurationMem += item.resourceDurationMem; 
+        });
+        res.send({
+            totalNodeDuration:totalNodeDuration,
+            totalEstimatedDuration:totalEstimatedDuration,
+            totalResourceDurationCPU:totalResourceDurationCPU,
+            totalResourceDurationMem:totalResourceDurationMem,
+            workflows:workflows
+        });
+    }
+    catch(err){
+        res.status(400).send(err);;
     }
 });
 
