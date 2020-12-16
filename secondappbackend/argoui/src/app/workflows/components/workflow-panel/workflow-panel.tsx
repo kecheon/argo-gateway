@@ -1,4 +1,4 @@
-import {ObjectMeta} from 'argo-ui/src/models/kubernetes';
+import {ObjectMeta} from '../../../../models/kubernetes';
 import * as React from 'react';
 import {WorkflowDag} from '..';
 import {WorkflowStatus} from '../../../../models';

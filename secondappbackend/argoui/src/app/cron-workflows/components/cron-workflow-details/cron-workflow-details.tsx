@@ -1,4 +1,4 @@
-import {NotificationType, Page} from 'argo-ui';
+import {Page} from 'argo-ui';
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 import {CronWorkflow} from '../../../../models';
@@ -102,16 +102,10 @@ export class CronWorkflowDetails extends BasePage<RouteComponentProps<any>, Stat
             try {
                 document.location.href = `/workflows/${submitted.metadata.namespace}/${submitted.metadata.name}`;
             } catch (e) {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed redirect to newly submitted cron workflow ' + e,
-                    type: NotificationType.Error
-                });
+                alert(e);
             }
         } catch (e) {
-            this.appContext.apis.notifications.show({
-                content: 'Failed to submit cron workflow ' + e,
-                type: NotificationType.Error
-            });
+            alert(e);
         }
     }
 
@@ -122,10 +116,7 @@ export class CronWorkflowDetails extends BasePage<RouteComponentProps<any>, Stat
         services.cronWorkflows
             .delete(this.name, this.namespace)
             .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to delete cron workflow ' + e,
-                    type: NotificationType.Error
-                });
+                alert(e);
             })
             .then(() => {
                 document.location.href = '/cron-workflows';
@@ -137,10 +128,7 @@ export class CronWorkflowDetails extends BasePage<RouteComponentProps<any>, Stat
             .suspend(this.name, this.namespace)
             .then((updated: CronWorkflow) => this.setState({cronWorkflow: updated}))
             .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to suspend cron workflow ' + e,
-                    type: NotificationType.Error
-                });
+                alert(e);
             });
     }
 
@@ -149,10 +137,7 @@ export class CronWorkflowDetails extends BasePage<RouteComponentProps<any>, Stat
             .resume(this.name, this.namespace)
             .then((updated: CronWorkflow) => this.setState({cronWorkflow: updated}))
             .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to resume cron workflow ' + e,
-                    type: NotificationType.Error
-                });
+                alert(e);
             });
     }
 }

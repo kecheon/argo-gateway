@@ -144,7 +144,7 @@ router.post('/', async (req, res) => {
             res.status(400).send('invalid parent id');
             return;
         }*/
-        const ksResponse = await axios.post(KsUrl + 'projects', project, {
+        const ksResponse = await axios.post(KsUrl + 'projects', {project:project}, {
             headers: {
                 'x-auth-token': tokenId
             }
@@ -188,6 +188,83 @@ router.delete('/:id', async (req, res) => {
         res.status(400).send(err);
     }
 });
+
+router.get('/:id/users/:userid/roles', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const response = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid+'/roles', {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        const roles = response.data.roles;
+        if (!roles)
+            res.sendStatus(204);
+        else
+            res.send(roles);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.put('/:id/users/:userid/roles/:roleid', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const response = await axios.put(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles/' + req.params.roleid,
+            {}, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send('role added');
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.delete('/:id/users/:userid/roles/:roleid', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const response = await axios.delete(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles/' + req.params.roleid, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send('role deleted');
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.head('/:id/users/:userid/roles/:roleid', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    try {
+        const response = await axios.head(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles/' + req.params.roleid, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send(response.data.roles);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+})
 
 
 function ensureAuthenticated(req, res, next) {

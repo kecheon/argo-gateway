@@ -1,5 +1,5 @@
-import {Tabs, Ticker, Tooltip} from 'argo-ui';
-import * as moment from 'moment';
+import {Tabs, Ticker} from 'argo-ui';
+import moment from 'moment';
 import * as React from 'react';
 
 import * as models from '../../../../models';
@@ -178,9 +178,6 @@ const EnvVar = (props: {env: models.kubernetes.EnvVar}) => {
     const secret = env.valueFrom?.secretKeyRef;
     const secretValue = secret ? (
         <>
-            <Tooltip content={'The value of this environment variable has been hidden for security reasons because it comes from a kubernetes secret.'} arrow={false}>
-                <i className='fa fa-key' />
-            </Tooltip>
             {secret.name}/{secret.key}
         </>
     ) : (

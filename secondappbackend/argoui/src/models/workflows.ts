@@ -1,4 +1,4 @@
-import * as kubernetes from 'argo-ui/src/models/kubernetes';
+import * as kubernetes from './kubernetes';
 
 export const labels = {
     clusterWorkflowTemplate: 'workflows.argoproj.io/cluster-workflow-template',

@@ -59,6 +59,21 @@ router.get('/info', passport.authenticate('jwt', {session: false}),
         delete req.user.tokenId;
         delete req.user.tokenId2;
         res.json(req.user);
+// router.get('/info', (req, res) => {
+//     if (req.isAuthenticated()) {
+//         const user = req.user;
+//         const userinfo = {
+//             domain_id: user.domain,
+//             id: user.id,
+//             name: user.name,
+//             roles: user.roles,
+//             primary_namespace_id: user.default_project_id,
+//             primary_namespace_name: user.default_project_name
+//         };
+//         res.send(userinfo);
+
+//     }
+//     else res.sendStatus(401);
 });
 
 router.get('/logout', (req, res) => {

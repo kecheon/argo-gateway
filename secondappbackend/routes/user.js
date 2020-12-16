@@ -15,17 +15,29 @@ router.get('/', async (req, res) => {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        let users = response.data.users.filter(elem => elem.is_wf && ('default_project_id' in elem)
+        if (!('users' in response.data))
+            throw new Error('users not exist in response');
+        const usersData = response.data.users;
+        if (usersData.length < 1) {
+            res.sendStatus(204);
+            return;
+        }
+        let users = usersData.filter(elem => elem.is_wf && ('default_project_id' in elem)
             && ('domain_id' in elem));
-        users.forEach(elem => {
-            delete elem.is_wf;
-            delete elem.links;
-            delete elem.options;
-            delete elem.password_expires_at;
-            elem.sa = elem.wf.k8s_sa;
-            delete elem.wf;
-        })
-        res.json({users});
+        if (users.length < 1) {
+            res.sendStatus(204);
+            return;
+        }
+        const users2 = users.map(elem => {
+            return {
+                id: elem.id,
+                name: elem.name,
+                description: elem.description,
+                email: elem.email,
+                primary_namespace_id: elem.default_project_id
+            }
+        });
+        res.send(users2);
     }
     catch (err) {
         console.error(err);
@@ -38,7 +50,7 @@ router.get('/admin', (req, res) => {
         res.status(401).send('second token needed');
         return;
     }
-    else if (res.user.name == 'admin')
+    else if (req.user.roles.includes('wf-app-admin'))
         res.send('admin ok');
     else
         res.status(401).send('not admin');
@@ -55,7 +67,18 @@ router.get('/:id', async (req, res) => {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        res.send(response.data);
+        if (!response.data.user) {
+            res.sendStatus(404);
+            return;
+        }
+        const userData = response.data.user;
+        res.send({
+            id: userData.id,
+            name: userData.name,
+            description: userData.description,
+            email: userData.email,
+            primary_namespace_id: userData.default_project_id
+        });
     }
     catch (err) {
         console.error(err);

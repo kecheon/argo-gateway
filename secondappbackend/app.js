@@ -71,11 +71,14 @@ async function getAdminToken() {
             }
         });
         //////////////////////////
-        const adminInfo = await axios.get(KsIdentityURL + 'users/' + response1.data.token.user.id, {
+        const adminResponse = await axios.get(KsIdentityURL + 'users/' + response1.data.token.user.id, {
             headers: {
                 'x-auth-token': response1.headers['x-subject-token']
             }
         });
+        const adminInfo = adminResponse.data.user;
+        if (!adminInfo.is_wf || adminInfo.is_cluster)
+            throw new Error('admin information is invalid');
         let default_project_id = '';
         if ('default_project_id' in adminInfo)
             default_project_id = adminInfo.default_project_id;
@@ -87,8 +90,13 @@ async function getAdminToken() {
             });
             if (projectres.data.projects?.length < 1)
                 throw new Error('no project id');
-            else
-                default_project_id = projectres.data.projects[0].id;
+            else {
+                const validProjects = projectres.data.projects.filter(elem => elem.is_wf && !elem.is_cluster);
+                if (validProjects?.length < 1)
+                    throw new Error('no valid project, no primary workspace');
+                else
+                    default_project_id = projectres.data.projects[0].id;
+            }
         }
         const tokenres = await axios.post(KsIdentityURL + 'auth/tokens',
             {
@@ -131,14 +139,18 @@ passport.use(new KeystoneStrategy({
         if (projectres.data.projects.length < 1)
             throw new Error('project property error');
         const first_project_id = projectres.data.projects[0].id;*/
-        const userinfo = await axios.get(KsIdentityURL + 'users/' + req.user.id, {
+        const userResponse = await axios.get(KsIdentityURL + 'users/' + req.user.id, {
             headers: {
                 'x-auth-token': req.user.tokenId
             }
         });
+        const userInfo = userResponse.data.user;
+        if (!userInfo.is_wf || userInfo.is_cluster)
+            throw new Error('account information is invalid');
         let default_project_id = '';
-        if ('default_project_id' in userinfo)
-            default_project_id = userinfo.default_project_id;
+        if ('default_project_id' in userInfo) {
+            default_project_id = userInfo.default_project_id;
+        }
         else {
             const projectres = await axios.get(KsIdentityURL + 'auth/projects', {
                 headers: {
@@ -147,8 +159,13 @@ passport.use(new KeystoneStrategy({
             });
             if (projectres.data.projects.length < 1)
                 throw new Error('no project id');
-            else
-                default_project_id = projectres.data.projects[0].id;
+            else {
+                const validProjects = projectres.data.projects.filter(elem => elem.is_wf && !elem.is_cluster);
+                if (validProjects?.length < 1)
+                    throw new Error('no valid project, no primary workspace');
+                else
+                    default_project_id = projectres.data.projects[0].id;
+            }
         }
         const tokenres = await axios.post(KsIdentityURL + 'auth/tokens',
             {

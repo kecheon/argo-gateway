@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 
-import {Autocomplete, Page, SlidingPanel} from 'argo-ui';
+import {Page, SlidingPanel} from 'argo-ui';
 import * as models from '../../../../models';
 import {labels, Workflow} from '../../../../models';
 import {Consumer} from '../../../shared/context';
@@ -10,7 +11,7 @@ import {services} from '../../../shared/services';
 
 import {BasePage} from '../../../shared/components/base-page';
 import {Loading} from '../../../shared/components/loading';
-import {Query} from '../../../shared/components/query';
+//import {Query} from '../../../shared/components/query';
 import {ZeroState} from '../../../shared/components/zero-state';
 import {exampleWorkflow} from '../../../shared/examples';
 import {Utils} from '../../../shared/utils';
@@ -162,7 +163,6 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                         />
                         <div className='row'>
                             <div className='columns small-12 xlarge-2'>
-                                <div>{this.renderQuery(ctx)}</div>
                                 <div>
                                     <WorkflowFilters
                                         workflows={this.state.workflows || []}
@@ -230,7 +230,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
             .then(resourceVersion => {
                 this.subscription = services.workflows
                     .watchFields({namespace, phases: selectedPhases, labels: selectedLabels, resourceVersion})
-                    .map(workflowChange => {
+                    .pipe(map(workflowChange => {
                         const workflows = this.state.workflows;
                         if (!workflowChange) {
                             return {workflows, updated: false};
@@ -251,9 +251,9 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                             }
                         }
                         return {workflows, updated: true};
-                    })
-                    .filter(item => item.updated)
-                    .map(item => item.workflows)
+                    }))
+                    .pipe(filter(item => item.updated))
+                    .pipe(map(item => item.workflows))
                     .subscribe(
                         workflows => this.setState({error: null, workflows}),
                         error => this.setState({error})
@@ -376,7 +376,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
         this.setState({batchActionDisabled: nowDisabled, selectedWorkflows: new Map<string, models.Workflow>(newSelectedWorkflows)});
     }
 
-    private renderQuery(ctx: any) {
+    /*private renderQuery(ctx: any) {
         return (
             <Query>
                 {q => (
@@ -422,5 +422,5 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                 )}
             </Query>
         );
-    }
+    }*/
 }

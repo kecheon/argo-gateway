@@ -1,4 +1,4 @@
-import {Autocomplete} from 'argo-ui';
+//import {Autocomplete} from 'argo-ui';
 import * as React from 'react';
 
 interface InputProps {
@@ -26,28 +26,6 @@ export class InputFilter extends React.Component<InputProps, InputState> {
     public render() {
         return (
             <>
-                <Autocomplete
-                    items={this.state.localCache}
-                    value={this.state.value}
-                    onChange={(e, value) => this.setState({value})}
-                    onSelect={value => {
-                        this.setState({value});
-                        this.props.onChange(value);
-                    }}
-                    renderInput={inputProps => (
-                        <input
-                            {...inputProps}
-                            onKeyUp={event => {
-                                if (event.keyCode === 13) {
-                                    this.setValueAndCache(event.currentTarget.value);
-                                    this.props.onChange(this.state.value);
-                                }
-                            }}
-                            className='argo-field'
-                            placeholder={this.props.placeholder}
-                        />
-                    )}
-                />
                 <a
                     onClick={() => {
                         this.setState({value: ''});
@@ -59,7 +37,7 @@ export class InputFilter extends React.Component<InputProps, InputState> {
         );
     }
 
-    private setValueAndCache(value: string) {
+    /*private setValueAndCache(value: string) {
         this.setState(state => {
             const localCache = state.localCache;
             if (!state.localCache.includes(value)) {
@@ -71,5 +49,5 @@ export class InputFilter extends React.Component<InputProps, InputState> {
             localStorage.setItem(this.props.name + '_inputs', localCache.join(','));
             return {value, localCache};
         });
-    }
+    }*/
 }

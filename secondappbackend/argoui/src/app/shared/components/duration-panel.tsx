@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import * as React from 'react';
 import Moment from 'react-moment';
 import {NODE_PHASE, NodePhase} from '../../../models';

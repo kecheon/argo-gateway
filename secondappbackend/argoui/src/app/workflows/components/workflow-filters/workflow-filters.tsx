@@ -47,7 +47,7 @@ export class WorkflowFilters extends React.Component<WorkflowFilterProps, {}> {
                         <p className='wf-filters-container__title'>Labels</p>
                         <TagsInput
                             placeholder=''
-                            autocomplete={this.labelSuggestion}
+                            //autocomplete={this.labelSuggestion}
                             tags={this.props.selectedLabels}
                             onChange={tags => {
                                 this.props.onChange(this.props.namespace, this.props.selectedPhases, tags);

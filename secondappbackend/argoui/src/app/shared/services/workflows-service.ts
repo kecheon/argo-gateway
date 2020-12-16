@@ -1,4 +1,5 @@
-import {Observable} from 'rxjs';
+import { Observable, from, of } from 'rxjs';
+import { map, filter, switchMap, mergeMap } from 'rxjs/operators';
 import * as models from '../../../models';
 import {Event, NodeStatus, Workflow, WorkflowList} from '../../../models';
 import {SubmitOpts} from '../../../models/submit-opts';
@@ -13,7 +14,7 @@ function isString(value: any): value is string {
 export class WorkflowsService {
     public create(workflow: Workflow, namespace: string) {
         return requests
-            .post(`api/v1/workflows/${namespace}`)
+            .post(`/argo/workflows/${namespace}`)
             .send({workflow})
             .then(res => res.body as Workflow);
     }
@@ -45,11 +46,11 @@ export class WorkflowsService {
             params.push(`listOptions.limit=${pagination.limit}`);
         }
         params.push(`fields=${fields.join(',')}`);
-        return requests.get(`api/v1/workflows/${namespace}?${params.join('&')}`).then(res => res.body as WorkflowList);
+        return requests.get(`/argo/workflows/${namespace}?${params.join('&')}`).then(res => res.body as WorkflowList);
     }
 
     public get(namespace: string, name: string) {
-        return requests.get(`api/v1/workflows/${namespace}/${name}`).then(res => res.body as Workflow);
+        return requests.get(`/argo/workflows/${namespace}/${name}`).then(res => res.body as Workflow);
     }
 
     public watch(filter: {
@@ -59,12 +60,12 @@ export class WorkflowsService {
         labels?: Array<string>;
         resourceVersion?: string;
     }): Observable<models.kubernetes.WatchEvent<Workflow>> {
-        const url = `api/v1/workflow-events/${filter.namespace || ''}?${this.queryParams(filter).join('&')}`;
-        return requests.loadEventSource(url).map(data => JSON.parse(data).result as models.kubernetes.WatchEvent<Workflow>);
+        const url = `/argo/workflow-events/${filter.namespace || ''}?${this.queryParams(filter).join('&')}`;
+        return requests.loadEventSource(url).pipe(map(data => JSON.parse(data).result as models.kubernetes.WatchEvent<Workflow>));
     }
 
     public watchEvents(namespace: string, fieldSelector: string): Observable<Event> {
-        return requests.loadEventSource(`api/v1/stream/events/${namespace}?listOptions.fieldSelector=${fieldSelector}`).map(data => JSON.parse(data).result as Event);
+        return requests.loadEventSource(`/argo/stream/events/${namespace}?listOptions.fieldSelector=${fieldSelector}`).pipe(map(data => JSON.parse(data).result as Event));
     }
 
     public watchFields(filter: {
@@ -90,66 +91,66 @@ export class WorkflowsService {
             'result.object.spec.suspend'
         ];
         params.push(`fields=${fields.join(',')}`);
-        const url = `api/v1/workflow-events/${filter.namespace || ''}?${params.join('&')}`;
-        return requests.loadEventSource(url).map(data => JSON.parse(data).result as models.kubernetes.WatchEvent<Workflow>);
+        const url = `/argo/workflow-events/${filter.namespace || ''}?${params.join('&')}`;
+        return requests.loadEventSource(url).pipe(map(data => JSON.parse(data).result as models.kubernetes.WatchEvent<Workflow>));
     }
 
     public retry(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/retry`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/retry`).then(res => res.body as Workflow);
     }
 
     public resubmit(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/resubmit`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/resubmit`).then(res => res.body as Workflow);
     }
 
     public suspend(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/suspend`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/suspend`).then(res => res.body as Workflow);
     }
 
     public resume(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/resume`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/resume`).then(res => res.body as Workflow);
     }
 
     public stop(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/stop`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/stop`).then(res => res.body as Workflow);
     }
 
     public terminate(name: string, namespace: string) {
-        return requests.put(`api/v1/workflows/${namespace}/${name}/terminate`).then(res => res.body as Workflow);
+        return requests.put(`/argo/workflows/${namespace}/${name}/terminate`).then(res => res.body as Workflow);
     }
 
     public delete(name: string, namespace: string): Promise<WorkflowDeleteResponse> {
-        return requests.delete(`api/v1/workflows/${namespace}/${name}`).then(res => res.body as WorkflowDeleteResponse);
+        return requests.delete(`/argo/workflows/${namespace}/${name}`).then(res => res.body as WorkflowDeleteResponse);
     }
 
     public submit(kind: string, name: string, namespace: string, submitOptions?: SubmitOpts) {
         return requests
-            .post(`api/v1/workflows/${namespace}/submit`)
+            .post(`/argo/workflows/${namespace}/submit`)
             .send({namespace, resourceKind: kind, resourceName: name, submitOptions})
             .then(res => res.body as Workflow);
     }
 
     public getContainerLogsFromCluster(workflow: Workflow, nodeId: string, container: string): Observable<string> {
-        const podLogsURL = `api/v1/workflows/${workflow.metadata.namespace}/${workflow.metadata.name}/${nodeId}/log?logOptions.container=${container}&logOptions.follow=true`;
+        const podLogsURL = `/argo/workflows/${workflow.metadata.namespace}/${workflow.metadata.name}/${nodeId}/log?logOptions.container=${container}&logOptions.follow=true`;
         return requests
             .loadEventSource(podLogsURL)
-            .map(line => JSON.parse(line).result.content)
-            .filter(isString)
-            .catch(() => {
-                // When an error occurs on an observable, RxJS is hard-coded to unsubscribe from the stream.  In the case
-                // that the connection to the server was interrupted while the node is still pending or running, this is not
-                // correct since we actually want the EventSource to re-connect and continue streaming logs.  In the event
-                // that the pod has completed, then we want to allow the unsubscribe to happen since no additional logs exist.
-                return Observable.fromPromise(this.isWorkflowNodePendingOrRunning(workflow, nodeId)).switchMap(isPendingOrRunning => {
-                    if (isPendingOrRunning) {
-                        return this.getContainerLogsFromCluster(workflow, nodeId, container);
-                    }
+            .pipe(map(line => JSON.parse(line).result.content))
+            .pipe(filter(isString));
+        /*subscribe(() => 'fine',
+                err => catchError(err)
+                    // When an error occurs on an observable, RxJS is hard-coded to unsubscribe from the stream.  In the case
+                    // that the connection to the server was interrupted while the node is still pending or running, this is not
+                    // correct since we actually want the EventSource to re-connect and continue streaming logs.  In the event
+                    // that the pod has completed, then we want to allow the unsubscribe to happen since no additional logs exist.
+                    from(this.isWorkflowNodePendingOrRunning(workflow, nodeId)).switchMap((isPendingOrRunning: any) => {
+                        if (isPendingOrRunning)
+                            return this.getContainerLogsFromCluster(workflow, nodeId, container);
 
-                    // If our workflow is completed, then simply complete the Observable since nothing else
-                    // should be omitted
-                    return Observable.empty();
-                });
-            });
+                        // If our workflow is completed, then simply complete the Observable since nothing else
+                        // should be omitted
+                        return empty();
+                    });
+                );*/
     }
 
     public async isWorkflowNodePendingOrRunning(workflow: Workflow, nodeId: string) {
@@ -160,15 +161,14 @@ export class WorkflowsService {
     }
 
     public getContainerLogsFromArtifact(workflow: Workflow, nodeId: string, container: string, archived: boolean) {
-        return Observable.of(this.hasArtifactLogs(workflow, nodeId, container))
-            .switchMap(hasArtifactLogs => {
+        return of(this.hasArtifactLogs(workflow, nodeId, container))
+            .pipe(switchMap(hasArtifactLogs => {
                 if (!hasArtifactLogs) {
                     throw new Error('no artifact logs are available');
                 }
 
-                return Observable.fromPromise(requests.get(this.getArtifactLogsUrl(workflow, nodeId, container, archived)));
-            })
-            .mergeMap(r => r.text.split('\n'));
+                return from(requests.get(this.getArtifactLogsUrl(workflow, nodeId, container, archived)));
+            })).pipe(mergeMap(r => r.text.split('\n')));
     }
 
     public getContainerLogs(workflow: Workflow, nodeId: string, container: string, archived: boolean): Observable<string> {
@@ -180,7 +180,7 @@ export class WorkflowsService {
             return getLogsFromArtifact();
         }
 
-        return this.getContainerLogsFromCluster(workflow, nodeId, container).catch(getLogsFromArtifact);
+        return this.getContainerLogsFromCluster(workflow, nodeId, container);
     }
 
     public getArtifactLogsUrl(workflow: Workflow, nodeId: string, container: string, archived: boolean) {

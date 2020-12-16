@@ -1,4 +1,4 @@
-import * as kubernetes from 'argo-ui/src/models/kubernetes';
+import { kubernetes } from '../models';
 import {Condition, WorkflowSpec} from './workflows';
 
 export interface CronWorkflow {

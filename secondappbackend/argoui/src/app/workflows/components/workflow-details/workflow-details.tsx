@@ -1,9 +1,10 @@
-import {AppContext, NotificationType, Page, SlidingPanel} from 'argo-ui';
-import * as classNames from 'classnames';
+import {AppContext, Page, SlidingPanel} from 'argo-ui';
+import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {Link, NodePhase, Workflow} from '../../../../models';
 import {services} from '../../../shared/services';
@@ -205,12 +206,7 @@ export class WorkflowDetails extends React.Component<RouteComponentProps<any>, W
                     ctx.navigation.goto(`/workflows/${wf.metadata.namespace}/${wf.metadata.name}`);
                 }
             })
-            .catch(() => {
-                this.appContext.apis.notifications.show({
-                    content: `Unable to ${title} workflow`,
-                    type: NotificationType.Error
-                });
-            });
+            .catch(err => console.error(err));
     }
 
     private getItems(workflowPhase: NodePhase, ctx: any) {
@@ -336,7 +332,7 @@ export class WorkflowDetails extends React.Component<RouteComponentProps<any>, W
             this.ensureUnsubscribed();
             this.changesSubscription = services.workflows
                 .watch({name, namespace, resourceVersion: this.resourceVersion})
-                .map(changeEvent => changeEvent.object)
+                .pipe(map(changeEvent => changeEvent.object))
                 .subscribe(
                     workflow => this.setState({workflow, error: null}),
                     error => this.setState({error})

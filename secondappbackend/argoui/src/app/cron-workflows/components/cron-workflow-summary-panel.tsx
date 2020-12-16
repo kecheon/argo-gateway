@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import * as kubernetes from 'argo-ui/src/models/kubernetes';
-import {CronWorkflow} from '../../../models';
+import {CronWorkflow,kubernetes} from '../../../models';
 import {ResourceEditor} from '../../shared/components/resource-editor/resource-editor';
 import {Timestamp} from '../../shared/components/timestamp';
 import {ConditionsPanel} from '../../shared/conditions-panel';

@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import {Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map, publishReplay, refCount } from 'rxjs/operators';
 import * as models from '../../../../models';
 import {ErrorNotice} from '../../../shared/components/error-notice';
 import {services} from '../../../shared/services';
-import {FullHeightLogsViewer} from './full-height-logs-viewer';
+//import {FullHeightLogsViewer} from './full-height-logs-viewer';
 
 require('./workflow-logs-viewer.scss');
 
@@ -21,9 +22,9 @@ interface WorkflowLogsViewerState {
     lineCount: number;
 }
 
-function identity<T>(value: T) {
+/*function identity<T>(value: T) {
     return () => value;
-}
+}*/
 
 export class WorkflowLogsViewer extends React.Component<WorkflowLogsViewerProps, WorkflowLogsViewerState> {
     private subscription: Subscription | null = null;
@@ -65,17 +66,6 @@ export class WorkflowLogsViewer extends React.Component<WorkflowLogsViewerProps,
                         </p>
                     )}
                     {!this.state.error && this.podHasNoLogs() && <p>Pod did not output any logs.</p>}
-                    {this.state.lineCount > 0 && this.logsObservable && (
-                        <div className='log-box'>
-                            <FullHeightLogsViewer
-                                source={{
-                                    key: `${this.props.workflow.metadata.name}-${this.props.container}`,
-                                    loadLogs: identity(this.logsObservable),
-                                    shouldRepeat: () => false
-                                }}
-                            />
-                        </div>
-                    )}
                 </div>
                 {this.state.lineCount === 0 && (
                     <p>
@@ -102,9 +92,10 @@ export class WorkflowLogsViewer extends React.Component<WorkflowLogsViewerProps,
 
         this.setState({lineCount: 0, loaded: false, error: undefined});
 
-        const source = services.workflows.getContainerLogs(this.props.workflow, this.props.nodeId, this.props.container, this.props.archived).map(line => line + '\n');
+        const source = services.workflows.getContainerLogs(this.props.workflow, this.props.nodeId, this.props.container, this.props.archived)
+            .pipe(map(line => line + '\n'));
 
-        this.logsObservable = source.publishReplay().refCount();
+        this.logsObservable = source.pipe(publishReplay()).pipe(refCount());
         this.subscription = this.logsObservable.subscribe(
             log => {
                 this.setState(state => {

@@ -1,4 +1,3 @@
-import {NotificationType} from 'argo-ui';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import {Workflow} from '../../../../models';
@@ -60,10 +59,7 @@ export class WorkflowsToolbar extends React.Component<WorkflowsToolbarProps, {}>
             promises.push(
                 action(wf).catch(() => {
                     this.props.loadWorkflows();
-                    this.appContext.apis.notifications.show({
-                        content: `Unable to ${title} workflow`,
-                        type: NotificationType.Error
-                    });
+                    alert(`Unable to ${title} workflow`);
                 })
             );
         });
@@ -84,10 +80,7 @@ export class WorkflowsToolbar extends React.Component<WorkflowsToolbarProps, {}>
                 groupAction: () => {
                     return this.performActionOnSelectedWorkflows(ctx, action.title, action.action).then(() => {
                         this.props.clearSelection();
-                        this.appContext.apis.notifications.show({
-                            content: `Performed '${action.title}' on selected workflows.`,
-                            type: NotificationType.Success
-                        });
+                        alert(`Performed '${action.title}' on selected workflows.`);
                         this.props.loadWorkflows();
                     });
                 },

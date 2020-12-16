@@ -22,8 +22,8 @@ interface State {
     namespace: string;
     selectedPhases: string[];
     selectedLabels: string[];
-    minStartedAt?: Date;
-    maxStartedAt?: Date;
+    minStartedAt?: Date | [Date, Date];
+    maxStartedAt?: Date | [Date, Date];
     workflows?: Workflow[];
     error?: Error;
 }
@@ -104,7 +104,7 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
         }
     }
 
-    private changeFilters(namespace: string, selectedPhases: string[], selectedLabels: string[], minStartedAt: Date, maxStartedAt: Date, pagination: Pagination) {
+    private changeFilters(namespace: string, selectedPhases: string[], selectedLabels: string[], minStartedAt: Date | [Date, Date], maxStartedAt: Date | [Date, Date], pagination: Pagination) {
         this.fetchArchivedWorkflows(namespace, selectedPhases, selectedLabels, minStartedAt, maxStartedAt, pagination);
     }
 
@@ -116,8 +116,10 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
         this.state.selectedLabels.forEach(label => {
             params.append('label', label);
         });
-        params.append('minStartedAt', this.state.minStartedAt.toISOString());
-        params.append('maxStartedAt', this.state.maxStartedAt.toISOString());
+        const minDate = Array.isArray(this.state.minStartedAt) ? this.state.minStartedAt[0] : this.state.minStartedAt;
+        const maxDate = Array.isArray(this.state.maxStartedAt) ? this.state.maxStartedAt[0] : this.state.maxStartedAt;
+        params.append('minStartedAt', minDate.toISOString());
+        params.append('maxStartedAt', maxDate.toISOString());
         if (this.state.pagination.offset) {
             params.append('offset', this.state.pagination.offset);
         }
@@ -132,7 +134,7 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
         Utils.setCurrentNamespace(this.state.namespace);
     }
 
-    private fetchArchivedWorkflows(namespace: string, selectedPhases: string[], selectedLabels: string[], minStartedAt: Date, maxStartedAt: Date, pagination: Pagination): void {
+    private fetchArchivedWorkflows(namespace: string, selectedPhases: string[], selectedLabels: string[], minStartedAt: Date | [Date, Date], maxStartedAt: Date | [Date, Date], pagination: Pagination): void {
         services.archivedWorkflows
             .list(namespace, selectedPhases, selectedLabels, minStartedAt, maxStartedAt, pagination)
             .then(list => {
