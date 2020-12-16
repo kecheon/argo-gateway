@@ -27,8 +27,7 @@ const sqlOptions = {
     port: 3306,
     user: 'argo',
     password: 'devstack',
-    database: 'tempdb',
-    expiration:3600000
+    database: 'tempdb'
 }
 
 /*tempdb_session.getSession().then(
