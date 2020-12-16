@@ -28,7 +28,7 @@ const sqlOptions = {
     user: 'argo',
     password: 'devstack',
     database: 'tempdb',
-    expiration:3600000
+    //expiration:3600000
 }
 
 /*tempdb_session.getSession().then(
