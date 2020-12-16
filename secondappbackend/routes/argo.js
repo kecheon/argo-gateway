@@ -901,7 +901,7 @@ router.get('/overview-data/:namespace', async (req, res) => {
     }
 });
 
-router.get('/overview-workflows',(req,res)=>{
+router.get('/overview-workflows', async (req,res)=>{
     try{
         const response = await axios.get(endurl + 'workflows/', {  
             headers: {
