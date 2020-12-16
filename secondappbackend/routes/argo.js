@@ -740,7 +740,7 @@ router.delete('/workflow-templates/:namespace/:name', async (req, res) => {
 });
 
 router.get('/metering', async (req, res) => {
-    if(!('minStartedAt' in req.query)||!(!('maxStartedAt' in req.query))){
+    if(!('minStartedAt' in req.query)||!('maxStartedAt' in req.query)){
         res.status(400).send('mindate or maxdate missing in query');
         return;
     }
@@ -809,6 +809,128 @@ router.get('/metering/:namespace', async (req, res) => {
             };
         });
         res.send(meteringData);
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+});
+
+router.get('/overview-data', async (req,res)=>{
+    let overviewData={
+        workflowsNum:0,
+        workflowTemplatesNum:0,
+        clusterWorkflowTemplatesNum:0,
+        cronWorkflowsNum:0
+    };
+    try{
+        let response = await axios.get(endurl + 'workflows/' + '?fields=items.metadata.uid', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.workflowsNum=response.data.items.length;
+        response = await axios.get(endurl + 'workflow-templates/', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.workflowTemplatesNum=response.data.items.length;
+        response = await axios.get(endurl + 'cluster-workflow-templates', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.clusterWorkflowTemplatesNum=response.data.items.length;
+        response = await axios.get(endurl + 'cron-workflows/', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.cronWorkflowsNum=response.data.items.length;
+        res.send(overviewData);
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+});
+
+router.get('/overview-data/:namespace', async (req, res) => {
+    let overviewData={
+        workflowsNum:0,
+        workflowTemplatesNum:0,
+        clusterWorkflowTemplatesNum:0,
+        cronWorkflowsNum:0
+    };
+    try{
+        let response=await axios.get(endurl + 'workflows/' + req.params.namespace + '?fields=items.metadata.uid', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.workflowsNum=response.data.items.length;
+        response = await axios.get(endurl + 'workflow-templates/' + req.params.namespace, {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.workflowTemplatesNum=response.data.items.length;
+        response = await axios.get(endurl + 'cluster-workflow-templates', {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.clusterWorkflowTemplatesNum=response.data.items.length;
+        response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace, {            
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if('items' in response.data)
+            overviewData.cronWorkflowsNum=response.data.items.length;
+        res.send(overviewData);
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+});
+
+router.get('/overview-workflows',(req,res)=>{
+    try{
+        const response = await axios.get(endurl + 'workflows/', {  
+            headers: {
+                Authorization: req.user.k8s_token
+            }
+        });
+        if(!('items' in response.data)){
+            res.status(404).send('no overview data');
+            return;
+        }
+        const items=response.data.items;
+        let totalNodeDuration = 0;
+        let totalEstimatedDuration = 0;
+        let totalResourceDurationCPU = 0;
+        let totalResourceDurationMem = 0;
+        const workflows=items.map(refinedWfItem);
+        items.forEach(item=>{
+            totalNodeDuration += item.nodeDuration;
+            totalEstimatedDuration += item.estimatedDuration;
+            totalResourceDurationCPU += item.resourceDurationCPU;
+            totalResourceDurationMem += item.resourceDurationMem; 
+        });
+        res.send({
+            totalNodeDuration:totalNodeDuration,
+            totalEstimatedDuration:totalEstimatedDuration,
+            totalResourceDurationCPU:totalResourceDurationCPU,
+            totalResourceDurationMem:totalResourceDurationMem,
+            workflows:workflows
+        });
     }
     catch(err){
         res.status(400).send(err);
