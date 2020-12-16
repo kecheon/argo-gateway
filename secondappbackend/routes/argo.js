@@ -1150,7 +1150,7 @@ router.get('/metering', async (req, res) => {
                 tempArchivedWorkflows.push(refinedWfItem(awfResponse.data));
             });
         const concatData = uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
-        const meteringData = concat.map(elem => { return { price: elem.resourceDurationCPU * 100 } });
+        const meteringData = concatData.map(elem => { return { price: elem.resourceDurationCPU * 100 } });
         res.send(meteringData);
     }
     catch (err) {
