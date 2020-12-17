@@ -760,7 +760,7 @@ router.get('/metering', async (req, res) => {
         const wfs = (Array.isArray(items)) ? response.data.items : [];
         let tempArchivedWorkflows = [];
         if (wfs.length > 0)
-            await Promise.all(wfs.forEach(async elem => {
+            const dummy = await Promise.all(wfs.forEach(async elem => {
                 let awfResponse = await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid, { headers: { Authorization: req.user.k8s_token } });
                 tempArchivedWorkflows.push(refinedWfItem(awfResponse.data));
             }));
