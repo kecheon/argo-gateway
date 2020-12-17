@@ -982,7 +982,7 @@ router.get('/overview-workflows/:namespace', async (req, res) => {
         });
     }
     catch(err){
-        res.status(400).send(err);;
+        res.status(400).send(err);
     }
 });
 
