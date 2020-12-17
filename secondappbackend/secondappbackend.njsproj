@@ -207,7 +207,7 @@
     <Content Include="argoui\package-lock.json" />
     <Content Include="argoui\package.json" />
     <Content Include="argoui\README.md" />
-    <Content Include="argoui\src\app\app.tsx" />
+    <Content Include="argoui\src\app\app_old.tsx" />
     <Content Include="argoui\src\app\archived-workflows\components\archived-workflow-container.tsx" />
     <Content Include="argoui\src\app\archived-workflows\components\archived-workflow-details\archived-workflow-details.tsx" />
     <Content Include="argoui\src\app\archived-workflows\components\archived-workflow-filters\archived-workflow-filters.scss" />
@@ -471,6 +471,7 @@
     <Folder Include="routes\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="argoui\src\app\app.tsx" />
     <TypeScriptCompile Include="argoui\src\app\help\components\help.tsx" />
     <TypeScriptCompile Include="argoui\src\app\help\index.tsx" />
     <TypeScriptCompile Include="argoui\src\models\kubernetes.ts" />

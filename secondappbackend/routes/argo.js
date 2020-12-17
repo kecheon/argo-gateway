@@ -7,14 +7,10 @@ const endurl = require('../ksinfo.json').ARGO_API_URL;
 router.all('/*', passport.authenticate('jwt', { session: false }));
 
 router.get('/archived-workflows', async (req, res) => {
-    /*let url =
-        ('minStartedAt' in req.query) ?
-            endurl + 'archived-workflows/?minStartedAt=' + encodeURIComponent(req.query.minStartedAt) : endurl + 'archived-workflows';
-    if ('maxStartedAt' in req.query)
-        url += '&maxStartedAt=' + encodeURIComponent(req.query.maxStartedAt);*/
+    const url = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'archived-workflows';
     try {
         //const response = await axios.get(url, {
-        const response = await axios.get(endurl + 'archived-workflows', {
+        const response = await axios.get(url, {
             headers: {
                 Authorization: req.user.k8s_token
             }
@@ -736,7 +732,7 @@ router.get('/stream/events/:namespace', async (req, res) => {
 });
 
 router.get('/workflow-events', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflow-events/' : endurl + req.url;
+    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'workflow-events/';
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -756,8 +752,8 @@ router.get('/workflow-events', async (req, res) => {
 
 router.get('/workflow-events/:namespace', async (req, res) => {
     const requestUrl =
-        Object.keys(req.query).length == 0 ?
-            endurl + 'workflow-events/' + req.params.namespace : endurl + req.url;
+        Object.keys(req.query).length > 0 ?
+            endurl + req.url : endurl + 'workflow-events/' + req.params.namespace;
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -773,8 +769,8 @@ router.get('/workflow-events/:namespace', async (req, res) => {
 
 router.get('/workflows/:namespace', async (req, res) => {
     const requestUrl =
-        Object.keys(req.query).length == 0 ?
-            endurl + 'workflows/' + req.params.namespace : endurl + req.url;
+        Object.keys(req.query).length > 0 ?
+            endurl + req.url : endurl + 'workflows/' + req.params.namespace;
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -793,7 +789,7 @@ router.get('/workflows/:namespace', async (req, res) => {
 });
 
 router.get('/workflows', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflows/' : endurl + req.url;
+    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'workflows/';
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -1134,8 +1130,8 @@ router.get('/metering', async (req, res) => {
         { headers: { Authorization: req.user.k8s_token } });
         if (!('items' in response.data))
             throw new Error('no items in response');
-        const items = response.data.items;
-        const tempWorkflows = items.map(refinedWfItem);
+        let items = response.data.items;
+        const tempWorkflows = (Array.isArray(items)) ? items.map(refinedWfItem) : [];
 
         //get archived-workflows      
         const requestAWfUrl = endurl + 'archived-workflows?listOptions.fieldSelector=spec.startedAt%3E' + req.query.minStartedAt
@@ -1144,16 +1140,17 @@ router.get('/metering', async (req, res) => {
         response = await axios.get(requestAWfUrl, { headers: { Authorization: req.user.k8s_token } });
         if (!('items' in response.data))
             throw new Error('no items in response');
-        const wfs = response.data.items;
+        items = response.data.items;
+        const wfs = (Array.isArray(items)) ? response.data.items : [];
         let tempArchivedWorkflows = [];
         if (wfs.length > 0)
-            wfs.forEach(async elem => {
+            for (let i = 0; i < wfs.length; i++){
+                const elem = wfs[i];
                 let awfResponse = await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid, { headers: { Authorization: req.user.k8s_token } });
                 tempArchivedWorkflows.push(refinedWfItem(awfResponse.data));
-            });
+            }
         const concatData = uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
-        const meteringData = concatData.map(elem => { return { price: elem.resourceDurationCPU * 100 } });
-        res.send(meteringData);
+        res.send(concatData);
     }
     catch (err) {
         res.status(400).send(err);
@@ -1161,7 +1158,7 @@ router.get('/metering', async (req, res) => {
 });
 
 router.get('/metering/:namespace', async (req, res) => {
-    if(!('minStartedAt' in req.query)||!(!('maxStartedAt' in req.query))){
+    if(!('minStartedAt' in req.query)||!('maxStartedAt' in req.query)){
         res.status(400).send('mindate or maxdate missing in query');
         return;
     }
@@ -1170,8 +1167,8 @@ router.get('/metering/:namespace', async (req, res) => {
         { headers: {Authorization: req.user.k8s_token}});
         if (!('items' in response.data))
             throw new Error('no items in response');
-        const items = response.data.items;
-        const tempWorkflows=items.map(refinedWfItem);
+        let items = response.data.items;
+        const tempWorkflows = (Array.isArray(items)) ? items.map(refinedWfItem) : [];
 
         const requestAWfUrl = endurl + 'archived-workflows?listOptions.fieldSelector=metadata.namespace=' + req.params.namespace
                         + ',spec.startedAt%3E' + req.query.minStartedAt 
@@ -1180,19 +1177,15 @@ router.get('/metering/:namespace', async (req, res) => {
             { headers: { Authorization: req.user.k8s_token}});
         if (!('items' in response.data))
             throw new Error('no items in response');
-        const wfs = response.data.items;
-        const tempArchivedWorkflows=wfs.map(async elem=>{
-            let tawResponse=await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid,
-            { headers: {Authorization: req.user.k8s_token}});
+        items = response.data.items;
+        const wfs = (Array.isArray(items)) ? response.data.items : [];
+        const tempArchivedWorkflows = await Promise.all(wfs.map(async elem => {
+            let tawResponse = await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid,
+                { headers: { Authorization: req.user.k8s_token } });
             return refinedWfItem(tawResponse.data);
-        });
+        }));
         const concatData=uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
-        const meteringData=concatData.map(elem=>{
-            return {
-                price:elem.resourceDurationCPU*100
-            };
-        });
-        res.send(meteringData);
+        res.send(concatData);
     }
     catch(err){
         res.status(400).send(err);
@@ -1212,29 +1205,36 @@ router.get('/overview-data', async (req,res)=>{
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.workflowsNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        let items = response.data.items;
+        overviewData.workflowsNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'workflow-templates/', {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.workflowTemplatesNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        items = response.data.items;
+        overviewData.workflowTemplatesNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'cluster-workflow-templates', {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.clusterWorkflowTemplatesNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        items = response.data.items;
+        overviewData.clusterWorkflowTemplatesNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'cron-workflows/', {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.cronWorkflowsNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        overviewData.cronWorkflowsNum = Array.isArray(items) ? response.data.items.length : 0;
         res.send(overviewData);
     }
     catch(err){
@@ -1255,29 +1255,37 @@ router.get('/overview-data/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.workflowsNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        let items = response.data.items;
+        overviewData.workflowsNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'workflow-templates/' + req.params.namespace, {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.workflowTemplatesNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        items = response.data.items;
+        overviewData.workflowTemplatesNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'cluster-workflow-templates', {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.clusterWorkflowTemplatesNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        items = response.data.items;
+        overviewData.clusterWorkflowTemplatesNum = Array.isArray(items) ? response.data.items.length : 0;
         response = await axios.get(endurl + 'cron-workflows/' + req.params.namespace, {            
             headers: {
                 Authorization: req.user.k8s_token
             }
         });
-        if('items' in response.data)
-            overviewData.cronWorkflowsNum=response.data.items.length;
+        if (!('items' in response.data))
+            throw new Error('no items in response');
+        items = response.data.items;
+        overviewData.cronWorkflowsNum = Array.isArray(items) ? response.data.items.length : 0;
         res.send(overviewData);
     }
     catch(err){
@@ -1292,7 +1300,7 @@ router.get('/overview-workflows', async (req,res)=>{
                 Authorization: req.user.k8s_token
             }
         });
-        if(!('items' in response.data)){
+        if(!response.data.items){
             res.status(404).send('no overview data');
             return;
         }
@@ -1328,7 +1336,7 @@ router.get('/overview-workflows/:namespace', async (req, res) => {
                 Authorization: req.user.k8s_token
             }
         });
-        if(!('items' in response.data)){
+        if (!response.data.items) {
             res.status(404).send('no overview data');
             return;
         }
@@ -1353,7 +1361,7 @@ router.get('/overview-workflows/:namespace', async (req, res) => {
         });
     }
     catch(err){
-        res.status(400).send(err);;
+        res.status(400).send(err);
     }
 });
 

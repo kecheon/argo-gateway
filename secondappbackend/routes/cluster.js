@@ -112,13 +112,13 @@ router.post('/', async (req, res) => {
     project.parent_id = 'default';
     try {
         const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
-        const ksResponse = await axios.post(KsUrl + 'projects', project, {
+        const ksResponse = await axios.post(KsUrl + 'projects', { project: project }, {
             headers: {
                 'x-auth-token': tokenId
             }
         });
         
-        const k8sRes = await k8sClient.createNamespace(req.body);
+        //const k8sRes = await k8sClient.createNamespace(req.body);
 
         res.send(ksResponse.data);
     }

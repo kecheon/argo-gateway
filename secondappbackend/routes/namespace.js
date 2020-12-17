@@ -89,6 +89,83 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/:id/member', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+    try {
+        const response = await axios.get(KsUrl + 'users', {
+            headers: {
+                'x-auth-token': tokenId
+            }
+        });
+        if (!response.data.users) {
+            res.status(404).send('no user list found');
+            return;
+        }
+        const users = response.data.users.filter(user => user.is_wf);
+        const results = await Promise.all(users.map(async elem => {
+            const nsRes = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + elem.id + '/roles', {
+                headers: {
+                    'x-auth-token': req.user.tokenId2
+                }
+            });
+            let result = { id: elem.id, name: elem.name };
+            if (!nsRes.data.roles)
+                result.roles = [];
+            else {
+                result.roles = nsRes.data.roles.filter(elem => elem.is_wf).map(elem => {
+                    return {
+                        id: elem.id,
+                        name: elem.name
+                    };
+                });
+            }
+            return result;
+        }));
+        res.send(results);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.patch('/:id/member', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    if (!Array.isArray(req.body.add) || !Array.isArray(req.body.remove)) {
+        res.status(400).send('add or remove should be at least an empty array');
+        return;
+    }
+    const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+    try {
+        req.body.add.forEach(user =>
+            user.roles.forEach(async id =>
+                await axios.put(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
+                    {}, {
+                    headers: {
+                        'x-auth-token': tokenId
+                    }
+                })));
+        req.body.remove.forEach(user =>
+            user.roles.forEach(async id =>
+                await axios.delete(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
+                    {
+                    headers: {
+                        'x-auth-token': tokenId
+                    }
+                })));
+        res.send('patch successful');
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 router.get('/switch/:name', async (req, res) => {
     try {
         const response = await axios.post(KsUrl + 'auth/tokens', {
@@ -116,7 +193,7 @@ router.get('/switch/:name', async (req, res) => {
         });
     }
     catch (err) {
-        res.status(500).send(err);
+        res.status(400).send(err);
     }
 });
 
@@ -149,9 +226,20 @@ router.post('/', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
-        const k8sRes = await k8sClient.createNamespace(req.body);
-
-        res.send(ksResponse.data);
+        let k8sRes = await k8sClient.createNamespace({ metadata: { name: project.name } });
+        const quotaData = {
+            apiVersion: "v1", kind: "ResourceQuota",
+            metadata: { name: "compute-resources" },
+            spec: {
+                hard: {
+                    "requests.cpu": "1", "requests.memory": "1Gi",
+                    "limits.cpu": project.quota_cpu,
+                    "limits.memory": project.quota_mem
+                }
+            }
+        };
+        k8sRes = await k8sClient.createNamespacedResourceQuota(project.name, quotaData);
+        res.send('namespace created successfully');
     }
     catch (err) {
         res.status(400).send(err);
