@@ -795,11 +795,11 @@ router.get('/metering/:namespace', async (req, res) => {
             throw new Error('no items in response');
         items = response.data.items;
         const wfs = (Array.isArray(items)) ? response.data.items : [];
-        const tempArchivedWorkflows=wfs.map(async elem=>{
-            let tawResponse=await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid,
-            { headers: {Authorization: req.user.k8s_token}});
+        const tempArchivedWorkflows = await Promise.all(wfs.map(async elem => {
+            let tawResponse = await axios.get(endurl + 'archived-workflows/' + elem.metadata.uid,
+                { headers: { Authorization: req.user.k8s_token } });
             return refinedWfItem(tawResponse.data);
-        });
+        }));
         const concatData=uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
         const meteringData=concatData.map(elem=>{
             return {

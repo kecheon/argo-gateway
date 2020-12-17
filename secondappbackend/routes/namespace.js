@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const KsInfo = require('../ksinfo.json');
 
-const KsUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
+const KsUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 const k8sClient = require('../k8s-init');
 
@@ -101,8 +101,8 @@ router.get('/:id/member', async (req, res) => {
             return;
         }
         const users = response.data.users.filter(user => user.is_wf);
-        const results = users.map(async elem => {
-            const nsRes = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles', {
+        const results = await Promise.all(users.map(async elem => {
+            const nsRes = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + elem.id + '/roles', {
                 headers: {
                     'x-auth-token': req.user.tokenId2
                 }
@@ -119,7 +119,7 @@ router.get('/:id/member', async (req, res) => {
                 });
             }
             return result;
-        });
+        }));
         res.send(results);
     }
     catch (err) {
