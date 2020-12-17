@@ -221,9 +221,20 @@ router.post('/', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
-        const k8sRes = await k8sClient.createNamespace(req.body);
-
-        res.send(ksResponse.data);
+        let k8sRes = await k8sClient.createNamespace({ metadata: { name: project.name } });
+        const quotaData = {
+            apiVersion: "v1", kind: "ResourceQuota",
+            metadata: { name: "compute-resources" },
+            spec: {
+                hard: {
+                    "requests.cpu": "1", "requests.memory": "1Gi",
+                    "limits.cpu": project.quota_cpu,
+                    "limits.memory": project.quota_mem
+                }
+            }
+        };
+        k8sRes = await k8sClient.createNamespacedResourceQuota(project.name, quotaData);
+        res.send('namespace created successfully');
     }
     catch (err) {
         res.status(400).send(err);
