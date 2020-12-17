@@ -221,7 +221,7 @@ app.get(['/', '/overview/?', '/admin/?', '/workflows/?', '/workflow-templates/?'
     '/cron-workflows/?', '/archived-workflows/?', '/notfound', '/metering/?',
     '/monitoring/?','/reports','/userinfo',
     '/cluster-workflow-templates/?', '/login','/user-manager/?', '/logout',
-    '/users/?', '/users/namespaces/?', '/users/roles/?', '/users/cluster/?'
+    '/users/list/?', '/users/namespaces/?', '/users/roles/?', '/users/cluster/?'
 ],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
