@@ -132,13 +132,13 @@ router.patch('/:id/member', async (req, res) => {
         res.sendStatus(401);
         return;
     }
-    if (!Array.isArray(req.query.add) || !Array.isArray(req.query.remove)) {
+    if (!Array.isArray(req.body.add) || !Array.isArray(req.body.remove)) {
         res.status(400).send('add or remove should be at least an empty array');
         return;
     }
     const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
     try {
-        req.query.add.forEach(user =>
+        req.body.add.forEach(user =>
             user.roles.forEach(async id =>
                 await axios.put(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
                     {}, {
@@ -146,7 +146,7 @@ router.patch('/:id/member', async (req, res) => {
                         'x-auth-token': tokenId
                     }
                 })));
-        req.query.remove.forEach(user =>
+        req.body.remove.forEach(user =>
             user.roles.forEach(async id =>
                 await axios.delete(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
                     {}, {
