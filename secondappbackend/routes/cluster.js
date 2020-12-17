@@ -116,7 +116,7 @@ router.post('/', async (req, res) => {
             }
         });
         
-        const k8sRes = await k8sClient.createNamespace(req.body);
+        //const k8sRes = await k8sClient.createNamespace(req.body);
 
         res.send(ksResponse.data);
     }
