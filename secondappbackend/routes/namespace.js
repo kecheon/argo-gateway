@@ -100,7 +100,7 @@ router.get('/:id/member', async (req, res) => {
             res.status(404).send('no user list found');
             return;
         }
-        const users = response.data.users.filter(user => user.roles.is_wf);
+        const users = response.data.users.filter(user => user.is_wf);
         const results = users.map(async elem => {
             const nsRes = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles', {
                 headers: {
