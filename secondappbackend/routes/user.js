@@ -135,7 +135,7 @@ router.get('/:id/namespace', async (req, res) => {
         return;
     }
     try {
-        const response = axios.get(ksUserUrl + '/' + req.params.id + '/namespaces', {
+        const response = await axios.get(ksUserUrl + '/' + req.params.id + '/projects', {
             headers: {
                 'x-auth-token': req.user.tokenId2
             }
