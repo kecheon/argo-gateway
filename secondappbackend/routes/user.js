@@ -89,6 +89,7 @@ router.get('/:id', async (req, res) => {
             id: userData.id,
             name: userData.name,
             description: userData.description,
+            enabled:userData.enabled,
             email: userData.email,
             primary_namespace_id: userData.default_project_id
         });
@@ -108,8 +109,10 @@ router.post('/', async (req, res) => {
         res.status(401).send('second token needed');
         return;
     }
+    let user = req.body;
+    user.is_wf = true;
     try {
-        const response = await axios.post(ksUserUrl, req.body, {
+        const response = await axios.post(ksUserUrl, { user: user }, {
             headers: {
                 'x-auth-token': req.user.tokenId2
             }
@@ -155,7 +158,7 @@ router.patch('/:id', async (req, res) => {
         return;
     }
     try {
-        const response = await axios.patch(ksUserUrl + '/' + req.params.id, {
+        const response = await axios.patch(ksUserUrl + '/' + req.params.id, { user: req.body }, {
             headers: {
                 'x-auth-token': req.user.tokenId2
             }
