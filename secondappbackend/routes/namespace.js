@@ -149,7 +149,7 @@ router.patch('/:id/member', async (req, res) => {
         req.body.remove.forEach(user =>
             user.roles.forEach(async id =>
                 await axios.delete(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
-                    {}, {
+                    {
                     headers: {
                         'x-auth-token': tokenId
                     }
