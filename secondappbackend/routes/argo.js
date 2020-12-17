@@ -6,14 +6,10 @@ const endurl = require('../ksinfo.json').ARGO_API_URL;
 router.all('*', ensureAuthenticated);
 
 router.get('/archived-workflows', async (req, res) => {
-    /*let url =
-        ('minStartedAt' in req.query) ?
-            endurl + 'archived-workflows/?minStartedAt=' + encodeURIComponent(req.query.minStartedAt) : endurl + 'archived-workflows';
-    if ('maxStartedAt' in req.query)
-        url += '&maxStartedAt=' + encodeURIComponent(req.query.maxStartedAt);*/
+    const url = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'archived-workflows';
     try {
         //const response = await axios.get(url, {
-        const response = await axios.get(endurl + 'archived-workflows', {
+        const response = await axios.get(url, {
             headers: {
                 Authorization: req.user.k8s_token
             }
@@ -352,7 +348,7 @@ router.get('/stream/events/:namespace', async (req, res) => {
 });
 
 router.get('/workflow-events', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflow-events/' : endurl + req.url;
+    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'workflow-events/';
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -372,8 +368,8 @@ router.get('/workflow-events', async (req, res) => {
 
 router.get('/workflow-events/:namespace', async (req, res) => {
     const requestUrl =
-        Object.keys(req.query).length == 0 ?
-            endurl + 'workflow-events/' + req.params.namespace : endurl + req.url;
+        Object.keys(req.query).length > 0 ?
+            endurl + req.url : endurl + 'workflow-events/' + req.params.namespace;
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -389,8 +385,8 @@ router.get('/workflow-events/:namespace', async (req, res) => {
 
 router.get('/workflows/:namespace', async (req, res) => {
     const requestUrl =
-        Object.keys(req.query).length == 0 ?
-            endurl + 'workflows/' + req.params.namespace : endurl + req.url;
+        Object.keys(req.query).length > 0 ?
+            endurl + req.url : endurl + 'workflows/' + req.params.namespace;
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -409,7 +405,7 @@ router.get('/workflows/:namespace', async (req, res) => {
 });
 
 router.get('/workflows', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length == 0 ? endurl + 'workflows/' : endurl + req.url;
+    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + 'workflows/';
     try {
         const response = await axios.get(requestUrl, {
             headers: {
@@ -777,7 +773,7 @@ router.get('/metering', async (req, res) => {
 });
 
 router.get('/metering/:namespace', async (req, res) => {
-    if(!('minStartedAt' in req.query)||!(!('maxStartedAt' in req.query))){
+    if(!('minStartedAt' in req.query)||!('maxStartedAt' in req.query)){
         res.status(400).send('mindate or maxdate missing in query');
         return;
     }

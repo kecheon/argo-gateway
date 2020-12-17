@@ -1,9 +1,7 @@
 import {createBrowserHistory} from 'history';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import { Redirect, Route, MemoryRouter as Router, Switch } from 'react-router';
-import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
+import {Redirect, Route, Router, Switch} from 'react-router';
 
 import { Layout, NavigationManager, NotificationsManager, Popup, PopupManager, PopupProps } from 'argo-ui';
 import {ContextApis, Provider} from './shared/context';
@@ -115,21 +113,64 @@ export class App extends React.Component<{}, {version?: Version; popupProps: Pop
     }
 
     public render() {
+        const providerContext: ContextApis = {
+            notifications: this.notificationsManager,
+            popup: this.popupManager,
+            navigation: this.navigationManager,
+            history
+        };
         return (
-            <Router>
-                <div>
-                    <Link component={RouterLink} to={workflowsUrl}>
-                        Workflows
-                    </Link>
-                    <br />
-                    <Link component={RouterLink} to={workflowTemplatesUrl}>
-                        Workflow Templates
-                    </Link>
-                </div>
-                <Route exact path='/' component={workflows.component} />
-                <Route path={workflowsUrl} component={workflows.component} />
-                <Route path={workflowTemplatesUrl} component={workflowTemplates.component} />
-            </Router>
+            <Provider value={providerContext}>
+                {this.state.popupProps && <Popup {...this.state.popupProps} />}
+                <Router history={history}>
+                    <Layout navItems={navItems} version={() => <>{this.state.version ? this.state.version.version : 'unknown'}</>}>
+
+                        <ErrorBoundary>
+                            <Switch>
+                                <Route exact={true} strict={true} path='/'>
+                                    <Redirect to={workflowsUrl} />
+                                </Route>
+                                <Route exact={true} strict={true} path={timelineUrl}>
+                                    <Redirect to={workflowsUrl} />
+                                </Route>
+                                {this.state.namespace && (
+                                    <Route exact={true} strict={true} path={workflowsUrl}>
+                                        <Redirect to={this.workflowsUrl} />
+                                    </Route>
+                                )}
+                                {this.state.namespace && (
+                                    <Route exact={true} strict={true} path={workflowTemplatesUrl}>
+                                        <Redirect to={this.workflowTemplatesUrl} />
+                                    </Route>
+                                )}
+                                {this.state.namespace && (
+                                    <Route exact={true} strict={true} path={cronWorkflowsUrl}>
+                                        <Redirect to={this.cronWorkflowsUrl} />
+                                    </Route>
+                                )}
+                                {this.state.namespace && (
+                                    <Route exact={true} strict={true} path={archivedWorkflowsUrl}>
+                                        <Redirect to={this.archivedWorkflowsUrl} />
+                                    </Route>
+                                )}
+                                {this.state.namespace && (
+                                    <Route exact={true} strict={true} path={reportsUrl}>
+                                        <Redirect to={this.reportsUrl} />
+                                    </Route>
+                                )}
+                                <Route path={workflowsUrl} component={workflows.component} />
+                                <Route path={workflowTemplatesUrl} component={workflowTemplates.component} />
+                                <Route path={clusterWorkflowTemplatesUrl} component={clusterWorkflowTemplates.component} />
+                                <Route path={cronWorkflowsUrl} component={cronWorkflows.component} />
+                                <Route path={archivedWorkflowsUrl} component={archivedWorkflows.component} />
+                                <Route path={reportsUrl} component={reports.component} />
+                                <Route exact={true} strict={true} path={userInfoUrl} component={userinfo.component} />
+                                <Route exact={true} strict={true} path={loginUrl} component={login.component} />
+                            </Switch>
+                        </ErrorBoundary>
+                    </Layout>
+                </Router>
+            </Provider>
         );
     }
 
