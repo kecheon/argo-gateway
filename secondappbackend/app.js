@@ -18,7 +18,7 @@ const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION
 const KeystoneStrategy = require('./passport-keystone');
 
 //const rootPath = path.join(__dirname, 'uidist');
-const rootPath = path.join(__dirname, '../ClientApp/dist/ClientApp');
+const rootPath = path.join(__dirname, '../dist/app');
 
 //const tempdb_session = require('./connect-db');
 
@@ -220,7 +220,9 @@ app.use(passport.session());
 app.get(['/', '/overview/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
     '/cron-workflows/?', '/archived-workflows/?', '/notfound', '/metering/?',
     '/monitoring/?','/reports','/userinfo',
-    '/cluster-workflow-templates/?', '/login','/user-manager/?'],
+    '/cluster-workflow-templates/?', '/login','/user-manager/?', '/logout',
+    '/users/?', '/users/namespaces/?', '/users/roles/?', '/users/cluster/?'
+],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
 ///////////////////////////
