@@ -108,10 +108,10 @@ router.get('/:id/member', async (req, res) => {
                 }
             });
             let result = { id: elem.id, name: elem.name };
-            if (!response.data.roles)
+            if (!nsRes.data.roles)
                 result.roles = [];
             else {
-                result.roles = response.data.roles.filter(elem => elem.is_wf).map(elem => {
+                result.roles = nsRes.data.roles.filter(elem => elem.is_wf).map(elem => {
                     return {
                         id: elem.id,
                         name: elem.name
