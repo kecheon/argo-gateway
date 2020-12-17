@@ -218,7 +218,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get(['/', '/overview/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
-    '/cron-workflows/?','/archived-workflows/?','/notfound','/metering/?','/monitoring/?',
+    '/cron-workflows/?', '/archived-workflows/?', '/notfound', '/metering/?',
+    '/monitoring/?','/reports','/userinfo',
     '/cluster-workflow-templates/?', '/login','/user-manager/?'],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing

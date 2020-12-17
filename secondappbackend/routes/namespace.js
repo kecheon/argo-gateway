@@ -84,6 +84,83 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/:id/member', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+    try {
+        const response = await axios.get(KsUrl + 'users', {
+            headers: {
+                'x-auth-token': tokenId
+            }
+        });
+        if (!response.data.users) {
+            res.status(404).send('no user list found');
+            return;
+        }
+        const users = response.data.users.filter(user => user.roles.is_wf);
+        const results = users.map(async elem => {
+            const nsRes = await axios.get(KsUrl + 'projects/' + req.params.id + '/users/' + req.params.userid + '/roles', {
+                headers: {
+                    'x-auth-token': req.user.tokenId2
+                }
+            });
+            let result = { id: elem.id, name: elem.name };
+            if (!response.data.roles)
+                result.roles = [];
+            else {
+                result.roles = response.data.roles.filter(elem => elem.is_wf).map(elem => {
+                    return {
+                        id: elem.id,
+                        name: elem.name
+                    };
+                });
+            }
+            return result;
+        });
+        res.send(results);
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+router.patch('/:id/member', async (req, res) => {
+    if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin'))) {
+        res.sendStatus(401);
+        return;
+    }
+    if (!Array.isArray(req.query.add) || !Array.isArray(req.query.remove)) {
+        res.status(400).send('add or remove should be at least an empty array');
+        return;
+    }
+    const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
+    try {
+        req.query.add.forEach(user =>
+            user.roles.forEach(async id =>
+                await axios.put(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
+                    {}, {
+                    headers: {
+                        'x-auth-token': tokenId
+                    }
+                })));
+        req.query.remove.forEach(user =>
+            user.roles.forEach(async id =>
+                await axios.delete(KsUrl + 'projects/' + req.params.id + '/users/' + user.id + '/roles/' + id,
+                    {}, {
+                    headers: {
+                        'x-auth-token': tokenId
+                    }
+                })));
+        res.send('patch successful');
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+});
+
 router.get('/switch/:name', async (req, res) => {
     try {
         const response = await axios.post(KsUrl + 'auth/tokens', {
@@ -111,7 +188,7 @@ router.get('/switch/:name', async (req, res) => {
         });
     }
     catch (err) {
-        res.status(500).send(err);
+        res.status(400).send(err);
     }
 });
 
