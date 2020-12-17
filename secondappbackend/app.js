@@ -217,8 +217,8 @@ passport.use(new KeystoneStrategy({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
-    '/cron-worklows/?','/archived-workflows/?','/notfound',
+app.get(['/', '/overview/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
+    '/cron-workflows/?','/archived-workflows/?','/notfound','/metering/?','/monitoring/?',
     '/cluster-workflow-templates/?', '/login','/user-manager/?'],
     (req, res)=> res.sendFile(path.join(rootPath, 'index.html')));
 // End of front-end routing
