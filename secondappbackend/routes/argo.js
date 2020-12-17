@@ -801,12 +801,7 @@ router.get('/metering/:namespace', async (req, res) => {
             return refinedWfItem(tawResponse.data);
         }));
         const concatData=uniqueArray(tempWorkflows.concat(tempArchivedWorkflows));
-        const meteringData=concatData.map(elem=>{
-            return {
-                price:elem.resourceDurationCPU*100
-            };
-        });
-        res.send(meteringData);
+        res.send(concatData);
     }
     catch(err){
         res.status(400).send(err);
