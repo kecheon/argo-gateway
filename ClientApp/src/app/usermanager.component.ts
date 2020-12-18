@@ -29,7 +29,12 @@ export class UsermanagerComponent implements OnInit {
   }
 
   createUser(){
-    this.dialog.open(UserDialog)
+    this.dialog.open(UserDialog).afterClosed().subscribe(user=>{
+      if(user)
+        this.userService.createUser(user).subscribe(
+          
+        )
+    })
   }
 
   editUser(id:number){

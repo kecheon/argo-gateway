@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { UserData } from './userData';
+import { UserData,UserCreationData } from './userData';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class UserService {
     return this.http.get<UserData>('/user/' + id);
   }
 
-  createUser(user: UserData): Observable<string> {
+  createUser(user: UserCreationData): Observable<string> {
     return this.http.post('/user', user, { responseType:'text' });
   }
 

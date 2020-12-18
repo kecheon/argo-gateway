@@ -3,7 +3,8 @@ const axios = require('axios');
 
 const KsInfo = require('../ksinfo.json');
 
-const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
+const KsUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
+const ksUserUrl = KsUrl+ 'users';
 
 router.all('*',ensureAuthenticated);
 
@@ -110,15 +111,35 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    let user = req.body;
-    user.is_wf = true;
+    if(!req.body.name||!req.body.email||!Array.isArray(req.body.role_ids)){
+        res.status(400).send('some properties are missing.');
+        return;
+    }
+    let user = {
+        name:req.body.name,
+        email:req.body.email,
+        enabled:req.body.enabled,
+        password:req.body.password,
+        is_wf:true
+    };
+    if(req.body.description)
+        user.description=req.body.description;
     try {
-        const response = await axios.post(ksUserUrl, { user: user }, {
+        let response = await axios.post(ksUserUrl, { user: user }, {
             headers: {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        res.sendStatus(response.status);
+        const id=response.data.id;
+        if(!response.data.user)
+            throw new Error('somethings wrong, creation successful but no user data?');
+        response=await axios.put(KsUrl + 'projects/' + req.body.primary_namespace_id + '/users/' + id + '/roles/' + req.body.role_ids[0],
+            {}, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        res.send({id:id});
     }
     catch (err) {
         console.error(err);
