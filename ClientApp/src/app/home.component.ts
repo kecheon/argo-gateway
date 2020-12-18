@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { ProjectData } from './projectData';
 import { ProjectService } from './project.service';
 import { ErrorAlert } from './error.alert';

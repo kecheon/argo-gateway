@@ -18,6 +18,7 @@ import {LoggedIn,NotLoggedIn } from './check-login';
 import { UsermanagerComponent } from './usermanager.component';
 import { ConfirmDialog, ConfirmDialogTemplate, ConfirmDialogTemplate2 } from './confirm.dialog';
 import { ErrorAlert, ErrorDialog } from './error.alert';
+import {UserDialog} from './user.dialog';
 import { UserService } from './user.service';
 import { NotfoundComponent } from './notfound.component';
 
@@ -33,12 +34,14 @@ import { NotfoundComponent } from './notfound.component';
     NotfoundComponent,
     ConfirmDialogTemplate,
     ConfirmDialogTemplate2,
-    ErrorDialog
+    ErrorDialog,
+    UserDialog
   ],
   entryComponents: [
     ConfirmDialogTemplate,
     ConfirmDialogTemplate2,
-    ErrorDialog
+    ErrorDialog,
+    UserDialog
   ],
   imports: [
     BrowserModule,
