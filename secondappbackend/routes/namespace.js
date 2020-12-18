@@ -7,6 +7,8 @@ const KsInfo = require('../ksinfo.json');
 const KsUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
 const k8sClient = require('../k8s-init');
+const k8sCore=k8sClient.core;
+const k8sRbac=k8sClient.rbac;
 
 router.all('*', ensureAuthenticated);
 
@@ -221,7 +223,7 @@ router.post('/', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
-        let k8sRes = await k8sClient.createNamespace({ metadata: { name: project.name } });
+        let k8sRes = await k8sCore.createNamespace({ metadata: { name: project.name } });
         const quotaData = {
             apiVersion: "v1", kind: "ResourceQuota",
             metadata: { name: "compute-resources" },
@@ -231,9 +233,29 @@ router.post('/', async (req, res) => {
                     "limits.cpu": project.quota_cpu,
                     "limits.memory": project.quota_mem
                 }
-            }
+            }   
         };
-        k8sRes = await k8sClient.createNamespacedResourceQuota(project.name, quotaData);
+        k8sRes = await k8sCore.createNamespacedResourceQuota(project.name, quotaData);
+        /* const secret = await k8sCore.createNamespacedSecret(project.name,{
+
+        }) */
+        k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{apiVersion: "rbac.authorization.k8s.io/v1", 
+            kind: "RoleBinding",
+            metadata: { 
+                name: project.name + "_default_admin",
+                namespace: project.name
+            },
+            subjects: [
+                { kind: "ServiceAccount",
+                name: project.name, 
+                apiGroup: "" }
+            ],
+            roleRef: { 
+                kind: "ClusterRole",
+                name: "admin",
+                apiGroup: "rbac.authorization.k8s.io"
+            }
+        });
         res.send('namespace created successfully');
     }
     catch (err) {
@@ -264,7 +286,7 @@ router.delete('/:id', async (req, res) => {
                 'x-auth-token': tokenId
             }
         });
-        const k8sResponse = await k8sClient.deleteNamespace(projectName);
+        const k8sResponse = await k8sCore.deleteNamespace(projectName);
         res.send('namespace deleted');
     }
     catch (err) {

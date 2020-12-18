@@ -6,7 +6,8 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 const kc = new k8s.KubeConfig();
 kc.loadFromOptions(require('./kube.config.json'));
 //kc.applyAuthorizationHeader();
-const client = kc.makeApiClient(k8s.CoreV1Api);
+const coreClient = kc.makeApiClient(k8s.CoreV1Api);
+const rbacClient = kc.makeApiClient(k8s.RbacAuthorizationV1Api);
 /*module.exports = (async () => {
     try {
         const session = await tempdb_session.getSession();
@@ -26,4 +27,4 @@ const client = kc.makeApiClient(k8s.CoreV1Api);
     Authorization: 'Bearer ' + require('./ksinfo.json').K8S_TOKEN
 };*/
 
-module.exports = client;
+module.exports = {core:coreClient,rbac:rbacClient};
