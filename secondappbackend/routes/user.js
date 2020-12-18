@@ -7,6 +7,27 @@ const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '
 
 router.all('*',ensureAuthenticated);
 
+router.get('/checkname/:name',async (req,res)=>{
+    try{
+        const response=await axios.get(ksUserUrl, {
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        if (!response.data.users)
+            // error in any case, there should be at least 1 user(admin)
+            throw new Error('users not exist in response');
+        const names=response.data.users.map(elem=>elem.name);
+        if(names.includes(req.params.name))
+            res.send(406);
+        else
+            res.send('available');
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+});
+
 router.get('/', async (req, res) => {
     try {
         const response = await axios.get(ksUserUrl, {
@@ -14,7 +35,8 @@ router.get('/', async (req, res) => {
                 'x-auth-token': req.user.tokenId2
             }
         });
-        if (!('users' in response.data))
+        if (!response.data.users)
+            // error in any case, there should be at least 1 user(admin)
             throw new Error('users not exist in response');
         const usersData = response.data.users;
         if (usersData.length < 1) {

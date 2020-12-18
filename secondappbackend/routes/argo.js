@@ -1,9 +1,39 @@
 const router = require('express').Router();
 const axios = require('axios');
 
+const KsInfo = require('../ksinfo.json');
+
+const KsUrl = KsInfo.KS_AUTH_URL + 'v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
+
 const endurl = require('../ksinfo.json').ARGO_API_URL;
 
 router.all('*', ensureAuthenticated);
+
+// this is temporary medication, not available for non-admin
+router.get('/checkname/:name',async (req,res)=>{
+    try{
+        // this is temporary medication, not available for non-admin
+        const response=await axios.get(KsUrl+'projects',{
+            headers: {
+                'x-auth-token': req.user.tokenId2
+            }
+        });
+        if(!('projects' in response.data))
+            throw new Error('projects property missing');
+        if(!response.data.projects){
+            res.send('available');
+            return;
+        }
+        const names=response.data.projects.map(elem=>elem.name);
+        if(names.includes(req.params.name))
+            res.send(406);
+        else
+            res.send('available');
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+});
 
 router.get('/archived-workflows', async (req, res) => {
     const url = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + '/archived-workflows';
