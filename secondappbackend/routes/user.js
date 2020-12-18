@@ -5,15 +5,9 @@ const KsInfo = require('../ksinfo.json');
 
 const ksUserUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/users';
 
+router.all('*',ensureAuthenticated);
+
 router.get('/', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
     try {
         const response = await axios.get(ksUserUrl, {
             headers: {
@@ -51,7 +45,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/admin', (req, res) => {
-    if (req.isUnauthenticated()) {
+    /* if (req.isUnauthenticated()) {
         res.sendStatus(401);
         return;
     }
@@ -62,18 +56,11 @@ router.get('/admin', (req, res) => {
     else if (req.user.roles.includes('wf-app-admin'))
         res.send('admin ok');
     else
-        res.status(401).send('not admin');
+        res.status(401).send('not admin'); */
+    res.send('yes, admin');
 });
 
 router.get('/:id', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
     try {
         const response = await axios.get(ksUserUrl + '/' + req.params.id, {
             headers: {
@@ -101,14 +88,6 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
     let user = req.body;
     user.is_wf = true;
     try {
@@ -126,14 +105,6 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id/namespace', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
     try {
         const response = await axios.get(ksUserUrl + '/' + req.params.id + '/projects', {
             headers: {
@@ -149,14 +120,6 @@ router.get('/:id/namespace', async (req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
-    if (req.isUnauthenticated()) {
-        res.sendStatus(401);
-        return;
-    }
-    else if (!req.user.tokenId2) {
-        res.status(401).send('second token needed');
-        return;
-    }
     try {
         const response = await axios.patch(ksUserUrl + '/' + req.params.id, { user: req.body }, {
             headers: {
@@ -170,5 +133,20 @@ router.patch('/:id', async (req, res) => {
         res.status(500).send(err);
     }
 });
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        if (('tokenId' in req.user) && ('tokenId2' in req.user) && ('k8s_token' in req.user)) {
+            if (!(req.user.roles?.includes('wf-app-admin')) && !(req.user.roles?.includes('wf-tenant-admin')))
+                res.sendStatus(401);
+            else
+                next();
+        }
+        else {
+            console.error('authenticated but some tokens are missing');
+            res.sendStatus(500);
+        }
+    }   
+    else res.sendStatus(401);
+}
 
 module.exports = router;
