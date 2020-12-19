@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const http=require('http');
+const fetch=require('node-fetch');
 
 const KsInfo = require('../ksinfo.json');
 
@@ -407,11 +408,19 @@ router.get('/workflow-events', async (req, res) => {
         response.on('error',err=>res.send(err));
         response.on('end',()=>res.send('stream ends'));
     }); */
-    res.send(501);
+    /* const response=await fetch(requestUrl,{method:'GET',headers:{
+        Authorization: req.user.k8s_token
+    }});
+    const buffer=await response.buffer();
+    const ftype=await fileType.fromBuffer(buffer);
+    console.log(ftype);
+    res.send(buffer); */
+
+    res.sendStatus(501);
 });
 
 router.get('/workflow-events/:namespace', async (req, res) => {
-    res.send(501);
+    res.sendStatus(501);
     /* const requestUrl =
         Object.keys(req.query).length > 0 ?
             endurl + req.url : endurl + '/workflow-events/' + req.params.namespace;
