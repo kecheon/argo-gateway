@@ -15,7 +15,7 @@ import { WorkflowsComponent } from './workflows.component';
 import { WorkflowTComponent } from './workflow-t.component';
 import { CWorkflowTComponent } from './c-workflow-t.component';
 import { MaterialModule } from './material.module';
-import {LoggedIn,NotLoggedIn } from './check-login';
+import {LoggedIn,NotLoggedIn,IsAdmin } from './check-login';
 import { UsermanagerComponent } from './usermanager.component';
 import { ConfirmDialog, ConfirmDialogTemplate, ConfirmDialogTemplate2 } from './confirm.dialog';
 import { ErrorAlert, ErrorDialog } from './error.alert';
@@ -55,7 +55,7 @@ import { NotfoundComponent } from './notfound.component';
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [ProjectService, LoggedIn, NotLoggedIn, ErrorAlert, ConfirmDialog,
+  providers: [ProjectService, LoggedIn, NotLoggedIn,IsAdmin, ErrorAlert, ConfirmDialog,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
     UserService,RoleService],
   bootstrap: [AppComponent]
