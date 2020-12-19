@@ -67,6 +67,10 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/rolelist',(req,res)=>res.send(
+    ['wf-app-admin','wf-app-viewer','wf-app-executor','wf-tenant-admin']
+));
+
 router.get('/admin', (req, res) => {
     /* if (req.isUnauthenticated()) {
         res.sendStatus(401);

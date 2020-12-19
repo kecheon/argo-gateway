@@ -1035,6 +1035,7 @@ function refinedWfItem(item) {
     const status = item.status;
     let wfItem = {
         uid: metadata.uid,
+        name:metadata.name,
         namespace: metadata.namespace,
         phase: status.phase,
         finishedAt: status.finishedAt,

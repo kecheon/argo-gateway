@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {ReactiveFormsModule,FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
@@ -20,6 +21,7 @@ import { ConfirmDialog, ConfirmDialogTemplate, ConfirmDialogTemplate2 } from './
 import { ErrorAlert, ErrorDialog } from './error.alert';
 import {UserDialog} from './user.dialog';
 import { UserService } from './user.service';
+import {RoleService} from './role.service';
 import { NotfoundComponent } from './notfound.component';
 
 @NgModule({
@@ -49,11 +51,13 @@ import { NotfoundComponent } from './notfound.component';
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [ProjectService, LoggedIn, NotLoggedIn, ErrorAlert, ConfirmDialog,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    UserService],
+    UserService,RoleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

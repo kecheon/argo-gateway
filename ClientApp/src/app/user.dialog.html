@@ -1,13 +1,13 @@
 <h2 mat-dialog-title *ngIf="isNew">User Creation</h2>
 <h2 mat-dialog-title *ngIf="!isNew">Edit User</h2>
 <mat-dialog-content>
-  <form (ngSubmit)="submit(userForm)" fxLayout="column" #userForm="ngForm">
+  <form (ngSubmit)="dialogRef.close(_user)" fxLayout="column">
     <mat-form-field appearance="fill">
       <mat-label>
         name
       </mat-label>
-      <input mat-input name="name" [formControl]="name" required>
-      <mat-error *ngIf="name.invalid">{{getNameErrorMsg()}}</mat-error>
+      <input mat-input name="name" required>
+      <!-- <mat-error *ngIf="name.invalid">{{getNameErrorMsg()}}</mat-error> -->
     </mat-form-field>
     <mat-form-field>
       <mat-label>
@@ -17,8 +17,16 @@
       <mat-error *ngIf="email.invalid">{{getEmailErrorMsg()}}</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input type="password" name="password" placeholder="password" [formControl]="password" required>
-      <mat-error *ngIf="password.invalid">{{getPasswordErrrorMsg()}}</mat-error>
+      <input type="password" name="password" placeholder="password" required>
+      <!-- <mat-error *ngIf="password.invalid">{{getPasswordErrrorMsg()}}</mat-error> -->
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select [(ngModel)]="selectedRole" name="role">
+        <mat-option *ngFor="let role of roles; let i=index" [value]="role">
+          {{role}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </form>
 </mat-dialog-content>
