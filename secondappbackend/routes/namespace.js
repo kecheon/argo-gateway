@@ -236,9 +236,6 @@ router.post('/', async (req, res) => {
             }   
         };
         k8sRes = await k8sCore.createNamespacedResourceQuota(project.name, quotaData);
-        /* const secret = await k8sCore.createNamespacedSecret(project.name,{
-
-        }) */
         k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{apiVersion: "rbac.authorization.k8s.io/v1", 
             kind: "RoleBinding",
             metadata: { 
@@ -256,6 +253,12 @@ router.post('/', async (req, res) => {
                 apiGroup: "rbac.authorization.k8s.io"
             }
         });
+        k8sRes=await k8sCore.readNamespacedSecret('argo-artifacts','argo');
+        let secretData=k8sRes.data;
+        if(!('metadata' in secretData))
+            throw new Error('no metadata property in secret');
+        secretData.metadata.namespace=project.name;
+        k8sRes = await k8sCore.createNamespacedSecret(project.name,secretData);
         res.send('namespace created successfully');
     }
     catch (err) {
