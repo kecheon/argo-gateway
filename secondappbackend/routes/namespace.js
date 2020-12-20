@@ -239,42 +239,45 @@ router.post('/', async (req, res) => {
         k8sRes = await k8sCore.createNamespacedLimitRange(project.name,{
             apiVersion:"v1",kind:"LimitRange",
             metadata:{
-                name:"cpu-limit-range"
+                name:'cpu-limit-range'
             },spec:{
                 limits:[{
                         default:{cpu:1},
                         defaultRequest:{cpu:0.5},
-                        type:"Container"
+                        type: 'Container'
                     }]
             }
         });
         k8sRes = await k8sCore.createNamespacedLimitRange(project.name,{
-            apiVersion:"v1",kind:"LimitRange",
+            apiVersion: 'v1', kind:'LimitRange',
             metadata:{
-                name:"cpu-limit-range"
+                name: 'cpu-limit-range'
             },spec:{
                 limits:[{
-                    default:{memory:"512Mi"},
-                    defaultRequest:{"memory":"256Mi"},
-                    type:"Container"
+                    default: { memory: '512Mi' },
+                    defaultRequest: { memory:'256Mi' },
+                    type: 'Container'
                     }]
             }
         });
-        k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{apiVersion: "rbac.authorization.k8s.io/v1", 
-            kind: "RoleBinding",
+        k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{
+            apiVersion: 'rbac.authorization.k8s.io/v1', 
+            kind: 'RoleBinding',
             metadata: { 
-                name: project.name + "_default_admin",
+                name: project.name + '_default_admin',
                 namespace: project.name
             },
             subjects: [
-                { kind: "ServiceAccount",
-                name: project.name, 
-                apiGroup: "" }
+                {
+                    kind: 'ServiceAccount',
+                    name: 'default', 
+                    apiGroup: ''
+                }
             ],
             roleRef: { 
-                kind: "ClusterRole",
-                name: "admin",
-                apiGroup: "rbac.authorization.k8s.io"
+                kind: 'ClusterRole',
+                name: 'admin',
+                apiGroup: 'rbac.authorization.k8s.io'
             }
         });
         k8sRes=await k8sCore.readNamespacedSecret('argo-artifacts','argo');

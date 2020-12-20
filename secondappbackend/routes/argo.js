@@ -366,76 +366,17 @@ router.get('/version', async (req, res) => {
 });
 
 router.get('/stream/events/:namespace', async (req, res) => {
-    try {
-        const response = await axios.get(endurl + '/stream/events/' + req.params.namespace, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        res.send(response.data);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    }
+    res.sendStatus(501);
 });
 
 router.get('/workflow-events', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + '/workflow-events/';
-    /*try {
-        const response = await axios.get(requestUrl, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    } */
-    /* const request=http.get({
-        hostname:'20.194.32.137',
-        port:32000,
-        path:'/api/v1'+req.url,
-        headers: {
-            Authorization: req.user.k8s_token
-        }
-    }).on('response',response=>{
-        response.on('data',chunk=>res.send(chunk));
-        response.on('error',err=>res.send(err));
-        response.on('end',()=>res.send('stream ends'));
-    }); */
-    /* const response=await fetch(requestUrl,{method:'GET',headers:{
-        Authorization: req.user.k8s_token
-    }});
-    const buffer=await response.buffer();
-    const ftype=await fileType.fromBuffer(buffer);
-    console.log(ftype);
-    res.send(buffer); */
+    //const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + '/workflow-events/';
 
     res.sendStatus(501);
 });
 
 router.get('/workflow-events/:namespace', async (req, res) => {
     res.sendStatus(501);
-    /* const requestUrl =
-        Object.keys(req.query).length > 0 ?
-            endurl + req.url : endurl + '/workflow-events/' + req.params.namespace;
-    console.log(requestUrl);
-    try {
-        const response = await axios.get(requestUrl, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        res.send(response.data);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    } */
 });
 
 router.get('/workflows/:namespace', async (req, res) => {
