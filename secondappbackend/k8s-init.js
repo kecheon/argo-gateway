@@ -8,6 +8,10 @@ kc.loadFromOptions(require('./kube.config.json'));
 //kc.applyAuthorizationHeader();
 const coreClient = kc.makeApiClient(k8s.CoreV1Api);
 const rbacClient = kc.makeApiClient(k8s.RbacAuthorizationV1Api);
+
+/* coreClient.listNamespacedPod('default').then((res) => {
+    console.log(res.body);
+}).catch(err=>console.error(err)); */
 /*module.exports = (async () => {
     try {
         const session = await tempdb_session.getSession();

@@ -230,33 +230,63 @@ router.post('/', async (req, res) => {
             metadata: { name: "compute-resources" },
             spec: {
                 hard: {
-                    "requests.cpu": "1", "requests.memory": "1Gi",
-                    "limits.cpu": project.quota_cpu,
-                    "limits.memory": project.quota_mem
+                    "requests.cpu": project.quota_cpu+"Gi", "requests.memory": project.quota_mem+"G",
+                    "limits.cpu": project.quota_cpu+"Gi",
+                    "limits.memory": project.quota_mem+"G"
                 }
             }   
         };
         k8sRes = await k8sCore.createNamespacedResourceQuota(project.name, quotaData);
-        /* const secret = await k8sCore.createNamespacedSecret(project.name,{
-
-        }) */
-        k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{apiVersion: "rbac.authorization.k8s.io/v1", 
-            kind: "RoleBinding",
+        k8sRes = await k8sCore.createNamespacedLimitRange(project.name,{
+            apiVersion:"v1",kind:"LimitRange",
+            metadata:{
+                name:'cpu-limit-range'
+            },spec:{
+                limits:[{
+                        default:{cpu:1},
+                        defaultRequest:{cpu:0.5},
+                        type: 'Container'
+                    }]
+            }
+        });
+        k8sRes = await k8sCore.createNamespacedLimitRange(project.name,{
+            apiVersion: 'v1', kind:'LimitRange',
+            metadata:{
+                name: 'cpu-limit-range'
+            },spec:{
+                limits:[{
+                    default: { memory: '512Mi' },
+                    defaultRequest: { memory:'256Mi' },
+                    type: 'Container'
+                    }]
+            }
+        });
+        k8sRes = await k8sRbac.createNamespacedRoleBinding(project.name,{
+            apiVersion: 'rbac.authorization.k8s.io/v1', 
+            kind: 'RoleBinding',
             metadata: { 
-                name: project.name + "_default_admin",
+                name: project.name + '_default_admin',
                 namespace: project.name
             },
             subjects: [
-                { kind: "ServiceAccount",
-                name: project.name, 
-                apiGroup: "" }
+                {
+                    kind: 'ServiceAccount',
+                    name: 'default', 
+                    apiGroup: ''
+                }
             ],
             roleRef: { 
-                kind: "ClusterRole",
-                name: "admin",
-                apiGroup: "rbac.authorization.k8s.io"
+                kind: 'ClusterRole',
+                name: 'admin',
+                apiGroup: 'rbac.authorization.k8s.io'
             }
         });
+        k8sRes=await k8sCore.readNamespacedSecret('argo-artifacts','argo');
+        let secretData=k8sRes.data;
+        if(!('metadata' in secretData))
+            throw new Error('no metadata property in secret');
+        secretData.metadata.namespace=project.name;
+        k8sRes = await k8sCore.createNamespacedSecret(project.name,secretData);
         res.send('namespace created successfully');
     }
     catch (err) {

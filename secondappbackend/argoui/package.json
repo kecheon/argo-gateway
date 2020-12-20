@@ -55,7 +55,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/rx": "^4.1.2",
     "@types/superagent": "^4.1.10",
-    "copy-webpack-plugin": "^6.4.0",
+    "copy-webpack-plugin": "~6.4.1",
     "copyfiles": "^2.4.1",
     "file-loader": "^6.2.0",
     "glob": "^7.1.6",

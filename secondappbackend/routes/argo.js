@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
+const http=require('http');
+const fetch=require('node-fetch');
 
 const KsInfo = require('../ksinfo.json');
 
@@ -364,54 +366,17 @@ router.get('/version', async (req, res) => {
 });
 
 router.get('/stream/events/:namespace', async (req, res) => {
-    try {
-        const response = await axios.get(endurl + '/stream/events/' + req.params.namespace, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        res.send(response.data);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    }
+    res.sendStatus(501);
 });
 
 router.get('/workflow-events', async (req, res) => {
-    const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + '/workflow-events/';
-    try {
-        const response = await axios.get(requestUrl, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        const items = response.data.items;
-        if (items?.length > 0)
-            res.send(response.data);
-        else
-            res.sendStatus(204);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    }
+    //const requestUrl = Object.keys(req.query).length > 0 ? endurl + req.url : endurl + '/workflow-events/';
+
+    res.sendStatus(501);
 });
 
 router.get('/workflow-events/:namespace', async (req, res) => {
-    const requestUrl =
-        Object.keys(req.query).length > 0 ?
-            endurl + req.url : endurl + '/workflow-events/' + req.params.namespace;
-    console.log(requestUrl);
-    try {
-        const response = await axios.get(requestUrl, {
-            headers: {
-                Authorization: req.user.k8s_token
-            }
-        });
-        res.send(response.data);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    }
+    res.sendStatus(501);
 });
 
 router.get('/workflows/:namespace', async (req, res) => {
@@ -1035,6 +1000,7 @@ function refinedWfItem(item) {
     const status = item.status;
     let wfItem = {
         uid: metadata.uid,
+        name:metadata.name,
         namespace: metadata.namespace,
         phase: status.phase,
         finishedAt: status.finishedAt,
