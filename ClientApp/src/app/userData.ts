@@ -3,6 +3,7 @@ export class UserData {
   name: string;
   domain_id: string;
   email: string;
+  description:string;
   primary_namespace_id: string;
   primary_namespace_name: string;
   default_project_roles: string[];
@@ -15,6 +16,7 @@ export class UserData2 {
   enabled: boolean;
   primary_namespace_id: string;
   description?: string;
+  role_ids:string[];
 }
 
 export class UserCreationData {
@@ -23,5 +25,6 @@ export class UserCreationData {
   enabled: boolean;
   password: string;
   primary_namespace_id: string;
-  role_id: string;
+  description?:string;
+  role_ids: string[];
 }

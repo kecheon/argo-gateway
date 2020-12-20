@@ -37,8 +37,7 @@ speed-measure-plugin*.json
 *.sublime-workspace
 
 # compiled output
-# dist/
-uidist/
+dist/
 tmp/
 out-tsc/
 # Only exists if Bazel was run

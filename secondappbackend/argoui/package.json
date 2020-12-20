@@ -42,7 +42,7 @@
     "superagent-promise": "^1.1.0"
   },
   "devDependencies": {
-    "@types/chart.js": "^2.9.28",
+    "@types/chart.js": "^2.9.29",
     "@types/classnames": "^2.2.11",
     "@types/history": "^4.7.8",
     "@types/js-yaml": "^3.12.5",
@@ -55,7 +55,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/rx": "^4.1.2",
     "@types/superagent": "^4.1.10",
-    "copy-webpack-plugin": "^6.4.0",
+    "copy-webpack-plugin": "~6.4.1",
     "copyfiles": "^2.4.1",
     "file-loader": "^6.2.0",
     "glob": "^7.1.6",
