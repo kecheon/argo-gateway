@@ -2,6 +2,7 @@ const router = require('express').Router();
 const axios = require('axios');
 const http=require('http');
 const fetch=require('node-fetch');
+const passport = require('passport');
 
 const KsInfo = require('../ksinfo.json');
 
@@ -11,6 +12,7 @@ const endurl = require('../ksinfo.json').ARGO_API_URL;
 
 router.all('*', ensureAuthenticated);
 
+// router.all('/*', passport.authenticate('jwt', { session: false }));
 // this is temporary medication, not available for non-admin
 router.get('/checkname/:name',async (req,res)=>{
     try{
