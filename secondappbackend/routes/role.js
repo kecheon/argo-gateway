@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 
 const KsInfo = require('../ksinfo.json');
 
 const KsRoleUrl = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/roles';
 
-router.all('*', ensureAuthenticated);
+// router.all('*', ensureAuthenticated);
+router.all('/*', passport.authenticate('jwt', { session: false }));
 
 router.get('/', async (req, res) => {
     const tokenId = req.user.roles?.includes('wf-tenant-admin') ? req.user.admin_token : req.user.tokenId2;
@@ -17,7 +19,7 @@ router.get('/', async (req, res) => {
         });
         let roles = response.data.roles.filter(elem => elem.is_wf);
         if (roles.length == 0) {
-            res.send(204);
+            res.json(roles);
             return;
         }
         roles.forEach(elem => {
@@ -25,7 +27,7 @@ router.get('/', async (req, res) => {
             delete elem.options;
             delete elem.links;
         });
-        res.send(roles);
+        res.json(roles);
     }
     catch (err) {
         res.status(400).send(err);

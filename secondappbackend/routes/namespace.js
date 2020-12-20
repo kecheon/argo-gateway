@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
+const passport = require('passport');
 //const spawn = require('child_process');
 
 const KsInfo = require('../ksinfo.json');
@@ -10,7 +11,9 @@ const k8sClient = require('../k8s-init');
 const k8sCore=k8sClient.core;
 const k8sRbac=k8sClient.rbac;
 
-router.all('*', ensureAuthenticated);
+// router.all('*', ensureAuthenticated);
+
+router.all('/*', passport.authenticate('jwt', { session: false }));
 
 /*router.get('/sa/:account/:namespace', (req, res) => {
     const args = ['get', 'serviceaccount',
@@ -52,6 +55,7 @@ router.get('/', async (req, res) => {
         res.json({namespaces: projects});
     }
     catch (err) {
+        console.log(err);
         res.status(400).send(err);
     }
 });

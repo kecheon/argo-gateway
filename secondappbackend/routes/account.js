@@ -1,9 +1,36 @@
 const router = require('express').Router();
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const blacklist = require('express-jwt-blacklist');
+const { check } = require('express-validator');
 
-router.post('/login',
-    passport.authenticate('keystone', { failureRedirect: '/login' }),
-    (req, res) => res.redirect('/')
+const loginValidation = [
+    check('username')
+      .exists()
+      .withMessage('username empty'),
+    check('password')
+      .exists()
+      .withMessage('PASSWORD_IS_EMPTY')
+  ];
+
+router.post('/login', passport.authenticate('keystone'), 
+    (req, res) => {
+        const { user } = req;
+        // console.log(user);
+        const userToSend = {
+            domain: user.domain.id,
+            id: user.id,
+            name: user.name,
+            roles: user.roles,
+            password: req.body.password
+        }
+        const jwtToken = jwt.sign({ user: userToSend }, 'do not need to know',         
+            {
+              expiresIn: 1000000,
+            });
+        const userToReturn = { ...userToSend, ...{ jwtToken } };
+        res.status(200).json(userToReturn)
+    }
 );
 
 // need for user info retrieval
@@ -26,26 +53,32 @@ router.get('/notLoggedIn', function (req, res) {
     else res.sendStatus(400);
 });
 
-router.get('/info', (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = req.user;
-        const userinfo = {
-            domain_id: user.domain,
-            id: user.id,
-            name: user.name,
-            roles: user.roles,
-            primary_namespace_id: user.default_project_id,
-            primary_namespace_name: user.default_project_name
-        };
-        res.send(userinfo);
+router.get('/info', passport.authenticate('jwt', {session: false}), 
+    (req, res) => {
+        delete req.user.k8s_token;
+        delete req.user.tokenId;
+        delete req.user.tokenId2;
+        res.json(req.user);
+// router.get('/info', (req, res) => {
+//     if (req.isAuthenticated()) {
+//         const user = req.user;
+//         const userinfo = {
+//             domain_id: user.domain,
+//             id: user.id,
+//             name: user.name,
+//             roles: user.roles,
+//             primary_namespace_id: user.default_project_id,
+//             primary_namespace_name: user.default_project_name
+//         };
+//         res.send(userinfo);
 
-    }
-    else res.sendStatus(401);
+//     }
+//     else res.sendStatus(401);
 });
 
-router.get('/logout', ensureAuthenticated, (req, res) => {
-    req.logout();
-    res.redirect('/');
+router.get('/logout', (req, res) => {
+    blacklist.revoke(req.user);
+    res.sendStatus(200);
 });
 
 

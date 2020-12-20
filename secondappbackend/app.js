@@ -6,18 +6,18 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const session = require('express-session');
-const SqlStore = require('express-mysql-session')(session);
 const passport = require('passport');
-const fernet = require('fernet');
+const applyPassportStrategy = require('./passport-jwt');
+const KeystoneStrategy = require('./passport-keystone');
+const cors = require('cors');
+// const k8sstore = require('./k8stoken');
+// const fernet = require('fernet');
 
 const KsInfo = require('./ksinfo.json');
 
 const KsIdentityURL = KsInfo.KS_AUTH_URL + '/v' + KsInfo.KS_IDENTITY_API_VERSION + '/';
 
-const KeystoneStrategy = require('./passport-keystone');
 
-//const rootPath = path.join(__dirname, 'uidist');
 const rootPath = path.join(__dirname, '../dist/app');
 
 //const tempdb_session = require('./connect-db');
@@ -38,7 +38,10 @@ const sqlOptions = {
 );*/
 
 var app = express();
+app.use(cors());
 
+app.use(cors());
+applyPassportStrategy(passport)
 // uncomment after placing your favicon in /public
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
@@ -46,18 +49,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname, 'public')));
 
-const sessionStore = new SqlStore(sqlOptions);
-
-app.use(session({
-    key: 'argo_cookie',
-    secret: 'do not need to know',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false
-}));
 
 passport.serializeUser((user, done) => done(null, user));
-
 passport.deserializeUser((obj, done) => done(null, obj));
 
 async function getAdminToken() {
@@ -132,7 +125,8 @@ async function getAdminToken() {
 }
 
 passport.use(new KeystoneStrategy({
-    authUrl: KsIdentityURL+'auth/tokens'
+    authUrl: KsIdentityURL+'auth/tokens',
+    session: false
 }, async (req, done) => {
     req.user.tokenId = req.token.id;
     try {
@@ -141,7 +135,7 @@ passport.use(new KeystoneStrategy({
                 'x-auth-token': req.user.tokenId
             }
         });
-        if (projectres.data.projects?.length < 1)
+        if (projectres.data.projects.length < 1)
             throw new Error('project property error');
         const first_project_id = projectres.data.projects[0].id;*/
         const userResponse = await axios.get(KsIdentityURL + 'users/' + req.user.id, {
@@ -162,7 +156,7 @@ passport.use(new KeystoneStrategy({
                     'x-auth-token': req.user.tokenId
                 }
             });
-            if (projectres.data.projects?.length < 1)
+            if (projectres.data.projects.length < 1)
                 throw new Error('no project id');
             else {
                 const validProjects = projectres.data.projects.filter(elem => elem.is_wf && !elem.is_cluster);
@@ -215,8 +209,12 @@ passport.use(new KeystoneStrategy({
 }));
 
 app.use(passport.initialize());
-app.use(passport.session());
 
+// app.get(['/', '/summary/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
+//     '/cron-worklows/?','/archived-workflows/?','/notfound',
+//     '/cluster-workflow-templates/?', '/login','/user-manager/?',
+//     '/overview', '/users/list', '/users/namespaces', '/users/cluster', '/users/tenants'
+// ],
 app.get(['/', '/overview/?', '/admin/?', '/workflows/?', '/workflow-templates/?',
     '/cron-workflows/?', '/archived-workflows/?', '/notfound', '/metering/?',
     '/monitoring/?','/reports','/userinfo',
