@@ -806,7 +806,7 @@ router.get('/workflows', async (req, res) => {
 
 router.post('/workflows/:namespace', async (req, res) => {
     try {
-        const response = await axios.get(endurl + '/workflows/' + req.params.namespace, req.body, {
+        const response = await axios.post(endurl + '/workflows/' + req.params.namespace, req.body, {
             headers: {
                 Authorization: req.user.k8s_token
             }
@@ -820,7 +820,7 @@ router.post('/workflows/:namespace', async (req, res) => {
 
 router.post('/workflows/:namespace/lint', async (req, res) => {
     try {
-        const response = await axios.get(endurl + '/workflows/' + req.params.namespace +'/lint',
+        const response = await axios.post(endurl + '/workflows/' + req.params.namespace +'/lint',
             req.body, {
             headers: {
                 Authorization: req.user.k8s_token
@@ -835,7 +835,7 @@ router.post('/workflows/:namespace/lint', async (req, res) => {
 
 router.post('/workflows/:namespace/submit', async (req, res) => {
     try {
-        const response = await axios.get(endurl + '/workflows/' + req.params.namespace + '/submit',
+        const response = await axios.post(endurl + '/workflows/' + req.params.namespace + '/submit',
             req.body, {
             headers: {
                 Authorization: req.user.k8s_token
