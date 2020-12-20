@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
             delete elem.options;
             delete elem.links;
         });
-        res.send(projects);
+        res.json({namespaces: projects});
     }
     catch (err) {
         res.status(400).send(err);
