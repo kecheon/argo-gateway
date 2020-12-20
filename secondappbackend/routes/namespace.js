@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
             delete elem.options;
             delete elem.links;
         });
-        console.log(projects);
+        // res.send(projects);
         res.json({namespaces: projects});
     }
     catch (err) {
